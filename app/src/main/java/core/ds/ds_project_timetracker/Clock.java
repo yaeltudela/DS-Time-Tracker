@@ -1,62 +1,54 @@
 package core.ds.ds_project_timetracker;
 
 
+
 import java.util.Date;
+import java.util.Observable;
+import java.util.Timer;
+import java.util.TimerTask;
 
-public class Clock extends Thread{
+public class Clock extends Observable {
 
-    private int refreshTicks = 1000;
-    private Date date = null;
+    public static int REFRESHRATEMS = 1000;
+    private Date date;
+    private Timer timer;
 
-    public void run(){
-        try{
-            while(true){
-                sleep(refreshTicks);
+    public Clock() {
+        timer = new Timer();
+        date = new Date();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
                 updateClock();
             }
-        }catch (InterruptedException e){
-            System.out.println("aaa");
-        }
+        }, 0, REFRESHRATEMS);
     }
 
-    private void updateClock(){
+    private void updateClock() {
         date = new Date();
+        setChanged();
+        notifyObservers(this);
     }
 
-    private void startClock(){
-        if(date == null){
-            this.date = new Date();
-            start();
-        }
+    public Date getTime() {
+        return date;
     }
 
-    public String getTime(){
-        return date.toString();
+    public int getRefreshTicks() {
+        return REFRESHRATEMS;
     }
 
-    private void setRefreshTicks(int secs) throws Exception {
-        if(secs >= 1){
-            refreshTicks = secs * 1000;
+    public void setRefreshTicks(int secs) {
+        if (secs > 1) {
+            REFRESHRATEMS = secs * 1000;
+            System.out.println("Refresh time setted to 2");
         }else{
-            throw new Exception(); //Out of limits
-        }
-    }
-
-    public static void main(String[] args) throws Exception{
-
-        Clock clock = new Clock();
-        clock.startClock();
-        int secs = 1;
-
-
-        clock.setRefreshTicks(secs);
-
-        for (int i = 0; i < 10; i++){
-            System.out.println(clock.getTime());
-            System.out.println(clock.isAlive());
+            System.out.println("Value needs to be 1 or above");
+            //Throw Exception o algo
         }
 
     }
+
 
 
 }
