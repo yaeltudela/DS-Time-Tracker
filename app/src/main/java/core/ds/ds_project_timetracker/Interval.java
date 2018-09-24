@@ -9,23 +9,46 @@ public class Interval implements Observer {
 
     private Task parent;
     private float duration;
-    private boolean isRunning;
+    private boolean active;
 
     private Date startDate;
     private Date endDate;
 
-    Interval(Date startDate) {
+    Interval(Date startDate, Task parent) {
+        this.active = true;
+        this.duration = 0;
         this.startDate = startDate;
-    }
-
-    private void stopInterval() {
-
+        this.endDate = null;
+        this.parent = parent;
     }
 
     @Override
     public void update(Observable o, Object arg) {
-        duration += Clock.REFRESHRATEMS;
+        this.duration += Clock.REFRESHRATEMS / 1000;
+        this.endDate = new Date();
+        this.parent.endDate = this.endDate;
     }
 
+
+    public float getDuration() {
+        return this.duration;
+    }
+
+    public void setParent(Task parent) {
+        this.parent = parent;
+    }
+
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
 }
 

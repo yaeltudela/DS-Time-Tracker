@@ -1,9 +1,12 @@
 package core.ds.ds_project_timetracker;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
-public class Project extends Node {
+public class Project extends Node implements Observer {
 
     private List<Node> activities;
     private Project parent;
@@ -16,55 +19,62 @@ public class Project extends Node {
 
         activities = new ArrayList<>();
 
-        System.out.println(this.toString());
+        if (this.parent != null) {
+            this.parent.getActivities().add(this);
+        }
     }
 
 
     //  To String
     @Override
     public String toString() {
-        if (getParent() == null) {
-            return "Project Name: " + getName() + "  -  project description: " + getDescription() + " - parent: None";
-        } else {
-            return "Project Name: " + getName() + "  -  project description: " + getDescription() + " - parent: " + getParent().getName();
-        }
-
-    }
-
-/*
-    public void getTree(){
-        System.out.println(this.toString());
-
-        for (Node n: activities) {
-            if(n instanceof Task){
-                System.out.println("\t" + n.toString());
-            }else{
-                System.out.print("\t");
-                (Project) n.getTree();
-            }
-        }
-
-    }
-
-*/
-
-
-    public void addProject(String name, String description) {
-        Project subproject = new Project(name, description, this);
-        activities.add(subproject);
-    }
-
-    public void addProject(Project subproject) {
-        activities.add(subproject);
-
-    }
-
-    public void addTask(String name, String description) {
-        Task task = new Task(name, description, this);
-        activities.add(task);
+        return this.getName() + "\t" + this.getStartDate() + "\t" + this.getEndDate() + "\t" + this.getDuration() + "\t" + (this.getParent() == null ? "null" : this.getParent().getName());
     }
 
     public Project getParent() {
         return parent;
     }
+
+    public List<Node> getActivities() {
+        return activities;
+    }
+
+    @Override
+    public float getDuration() {
+        this.duration = 0;
+        for (Node n : activities) {
+            this.duration += n.getDuration();
+        }
+        return this.duration;
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        this.printSons(this);
+        System.out.println("-----------------------------------------------");
+
+    }
+
+    private void printSons(Project project) {
+        System.out.println(project.toString());
+        for (Node n : project.activities) {
+            if(n instanceof Task){
+                Task task = (Task) n;
+                System.out.println(task.toString());
+            } else {
+                printSons((Project) n);
+            }
+        }
+
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+
 }

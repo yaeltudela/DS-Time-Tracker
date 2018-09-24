@@ -1,41 +1,76 @@
 package core.ds.ds_project_timetracker;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Task extends Node {
 
+    //Name
+    //Description
     private List<Interval> intervals;
-    private Project project;
+    private Project parent;
 
     public Task(String name, String description, Project project) {
         this.name = name;
         this.description = description;
-        this.project = project;
         this.intervals = new ArrayList<>();
+        this.parent = project;
+        this.startDate = null;
+        this.endDate = null;
 
-        System.out.println(this.toString());
+        project.getActivities().add(this);
     }
 
     //  To String
     @Override
     public String toString() {
-        return "Task Name: " + getName() + "  -  task description: " + getDescription() + " - Project: " + getProject().getName();
+        return getName() + "\t" + getStartDate() + "\t" + getEndDate() + "\t" + getDuration() + "\t" + getParent().getName();
     }
 
-    public void startInterval() {
+    public void startInterval(Clock clock) {
+        Interval interval = new Interval(new Date(), this);
+        this.intervals.add(interval);
+        clock.addObserver(interval);
 
-    }
-
-    public void stopInterval() {
-
-    }
-
-    public void getTotalWorkTime() {
 
     }
 
-    private Project getProject() {
-        return project;
+    public void stopInterval(Clock clock) {
+        Interval interval = null;
+        if (this.getIntervals() != null && !this.getIntervals().isEmpty()) {
+            interval = this.getIntervals().get(this.getIntervals().size() - 1);
+        }
+        clock.deleteObserver(interval);
+        this.getDuration();
+        this.startDate = this.intervals.get(0).getStartDate();
+        this.endDate = this.intervals.get(this.intervals.size() - 1).getEndDate();
+    }
+
+    private Project getParent() {
+        return parent;
+    }
+
+    public List<Interval> getIntervals() {
+        return intervals;
+    }
+
+    @Override
+    public float getDuration() {
+        float duration = 0;
+        for (Interval i : intervals) {
+            duration += i.getDuration();
+        }
+        this.duration = duration;
+        return duration;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
     }
 }
+

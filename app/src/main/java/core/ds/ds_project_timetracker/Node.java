@@ -1,28 +1,29 @@
 package core.ds.ds_project_timetracker;
 
 
+import java.util.Date;
+
 public class Node {
 
     protected String name;
     protected String description;
 
-    private float duration = 0;
+    protected float duration = 0;
+    protected Date startDate;
+    protected Date endDate;
 
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public float getDuration() {
+        return duration;
     }
+
 
 }
 

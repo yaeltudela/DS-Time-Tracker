@@ -9,25 +9,24 @@ import java.util.TimerTask;
 
 public class Clock extends Observable {
 
-    public static int REFRESHRATEMS = 1000;
+    public static int REFRESHRATEMS = 2000;
     private Date date;
-    private Timer timer;
 
     public Clock() {
-        timer = new Timer();
+        Timer timer = new Timer();
         date = new Date();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 updateClock();
             }
-        }, 0, REFRESHRATEMS);
+        }, 0, Clock.REFRESHRATEMS);
     }
 
     private void updateClock() {
         date = new Date();
         setChanged();
-        notifyObservers(this);
+        notifyObservers();
     }
 
     public Date getTime() {
@@ -41,7 +40,7 @@ public class Clock extends Observable {
     public void setRefreshTicks(int secs) {
         if (secs > 1) {
             REFRESHRATEMS = secs * 1000;
-            System.out.println("Refresh time setted to 2");
+            System.out.println("Refresh time setted to " + REFRESHRATEMS);
         }else{
             System.out.println("Value needs to be 1 or above");
             //Throw Exception o algo
