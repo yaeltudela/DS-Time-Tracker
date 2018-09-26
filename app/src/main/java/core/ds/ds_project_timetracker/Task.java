@@ -9,7 +9,6 @@ public class Task extends Node {
     //Name
     //Description
     private List<Interval> intervals;
-    private Project parent;
 
     public Task(String name, String description, Project project) {
         this.name = name;
@@ -18,22 +17,16 @@ public class Task extends Node {
         this.parent = project;
         this.startDate = null;
         this.endDate = null;
+        this.duration = 0;
 
         project.getActivities().add(this);
     }
 
     //  To String
-    @Override
-    public String toString() {
-        return getName() + "\t" + getStartDate() + "\t" + getEndDate() + "\t" + getDuration() + "\t" + getParent().getName();
-    }
-
     public void startInterval(Clock clock) {
         Interval interval = new Interval(new Date(), this);
         this.intervals.add(interval);
         clock.addObserver(interval);
-
-
     }
 
     public void stopInterval(Clock clock) {
@@ -47,8 +40,8 @@ public class Task extends Node {
         this.endDate = this.intervals.get(this.intervals.size() - 1).getEndDate();
     }
 
-    private Project getParent() {
-        return parent;
+    public Project getParent() {
+        return (Project) parent;
     }
 
     public List<Interval> getIntervals() {
@@ -65,12 +58,9 @@ public class Task extends Node {
         return duration;
     }
 
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
+    @Override
+    public String toString() {
+        return getName() + "\t" + getStartDate() + "\t" + getEndDate() + "\t" + getDuration() + "\t" + getParent().getName();
     }
 }
 

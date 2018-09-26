@@ -1,7 +1,6 @@
 package core.ds.ds_project_timetracker;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -9,30 +8,31 @@ import java.util.Observer;
 public class Project extends Node implements Observer {
 
     private List<Node> activities;
-    private Project parent;
 
 
     public Project(String name, String description, Project parent) {
         this.name = name;
         this.description = description;
         this.parent = parent;
+        this.duration = 0;
 
         activities = new ArrayList<>();
 
         if (this.parent != null) {
-            this.parent.getActivities().add(this);
+            this.getParent().getActivities().add(this);
         }
     }
 
-
-    //  To String
     @Override
-    public String toString() {
-        return this.getName() + "\t" + this.getStartDate() + "\t" + this.getEndDate() + "\t" + this.getDuration() + "\t" + (this.getParent() == null ? "null" : this.getParent().getName());
+    public void update(Observable o, Object arg) {
+        this.printSons(this);
+        System.out.println("-----------------------------------------------");
+
     }
+    //  To String
 
     public Project getParent() {
-        return parent;
+        return (Project) parent;
     }
 
     public List<Node> getActivities() {
@@ -48,13 +48,6 @@ public class Project extends Node implements Observer {
         return this.duration;
     }
 
-    @Override
-    public void update(Observable o, Object arg) {
-        this.printSons(this);
-        System.out.println("-----------------------------------------------");
-
-    }
-
     private void printSons(Project project) {
         System.out.println(project.toString());
         for (Node n : project.activities) {
@@ -68,13 +61,8 @@ public class Project extends Node implements Observer {
 
     }
 
-    public Date getStartDate() {
-        return startDate;
+    @Override
+    public String toString() {
+        return this.getName() + "\t" + this.getStartDate() + "\t" + this.getEndDate() + "\t" + this.getDuration() + "\t" + (this.getParent() == null ? "null" : this.getParent().getName());
     }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-
 }

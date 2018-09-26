@@ -8,9 +8,11 @@ public class Node {
     protected String name;
     protected String description;
 
-    protected float duration = 0;
+    protected float duration;
     protected Date startDate;
     protected Date endDate;
+
+    protected Node parent;
 
     public String getName() {
         return name;
@@ -24,7 +26,13 @@ public class Node {
         return duration;
     }
 
+    public Date getStartDate() {
+        return startDate;
+    }
 
+    public Date getEndDate() {
+        return endDate;
+    }
 }
 
 

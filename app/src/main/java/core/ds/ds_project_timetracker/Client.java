@@ -31,8 +31,8 @@ public class Client {
         t3.startInterval(clock);
         Thread.sleep(2000);
         t3.stopInterval(clock);
-*/
 
+*/
 
         //A2
         t3.startInterval(clock);
@@ -51,12 +51,9 @@ public class Client {
         Thread.sleep(2000);
         t3.stopInterval(clock);
 
+        clock.setRefreshTicks(5);
+        Thread.sleep(10000);
         clock.deleteObserver(p1);
-
-
-
-
-
 
     }
 

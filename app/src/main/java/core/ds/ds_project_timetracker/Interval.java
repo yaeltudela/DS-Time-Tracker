@@ -20,13 +20,18 @@ public class Interval implements Observer {
         this.startDate = startDate;
         this.endDate = null;
         this.parent = parent;
+        if (this.parent.getParent().startDate == null) {
+            this.parent.getParent().startDate = startDate;
+        }
     }
 
     @Override
     public void update(Observable o, Object arg) {
-        this.duration += Clock.REFRESHRATEMS / 1000;
-        this.endDate = new Date();
-        this.parent.endDate = this.endDate;
+        Clock c = (Clock) arg;
+        this.duration += Clock.REFRESHRATEMS / 1000.0;
+        this.endDate = c.getTime();
+        this.parent.endDate = c.getTime();
+        this.parent.getParent().endDate = c.getTime();
     }
 
 
