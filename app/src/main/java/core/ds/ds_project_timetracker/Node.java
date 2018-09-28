@@ -3,14 +3,14 @@ package core.ds.ds_project_timetracker;
 
 import java.util.Date;
 
-public class Node {
+public abstract class Node {
 
     protected String name;
     protected String description;
 
-    protected float duration;
-    protected Date startDate;
-    protected Date endDate;
+    float duration;
+    Date startDate;
+    Date endDate;
 
     protected Node parent;
 
@@ -33,6 +33,9 @@ public class Node {
     public Date getEndDate() {
         return endDate;
     }
+
+
+    public abstract void updateData(Date time);
 }
 
 

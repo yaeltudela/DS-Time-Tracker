@@ -7,8 +7,8 @@ public class Client {
         //TEST A1 (One simultaneous task)
         Clock clock = new Clock();
 
-
-        Project p1 = new Project("P1", "P1 desc", null);
+        Project root = new Project("root", "NA", null);
+        Project p1 = new Project("P1", "P1 desc", root);
         Task t3 = new Task("T3", "T3 desc", p1);
         Project p2 = new Project("P2", "P1 desc", p1);
         Task t1 = new Task("T1", "T1 desc", p2);
@@ -16,8 +16,8 @@ public class Client {
 
 
         System.out.println("Name  Start Date \t\t\t\t\t End Date \t\t\t\t\t Duration");
-        clock.addObserver(p1);
-        clock.setRefreshTicks(2);
+        clock.addObserver(root);
+        clock.setRefreshTicks(1);
 
 /*
         //A1
@@ -51,9 +51,9 @@ public class Client {
         Thread.sleep(2000);
         t3.stopInterval(clock);
 
-        clock.setRefreshTicks(5);
-        Thread.sleep(10000);
-        clock.deleteObserver(p1);
+        clock.deleteObserver(root);
+
+
 
     }
 

@@ -1,7 +1,6 @@
 package core.ds.ds_project_timetracker;
 
 
-
 import java.util.Date;
 import java.util.Observable;
 import java.util.Timer;
@@ -9,9 +8,10 @@ import java.util.TimerTask;
 
 public class Clock extends Observable {
 
-    public static int REFRESHRATEMS = 2000;
+    public static int REFRESHRATE = 1;
+    private final int msInSec = 1000;
     private Date date;
-    private Timer timer = null;
+    private Timer timer;
     private TimerTask tt = null;
 
     public Clock() {
@@ -21,12 +21,12 @@ public class Clock extends Observable {
     }
 
     private void setupTimer() {
-        this.timer.scheduleAtFixedRate(tt = new TimerTask() {
+        this.timer.scheduleAtFixedRate(this.tt = new TimerTask() {
             @Override
             public void run() {
                 updateClock();
             }
-        }, 0, Clock.REFRESHRATEMS);
+        }, 0, Clock.REFRESHRATE * this.msInSec);
     }
 
     private void updateClock() {
@@ -35,27 +35,27 @@ public class Clock extends Observable {
         notifyObservers(this);
     }
 
-    public void setRefreshTicks(int secs) {
-        if (secs >= 1) {
-            REFRESHRATEMS = secs * 1000;
-            System.out.println("Refresh time setted to " + REFRESHRATEMS);
-            if (this.timer != null) {
-                this.tt.cancel();
-                setupTimer();
-            }
-        } else {
-            System.out.println("Value needs to be 1 or above");
-            //Throw Exception o algo
-        }
-
+    public int getRefreshTicks() {
+        return REFRESHRATE;
     }
 
     public Date getTime() {
         return date;
     }
 
-    public int getRefreshTicks() {
-        return REFRESHRATEMS;
+    public void setRefreshTicks(int secs) {
+        if (secs >= 1) {
+            Clock.REFRESHRATE = secs;
+            System.out.println("Refresh time setted to " + REFRESHRATE);
+            if (this.timer != null) {
+                this.tt.cancel();
+                setupTimer();
+            }
+        } else {
+            System.out.println("Value needs to be 1 or above");
+            throw new IllegalArgumentException();
+        }
+
     }
 
 
