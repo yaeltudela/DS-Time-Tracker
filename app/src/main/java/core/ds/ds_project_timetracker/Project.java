@@ -1,12 +1,13 @@
 package core.ds.ds_project_timetracker;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Observable;
 import java.util.Observer;
 
-public class Project extends Node implements Observer {
+public class Project extends Node implements Observer, Serializable {
 
     private Collection<Node> activities;
 
@@ -42,13 +43,16 @@ public class Project extends Node implements Observer {
 
     @Override
     public void updateData(Date time) {
-        this.startDate = ((Node) this.activities.toArray()[0]).getStartDate();
+        if (this.startDate == null) {
+            this.startDate = time;
+        }
         float tmp = 0;
         for (Node i : this.activities) {
             tmp += i.getDuration();
         }
         this.duration = tmp;
-        this.endDate = ((Node) this.activities.toArray()[this.activities.size() - 1]).getEndDate();
+        this.endDate = time;
+
         if (this.parent != null) {
             this.parent.updateData(time);
         }

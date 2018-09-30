@@ -58,6 +58,10 @@ public class Clock extends Observable {
 
     }
 
+    public void stopClock() {
+        this.tt.cancel();
+        this.timer.cancel();
+    }
 
 
 }

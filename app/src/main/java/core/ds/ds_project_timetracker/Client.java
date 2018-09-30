@@ -2,22 +2,28 @@ package core.ds.ds_project_timetracker;
 
 public class Client {
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
+
+        DataManager dataManager = new DataManager("save.db");
+        Project root = (Project) dataManager.loadData();
+        System.out.println("Projects restored");
+
 
         //TEST A1 (One simultaneous task)
-        Clock clock = new Clock();
-
-        Project root = new Project("root", "NA", null);
+        /*
+        root = new Project("/", "rootProject", null);
         Project p1 = new Project("P1", "P1 desc", root);
         Task t3 = new Task("T3", "T3 desc", p1);
         Project p2 = new Project("P2", "P1 desc", p1);
         Task t1 = new Task("T1", "T1 desc", p2);
         Task t2 = new Task("T2", "T2 desc", p2);
+        */
 
-
+        Clock clock = new Clock();
+        clock.setRefreshTicks(2);
         System.out.println("Name  Start Date \t\t\t\t\t End Date \t\t\t\t\t Duration");
         clock.addObserver(root);
-        clock.setRefreshTicks(1);
+
 
 /*
         //A1
@@ -32,7 +38,6 @@ public class Client {
         Thread.sleep(2000);
         t3.stopInterval(clock);
 
-*/
 
         //A2
         t3.startInterval(clock);
@@ -51,9 +56,14 @@ public class Client {
         Thread.sleep(2000);
         t3.stopInterval(clock);
 
+        System.out.println("Test A2 ended");
+*/
+
         clock.deleteObserver(root);
 
+        clock.stopClock();
 
+        dataManager.saveData(root);
 
     }
 

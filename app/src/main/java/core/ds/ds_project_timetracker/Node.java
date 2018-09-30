@@ -1,9 +1,10 @@
 package core.ds.ds_project_timetracker;
 
 
+import java.io.Serializable;
 import java.util.Date;
 
-public abstract class Node {
+public abstract class Node implements Serializable {
 
     protected String name;
     protected String description;

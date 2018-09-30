@@ -1,12 +1,15 @@
 package core.ds.ds_project_timetracker;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
-public class Task extends Node {
+public class Task extends Node implements Serializable {
 
     private Collection<Interval> intervals;
+    private boolean active;
+
 
     public Task(String name, String description, Project project) {
         this.name = name;
@@ -16,27 +19,35 @@ public class Task extends Node {
         this.startDate = null;
         this.endDate = null;
         this.duration = 0;
+        this.active = false;
 
         project.getActivities().add(this);
     }
 
     public void startInterval(Clock clock) {
-        Interval interval = new Interval(new Date(), this);
-        this.intervals.add(interval);
-        interval.setActive(true);
-        clock.addObserver(interval);
+        if (!isActive()) {
+            Interval interval = new Interval(new Date(), this);
+            this.intervals.add(interval);
+            clock.addObserver(interval);
+        } else {
+            System.out.println("Task already running!");
+            //TODO THROW EXCEPTION O ALGO
+        }
+
     }
 
     public void stopInterval(Clock clock) {
-        Interval interval = null;
+        if (isActive()) {
+            Interval lastInterval = (Interval) this.intervals.toArray()[(this.intervals.size() - 1)];
+            clock.deleteObserver(lastInterval);
 
-        if (this.getIntervals() != null && !this.getIntervals().isEmpty()) {
-            interval = (Interval) this.getIntervals().toArray()[this.getIntervals().size() - 1];
+            this.startDate = lastInterval.getStartDate();
+            this.endDate = lastInterval.getEndDate();
+            setActive(false);
+        } else {
+            System.out.println("Task isn't running");
+            //TODO THROW EXCEPTION O ALGO
         }
-        interval.setActive(false);
-        clock.deleteObserver(interval);
-        this.startDate = ((Interval) this.intervals.toArray()[0]).getStartDate();
-        this.endDate = ((Interval) this.intervals.toArray()[(this.intervals.size() - 1)]).getEndDate();
     }
 
     public Project getParent() {
@@ -59,8 +70,11 @@ public class Task extends Node {
 
     @Override
     public void updateData(Date time) {
-        this.startDate = ((Interval) this.intervals.toArray()[0]).getStartDate();
-        this.endDate = ((Interval) this.intervals.toArray()[this.intervals.size() - 1]).getEndDate();
+        if (this.startDate == null) {
+            this.startDate = time;
+        }
+
+        this.endDate = ((Interval) this.intervals.toArray()[(this.intervals.size() - 1)]).getEndDate();
 
         float duration = 0;
         for (Interval i : this.intervals) {
@@ -70,6 +84,14 @@ public class Task extends Node {
 
         this.parent.updateData(time);
 
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean state) {
+        this.active = state;
     }
 }
 
