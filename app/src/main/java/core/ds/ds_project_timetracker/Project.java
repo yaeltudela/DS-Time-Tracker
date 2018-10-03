@@ -9,13 +9,13 @@ import java.util.Observer;
 
 public class Project extends Node implements Observer, Serializable {
 
-    private Collection<Node> activities;
+    private Collection<Node> activities = new ArrayList<Node>();
 
 
     public Project(String name, String description, Project parent) {
         super(name, description, parent);
 
-        activities = new ArrayList<>();
+        //activities = new ArrayList<>();
 
         if (this.parent != null) {
             this.getParent().getActivities().add(this);
@@ -60,6 +60,7 @@ public class Project extends Node implements Observer, Serializable {
         return this.getName() + "\t" + this.getStartDate() + "\t" + this.getEndDate() + "\t" + this.getDuration() + "\t" + (this.getParent() == null ? "null" : this.getParent().getName());
     }
 
+    @Override
     public Project getParent() {
         return (Project) parent;
     }

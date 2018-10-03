@@ -48,6 +48,13 @@ public abstract class Node implements Serializable {
         return endDate;
     }
 
+    public Node getParent() {
+        return parent;
+    }
+
+    public void setParent(Node parent) {
+        this.parent = parent;
+    }
 
     public abstract void updateData(Date time);
 }

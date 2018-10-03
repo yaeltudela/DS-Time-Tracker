@@ -22,27 +22,31 @@ public class Client {
         Clock.getInstance().addObserver(root);
 
 
-        /*
+/*
         try {
             Thread.sleep(10000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        */
+*/
 
         /*
 
         //A1
-        t3.startInterval();
-        Thread.sleep(3000);
-        t3.stopInterval();
-        Thread.sleep(7000);
-        t2.startInterval();
-        Thread.sleep(10000);
-        t2.stopInterval();
-        t3.startInterval();
-        Thread.sleep(2000);
-        t3.stopInterval();
+        try {
+            t3.startInterval();
+            Thread.sleep(3000);
+            t3.stopInterval();
+            Thread.sleep(7000);
+            t2.startInterval();
+            Thread.sleep(10000);
+            t2.stopInterval();
+            t3.startInterval();
+            Thread.sleep(2000);
+            t3.stopInterval();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         */
 

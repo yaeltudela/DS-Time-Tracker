@@ -10,7 +10,6 @@ public class Task extends Node implements Serializable {
     private Collection<Interval> intervals;
     private boolean active;
 
-
     public Task(String name, String description, Project project) {
         super(name, description, project);
         this.intervals = new ArrayList<>();
@@ -22,6 +21,8 @@ public class Task extends Node implements Serializable {
         project.getActivities().add(this);
     }
 
+
+    //Create an interval and adds it as observer and setup the startDate from this task (if needed)
     public void startInterval() {
         if (!isActive()) {
             Date startDate = Clock.getInstance().getTime();
@@ -38,6 +39,8 @@ public class Task extends Node implements Serializable {
 
     }
 
+
+    //Stops an interval and delete it as an observer and stops the task
     public void stopInterval() {
         if (isActive()) {
             Clock.getInstance().deleteObserver(this.getIntervals().get(this.getIntervals().size() - 1));
@@ -48,25 +51,9 @@ public class Task extends Node implements Serializable {
         }
     }
 
-    public Project getParent() {
-        return (Project) parent;
-    }
-
-    public ArrayList<Interval> getIntervals() {
-        return (ArrayList<Interval>) intervals;
-    }
 
     @Override
-    public long getDuration() {
-        return duration;
-    }
-
-    @Override
-    public String toString() {
-        return getName() + "\t" + getStartDate() + "\t" + getEndDate() + "\t" + getDuration() + "\t" + getParent().getName();
-    }
-
-    @Override
+    //Recursive function to calculate the duration (sum of intervals)
     public void updateData(Date time) {
         this.endDate = time;
 
@@ -78,6 +65,22 @@ public class Task extends Node implements Serializable {
 
         this.parent.updateData(time);
 
+    }
+
+    @Override
+    public String toString() {
+        return getName() + "\t" + getStartDate() + "\t" + getEndDate() + "\t" + getDuration() + "\t" + getParent().getName();
+    }
+
+    //GETTERS AND SETTERS
+
+    @Override
+    public Project getParent() {
+        return (Project) parent;
+    }
+
+    public ArrayList<Interval> getIntervals() {
+        return (ArrayList<Interval>) intervals;
     }
 
     public boolean isActive() {

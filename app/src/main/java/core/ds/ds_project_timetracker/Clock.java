@@ -17,7 +17,7 @@ public class Clock extends Observable {
     private static Clock clock = null;
 
     private Clock() {
-        this.timer = new Timer();
+        this.timer = new Timer(true);
         date = new Date();
         setupTimer();
     }
