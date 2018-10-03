@@ -14,11 +14,22 @@ public class Clock extends Observable {
     private Timer timer;
     private TimerTask tt = null;
 
-    public Clock() {
+    private static Clock clock = null;
+
+    private Clock() {
         this.timer = new Timer();
         date = new Date();
         setupTimer();
     }
+
+    public static Clock getInstance() {
+        if (Clock.clock == null) {
+            Clock.clock = new Clock();
+        }
+        return Clock.clock;
+    }
+
+
 
     private void setupTimer() {
         this.timer.scheduleAtFixedRate(this.tt = new TimerTask() {

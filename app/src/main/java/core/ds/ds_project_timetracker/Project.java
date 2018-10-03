@@ -43,12 +43,12 @@ public class Project extends Node implements Observer, Serializable {
         if (this.startDate == null) {
             this.startDate = time;
         }
+        this.endDate = time;
         long tmp = 0;
         for (Node i : this.activities) {
             tmp += i.getDuration();
         }
         this.duration = tmp;
-        this.endDate = time;
 
         if (this.parent != null) {
             this.parent.updateData(time);

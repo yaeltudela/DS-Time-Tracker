@@ -22,11 +22,15 @@ public class Task extends Node implements Serializable {
         project.getActivities().add(this);
     }
 
-    public void startInterval(Clock clock) {
+    public void startInterval() {
         if (!isActive()) {
-            Interval interval = new Interval(clock.getTime(), this);
+            Date startDate = Clock.getInstance().getTime();
+            Interval interval = new Interval(startDate, this);
             this.intervals.add(interval);
-            clock.addObserver(interval);
+            Clock.getInstance().addObserver(interval);
+            if (this.startDate == null) {
+                this.startDate = startDate;
+            }
         } else {
             System.out.println("Task already running!");
             //TODO THROW EXCEPTION O ALGO
@@ -34,9 +38,9 @@ public class Task extends Node implements Serializable {
 
     }
 
-    public void stopInterval(Clock clock) {
+    public void stopInterval() {
         if (isActive()) {
-            clock.deleteObserver(((ArrayList<Interval>) (this.getIntervals())).get(this.getIntervals().size() - 1));
+            Clock.getInstance().deleteObserver(this.getIntervals().get(this.getIntervals().size() - 1));
             setActive(false);
         } else {
             System.out.println("Task isn't running");
@@ -48,8 +52,8 @@ public class Task extends Node implements Serializable {
         return (Project) parent;
     }
 
-    public Collection<Interval> getIntervals() {
-        return intervals;
+    public ArrayList<Interval> getIntervals() {
+        return (ArrayList<Interval>) intervals;
     }
 
     @Override
@@ -64,16 +68,14 @@ public class Task extends Node implements Serializable {
 
     @Override
     public void updateData(Date time) {
-        this.endDate = ((ArrayList<Interval>) (this.getIntervals())).get(this.getIntervals().size() - 1).getEndDate();
+        this.endDate = time;
 
         long duration = 0;
         for (Interval i : this.intervals) {
             duration += i.getDuration();
         }
         this.duration = duration;
-        if (this.startDate == null) {
-            this.startDate = time;
-        }
+
         this.parent.updateData(time);
 
     }

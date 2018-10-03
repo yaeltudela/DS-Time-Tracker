@@ -10,9 +10,8 @@ public abstract class Node implements Serializable {
     protected String description;
 
     protected long duration;
-    Date startDate;
-    Date endDate;
-
+    protected Date startDate;
+    protected Date endDate;
     protected Node parent;
 
     public Node(String name, String description, Node parent) {
@@ -21,6 +20,8 @@ public abstract class Node implements Serializable {
             this.description = description;
             this.parent = parent;
             this.duration = 0;
+            this.startDate = null;
+            this.endDate = null;
         } else {
             throw new IllegalArgumentException("Project must have a name");
         }
