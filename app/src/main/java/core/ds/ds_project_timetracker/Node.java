@@ -9,11 +9,23 @@ public abstract class Node implements Serializable {
     protected String name;
     protected String description;
 
-    float duration;
+    protected long duration;
     Date startDate;
     Date endDate;
 
     protected Node parent;
+
+    public Node(String name, String description, Node parent) {
+        if (name != null && !name.isEmpty()) {
+            this.name = name;
+            this.description = description;
+            this.parent = parent;
+            this.duration = 0;
+        } else {
+            throw new IllegalArgumentException("Project must have a name");
+        }
+
+    }
 
     public String getName() {
         return name;
@@ -23,7 +35,7 @@ public abstract class Node implements Serializable {
         return description;
     }
 
-    public float getDuration() {
+    public long getDuration() {
         return duration;
     }
 

@@ -12,13 +12,11 @@ public class Task extends Node implements Serializable {
 
 
     public Task(String name, String description, Project project) {
-        this.name = name;
-        this.description = description;
+        super(name, description, project);
         this.intervals = new ArrayList<>();
         this.parent = project;
         this.startDate = null;
         this.endDate = null;
-        this.duration = 0;
         this.active = false;
 
         project.getActivities().add(this);
@@ -26,7 +24,7 @@ public class Task extends Node implements Serializable {
 
     public void startInterval(Clock clock) {
         if (!isActive()) {
-            Interval interval = new Interval(new Date(), this);
+            Interval interval = new Interval(clock.getTime(), this);
             this.intervals.add(interval);
             clock.addObserver(interval);
         } else {
@@ -38,11 +36,7 @@ public class Task extends Node implements Serializable {
 
     public void stopInterval(Clock clock) {
         if (isActive()) {
-            Interval lastInterval = (Interval) this.intervals.toArray()[(this.intervals.size() - 1)];
-            clock.deleteObserver(lastInterval);
-
-            this.startDate = lastInterval.getStartDate();
-            this.endDate = lastInterval.getEndDate();
+            clock.deleteObserver(((ArrayList<Interval>) (this.getIntervals())).get(this.getIntervals().size() - 1));
             setActive(false);
         } else {
             System.out.println("Task isn't running");
@@ -59,7 +53,7 @@ public class Task extends Node implements Serializable {
     }
 
     @Override
-    public float getDuration() {
+    public long getDuration() {
         return duration;
     }
 
@@ -70,18 +64,16 @@ public class Task extends Node implements Serializable {
 
     @Override
     public void updateData(Date time) {
-        if (this.startDate == null) {
-            this.startDate = time;
-        }
+        this.endDate = ((ArrayList<Interval>) (this.getIntervals())).get(this.getIntervals().size() - 1).getEndDate();
 
-        this.endDate = ((Interval) this.intervals.toArray()[(this.intervals.size() - 1)]).getEndDate();
-
-        float duration = 0;
+        long duration = 0;
         for (Interval i : this.intervals) {
             duration += i.getDuration();
         }
         this.duration = duration;
-
+        if (this.startDate == null) {
+            this.startDate = time;
+        }
         this.parent.updateData(time);
 
     }
@@ -93,5 +85,7 @@ public class Task extends Node implements Serializable {
     public void setActive(boolean state) {
         this.active = state;
     }
+
+
 }
 

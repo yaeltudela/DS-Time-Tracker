@@ -11,9 +11,9 @@ public class Interval implements Observer, Serializable {
     private Task parentTask;
     private Date startDate;
     private Date endDate;
-    private float duration;
+    private long duration;
 
-    Interval(Date startDate, Task parentTask) {
+    public Interval(Date startDate, Task parentTask) {
         this.duration = 0;
         this.startDate = startDate;
         this.endDate = null;
@@ -22,17 +22,25 @@ public class Interval implements Observer, Serializable {
 
     }
 
+    //Constructor para intervalos manuales
+    public Interval(Date startDate, Date endDate, Task parentTask) {
+        this.parentTask = parentTask;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.duration = this.endDate.getTime() - this.startDate.getTime();
+    }
+
     @Override
     public void update(Observable o, Object arg) {
-        this.duration += Clock.REFRESHRATE;
         this.endDate = ((Clock) arg).getTime();
-        this.parentTask.updateData(((Clock) arg).getTime());
+        this.duration += Clock.REFRESHRATE;
+        this.parentTask.updateData(this.endDate);
     }
 
 
     //Getters & Setters
 
-    public float getDuration() {
+    public long getDuration() {
         return this.duration;
     }
 

@@ -13,10 +13,7 @@ public class Project extends Node implements Observer, Serializable {
 
 
     public Project(String name, String description, Project parent) {
-        this.name = name;
-        this.description = description;
-        this.parent = parent;
-        this.duration = 0;
+        super(name, description, parent);
 
         activities = new ArrayList<>();
 
@@ -46,7 +43,7 @@ public class Project extends Node implements Observer, Serializable {
         if (this.startDate == null) {
             this.startDate = time;
         }
-        float tmp = 0;
+        long tmp = 0;
         for (Node i : this.activities) {
             tmp += i.getDuration();
         }

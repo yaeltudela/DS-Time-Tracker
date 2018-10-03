@@ -12,13 +12,7 @@ public class DataManager implements Serializable {
     private String filename = null;
 
     public DataManager(String file) {
-        try {
-            this.filename = file;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-
-        }
+        this.filename = file;
 
     }
 
