@@ -1,10 +1,10 @@
 package core.ds.ds_project_timetracker;
 
 public interface Visitor {
+    void visitProject(Project project);
 
-    void visitNode();
+    void visitTask(Task task);
 
-    void visitInterval();
-
+    void visitInterval(Interval interval);
 
 }

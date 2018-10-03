@@ -4,10 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Observable;
-import java.util.Observer;
 
-public class Project extends Node implements Observer, Serializable {
+public class Project extends Node implements Serializable {
 
     private Collection<Node> activities = new ArrayList<Node>();
 
@@ -24,18 +22,6 @@ public class Project extends Node implements Observer, Serializable {
 
     public Collection<Node> getActivities() {
         return activities;
-    }
-
-    private void printSons(Project project) {
-        System.out.println(project.toString());
-        for (Node n : project.activities) {
-            if(n instanceof Task){
-                Task task = (Task) n;
-                System.out.println(task.toString());
-            } else {
-                printSons((Project) n);
-            }
-        }
     }
 
     @Override
@@ -65,10 +51,9 @@ public class Project extends Node implements Observer, Serializable {
         return (Project) parent;
     }
 
-    @Override
-    public void update(Observable o, Object arg) {
-        this.printSons(this);
-        System.out.println("-----------------------------------------------");
 
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visitProject(this);
     }
 }

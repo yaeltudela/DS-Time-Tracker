@@ -4,7 +4,7 @@ package core.ds.ds_project_timetracker;
 import java.io.Serializable;
 import java.util.Date;
 
-public abstract class Node implements Serializable {
+public abstract class Node implements Serializable, Visitable {
 
     protected String name;
     protected String description;

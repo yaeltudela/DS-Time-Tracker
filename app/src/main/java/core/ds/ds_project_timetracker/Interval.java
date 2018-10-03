@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.Observable;
 import java.util.Observer;
 
-public class Interval implements Observer, Serializable {
+public class Interval implements Observer, Serializable, Visitable {
 
     private Task parentTask;
     private Date startDate;
@@ -61,5 +61,15 @@ public class Interval implements Observer, Serializable {
     }
 
 
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visitInterval(this);
+
+    }
+
+    @Override
+    public String toString() {
+        return "\t" + this.parentTask.getName() + " Interval \t" + this.duration;
+    }
 }
 

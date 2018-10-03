@@ -92,5 +92,9 @@ public class Task extends Node implements Serializable {
     }
 
 
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visitTask(this);
+    }
 }
 
