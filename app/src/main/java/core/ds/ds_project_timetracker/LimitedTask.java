@@ -24,10 +24,4 @@ public class LimitedTask extends TaskDecorator {
 
     }
 
-    protected void updateValues() {
-        this.baseTask.startDate = this.startDate;
-        this.baseTask.endDate = this.endDate;
-        this.baseTask.duration = this.duration;
-
-    }
 }

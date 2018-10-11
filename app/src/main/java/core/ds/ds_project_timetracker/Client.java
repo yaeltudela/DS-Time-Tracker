@@ -104,21 +104,12 @@ public class Client {
         Project p1 = new Project("P1", "p1desc", root);
         Task t1 = new BaseTask("T1", "T1 desc", p1);
         Project p2 = new Project("P1", "p1desc", p1);
-        Task t2 = new BaseTask("T2", "T2desc", p2);
+        Date stdate1 = new Date();
+        stdate1.setTime(stdate1.getTime() + 10000);
+        Task t2 = new ProgrammedTask(new BaseTask("T2", "T2desc", p2), stdate1);
 
         try {
-        /*
-            t1.startInterval();
-            Thread.sleep(1000);
-            t2.startInterval();
-            Thread.sleep(5000);
-            t2.stopInterval(); //T2 = 5
-            Thread.sleep(4000);
-            t2.startInterval();
-            Thread.sleep(10000);
-            t2.stopInterval(); //T2 = 14
-            t1.stopInterval(); //T1 = 20, Ttrancurrido = 20
-        */
+
             Date end1 = new Date();
             end1.setTime(new Date().getTime() + 5000);
             Task t3 = new LimitedTask(new BaseTask("T3", "limitedtask", p2), end1);
@@ -127,7 +118,10 @@ public class Client {
             t1.startInterval();
             Thread.sleep(8000);
             t1.stopInterval(); //T3 = 6; T1 = 8
-            Thread.sleep(300000); //T3 = 6; T1 = 8
+            Thread.sleep(10000); //T3 = 6; T1 = 8
+            t2.stopInterval();
+
+
 
         } catch (InterruptedException e) {
             e.printStackTrace();
