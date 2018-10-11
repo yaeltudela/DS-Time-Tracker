@@ -8,8 +8,7 @@ import java.util.TimerTask;
 
 public class Clock extends Observable {
 
-    public static int REFRESHRATE = 1;
-    private final int msInSec = 1000;
+    public static int REFRESH_RATE = 1;
     private Date date;
     private Timer timer;
     private TimerTask tt = null;
@@ -32,12 +31,13 @@ public class Clock extends Observable {
 
 
     private void setupTimer() {
+        int msInSec = 1000;
         this.timer.scheduleAtFixedRate(this.tt = new TimerTask() {
             @Override
             public void run() {
                 updateClock();
             }
-        }, 0, Clock.REFRESHRATE * this.msInSec);
+        }, 0, Clock.REFRESH_RATE * msInSec);
     }
 
     private void updateClock() {
@@ -47,7 +47,7 @@ public class Clock extends Observable {
     }
 
     public int getRefreshTicks() {
-        return REFRESHRATE;
+        return REFRESH_RATE;
     }
 
     public Date getTime() {
@@ -56,8 +56,8 @@ public class Clock extends Observable {
 
     public void setRefreshTicks(int secs) {
         if (secs >= 1) {
-            Clock.REFRESHRATE = secs;
-            System.out.println("Refresh time setted to " + REFRESHRATE);
+            Clock.REFRESH_RATE = secs;
+            System.out.println("Refresh time has been set to " + REFRESH_RATE);
             if (this.timer != null) {
                 this.tt.cancel();
                 setupTimer();

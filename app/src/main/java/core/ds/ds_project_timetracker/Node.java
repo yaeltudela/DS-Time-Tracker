@@ -28,6 +28,10 @@ public abstract class Node implements Serializable, Visitable {
 
     }
 
+    public Node() {
+
+    }
+
     public String getName() {
         return name;
     }

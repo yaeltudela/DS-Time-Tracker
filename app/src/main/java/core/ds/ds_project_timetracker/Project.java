@@ -7,7 +7,7 @@ import java.util.Date;
 
 public class Project extends Node implements Serializable {
 
-    private Collection<Node> activities = new ArrayList<Node>();
+    private Collection<Node> activities = new ArrayList<>();
 
 
     public Project(String name, String description, Project parent) {

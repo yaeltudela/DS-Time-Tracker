@@ -22,7 +22,7 @@ public class Interval implements Observer, Serializable, Visitable {
 
     }
 
-    //Constructor para intervalos manuales
+    //Manual interval constructor
     public Interval(Date startDate, Date endDate, Task parentTask) {
         this.parentTask = parentTask;
         this.startDate = startDate;
@@ -33,7 +33,7 @@ public class Interval implements Observer, Serializable, Visitable {
     @Override
     public void update(Observable o, Object arg) {
         this.endDate = ((Clock) arg).getTime();
-        this.duration += Clock.REFRESHRATE;
+        this.duration += Clock.REFRESH_RATE;
         this.parentTask.updateData(this.endDate);
     }
 

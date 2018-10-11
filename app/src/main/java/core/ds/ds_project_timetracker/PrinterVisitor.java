@@ -5,7 +5,7 @@ import java.util.Observer;
 
 public class PrinterVisitor implements Visitor, Observer {
 
-    private Project rootProject;
+    private final Project rootProject;
 
     public PrinterVisitor(Project rootProject) {
         this.rootProject = rootProject;
@@ -38,7 +38,7 @@ public class PrinterVisitor implements Visitor, Observer {
 
     @Override
     public void visitInterval(Interval interval) {
-        System.out.println(interval.toString());
+        //System.out.println(interval.toString());
 
 
     }

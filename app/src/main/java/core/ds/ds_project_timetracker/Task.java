@@ -5,26 +5,27 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
-public class Task extends Node implements Serializable {
+public abstract class Task extends Node implements Serializable {
 
-    private Collection<Interval> intervals;
-    private boolean active;
+    protected Collection<Interval> intervals;
+    protected boolean active;
 
     public Task(String name, String description, Project project) {
         super(name, description, project);
+
         this.intervals = new ArrayList<>();
         this.parent = project;
         this.startDate = null;
         this.endDate = null;
         this.active = false;
-
-        project.getActivities().add(this);
     }
 
+    public Task() {
 
-    //Create an interval and adds it as observer and setup the startDate from this task (if needed)
+    }
+
     public void startInterval() {
-        if (!isActive()) {
+        if (!this.isActive()) {
             Date startDate = Clock.getInstance().getTime();
             Interval interval = new Interval(startDate, this);
             this.intervals.add(interval);
@@ -32,29 +33,35 @@ public class Task extends Node implements Serializable {
             if (this.startDate == null) {
                 this.startDate = startDate;
             }
+            if (this.endDate == null) {
+                this.endDate = startDate;
+            }
+
         } else {
             System.out.println("Task already running!");
-            //TODO THROW EXCEPTION O ALGO
+            //TODO THROW EXCEPTION OR SOMETHING
         }
 
     }
 
 
-    //Stops an interval and delete it as an observer and stops the task
     public void stopInterval() {
-        if (isActive()) {
+        if (this.isActive()) {
             Clock.getInstance().deleteObserver(this.getIntervals().get(this.getIntervals().size() - 1));
             setActive(false);
         } else {
             System.out.println("Task isn't running");
-            //TODO THROW EXCEPTION O ALGO
+            //TODO THROW EXCEPTION OR SOMETHING
         }
     }
 
 
-    @Override
-    //Recursive function to calculate the duration (sum of intervals)
     public void updateData(Date time) {
+
+        if (this.startDate == null) {
+            this.startDate = time;
+        }
+
         this.endDate = time;
 
         long duration = 0;
@@ -67,9 +74,10 @@ public class Task extends Node implements Serializable {
 
     }
 
+
     @Override
     public String toString() {
-        return getName() + "\t" + getStartDate() + "\t" + getEndDate() + "\t" + getDuration() + "\t" + getParent().getName();
+        return this.getName() + "\t" + this.getStartDate() + "\t" + this.getEndDate() + "\t" + this.getDuration() + "\t" + getParent().getName();
     }
 
     //GETTERS AND SETTERS
@@ -96,5 +104,6 @@ public class Task extends Node implements Serializable {
     public void accept(Visitor visitor) {
         visitor.visitTask(this);
     }
+
 }
 

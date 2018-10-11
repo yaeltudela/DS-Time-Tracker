@@ -11,13 +11,13 @@ import java.io.Serializable;
 public class DataManager implements Serializable {
 
     private String filename;
-
+    boolean error;
     public DataManager(String file) {
         this.filename = file;
         File f = new File(this.filename);
         if (!f.exists()) {
             try {
-                f.createNewFile();
+                error = f.createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -25,9 +25,7 @@ public class DataManager implements Serializable {
 
     }
 
-    public boolean saveData(Object object) {
-        boolean error = false;
-
+    public void saveData(Object object) {
         try {
             FileOutputStream fOutStream = new FileOutputStream(this.filename);
             ObjectOutputStream outputStream = new ObjectOutputStream(fOutStream);
@@ -35,10 +33,9 @@ public class DataManager implements Serializable {
             outputStream.flush();
             outputStream.close();
         } catch (IOException e) {
-            error = true;
             e.printStackTrace();
         }
-        return error;
+
 
     }
 

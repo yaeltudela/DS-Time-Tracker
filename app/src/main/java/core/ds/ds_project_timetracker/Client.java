@@ -1,11 +1,13 @@
 package core.ds.ds_project_timetracker;
 
+import java.util.Date;
+
 public class Client {
 
     public static void main(String[] args) {
 
         DataManager dataManager = new DataManager("save.db");
-        boolean loadFile = true;
+        boolean loadFile = false;
         boolean saveFile = false;
         Project root = null;
 
@@ -19,10 +21,10 @@ public class Client {
 
         /*
         Project p1 = new Project("P1", "P1 desc", root);
-        Task t3 = new Task("T3", "T3 desc", p1);
+        Task t3 = new BaseTask("T3", "T3 desc", p1);
         Project p2 = new Project("P2", "P1 desc", p1);
-        Task t1 = new Task("T1", "T1 desc", p2);
-        Task t2 = new Task("T2", "T2 desc", p2);
+        Task t1 = new BaseTask("T1", "T1 desc", p2);
+        Task t2 = new BaseTask("T2", "T2 desc", p2);
         */
 
         PrinterVisitor printerVisitor = new PrinterVisitor(root);
@@ -44,6 +46,9 @@ public class Client {
 
         //Test A2
         //testA2(t3, t1, t2);
+
+        //Test A3
+        testA3(root);
 
 
         Clock.getInstance().deleteObserver(printerVisitor);
@@ -95,4 +100,38 @@ public class Client {
         }
     }
 
+    private static void testA3(Project root) {
+        Project p1 = new Project("P1", "p1desc", root);
+        Task t1 = new BaseTask("T1", "T1 desc", p1);
+        Project p2 = new Project("P1", "p1desc", p1);
+        Task t2 = new BaseTask("T2", "T2desc", p2);
+
+        try {
+        /*
+            t1.startInterval();
+            Thread.sleep(1000);
+            t2.startInterval();
+            Thread.sleep(5000);
+            t2.stopInterval(); //T2 = 5
+            Thread.sleep(4000);
+            t2.startInterval();
+            Thread.sleep(10000);
+            t2.stopInterval(); //T2 = 14
+            t1.stopInterval(); //T1 = 20, Ttrancurrido = 20
+        */
+            Date end1 = new Date();
+            end1.setTime(new Date().getTime() + 5000);
+            Task t3 = new LimitedTask(new BaseTask("T3", "limitedtask", p2), end1);
+            t3.startInterval();
+            Thread.sleep(2000);
+            t1.startInterval();
+            Thread.sleep(8000);
+            t1.stopInterval(); //T3 = 6; T1 = 8
+            Thread.sleep(300000); //T3 = 6; T1 = 8
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+    }
 }
