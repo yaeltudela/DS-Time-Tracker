@@ -5,73 +5,99 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
+/**
+ * Abstract class who extends from Node and it's used to define a generic Task.
+ * It must be serializable as the Node, so it can be saved/loaded to/from disk
+ */
 public abstract class Task extends Node implements Serializable {
 
     protected Collection<Interval> intervals;
     protected boolean active;
 
+    /**
+     * Constructor for the Task objects. It calls the Node constructor and also initialices
+     * the intervals Collection.
+     *
+     * @param name        Task's Name. Must be non empty String
+     * @param description Task's Description
+     * @param project     Task's parent project. Must be a project
+     */
     public Task(String name, String description, Project project) {
         super(name, description, project);
 
-        this.intervals = new ArrayList<>();
-        this.parent = project;
-        this.startDate = null;
-        this.endDate = null;
-        this.active = false;
+        this.setIntervals(new ArrayList<Interval>());
+        this.setParent(project);
+        this.setStartDate(null);
+        this.setEndDate(null);
+        this.setActive(false);
     }
 
+
+    /**
+     * Task empty Constructor
+     */
     public Task() {
 
     }
 
+    /**
+     * Method that checks if the task isn't running and creates a new Interval object and makes
+     * it an Observer
+     */
     public void startInterval() {
         if (!this.isActive()) {
+            this.setActive(true);
             Date startDate = Clock.getInstance().getTime();
             Interval interval = new Interval(startDate, this);
-            this.intervals.add(interval);
+            this.getIntervals().add(interval);
             Clock.getInstance().addObserver(interval);
-            if (this.startDate == null) {
-                this.startDate = startDate;
-            }
-            if (this.endDate == null) {
-                this.endDate = startDate;
-            }
-
         } else {
             throw new IllegalStateException("Task already running");
         }
 
     }
 
-
+    /**
+     * Method that checks if the task is running, and deletes the last interval (the one that
+     * is running) from being an Observer (making he don't refresh it's state more)
+     */
     public void stopInterval() {
         if (this.isActive()) {
             Clock.getInstance().deleteObserver(this.getIntervals().get(this.getIntervals().size() - 1));
-            setActive(false);
+            this.setActive(false);
         } else {
             throw new IllegalStateException("Task isn't running");
         }
     }
 
-
+    /**
+     * Method that updates all the data for the current task and calls recursively to it's project
+     *
+     * @param time time to do the update. Usually the actual Clock time
+     */
     public void updateData(Date time) {
 
-        if (this.startDate == null) {
-            this.startDate = time;
+        if (this.getStartDate() == null) {
+            this.setStartDate(time);
         }
 
-        this.endDate = time;
+        this.setEndDate(time);
 
         long duration = 0;
-        for (Interval i : this.intervals) {
+        for (Interval i : this.getIntervals()) {
             duration += i.getDuration();
         }
-        this.duration = duration;
+        this.setDuration(duration);
 
-        this.parent.updateData(time);
+        this.getParent().updateData(time);
 
     }
 
+
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visitTask(this);
+    }
 
     @Override
     public String toString() {
@@ -98,10 +124,8 @@ public abstract class Task extends Node implements Serializable {
     }
 
 
-    @Override
-    public void accept(Visitor visitor) {
-        visitor.visitTask(this);
+    public void setIntervals(ArrayList<Interval> intervals) {
+        this.intervals = intervals;
     }
-
 }
 

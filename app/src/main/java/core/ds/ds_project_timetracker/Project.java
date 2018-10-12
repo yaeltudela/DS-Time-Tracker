@@ -7,53 +7,90 @@ import java.util.Date;
 
 public class Project extends Node implements Serializable {
 
-    private Collection<Node> activities = new ArrayList<>();
+    private Collection<Node> activities;
 
 
+    /**
+     * Constructor for the Project objects. It calls the Node constructor and also initialices
+     * the activity Collection and add its to his parent's activity Collection
+     *
+     * @param name        Project's Name. Must be non empty String
+     * @param description Project's Description
+     * @param parent      Project's parent. Null if it's root project
+     */
     public Project(String name, String description, Project parent) {
         super(name, description, parent);
 
-        //activities = new ArrayList<>();
+        activities = new ArrayList<>();
 
-        if (this.parent != null) {
+        if (this.getParent() != null) {
             this.getParent().getActivities().add(this);
         }
     }
 
-    public Collection<Node> getActivities() {
-        return activities;
-    }
-
+    /**
+     * Method that updates all the data for the current project and calls recursively to it's parent
+     *
+     * @param time time to do the update. Usually the actual Clock time
+     */
     @Override
     public void updateData(Date time) {
-        if (this.startDate == null) {
-            this.startDate = time;
+        if (this.getStartDate() == null) {
+            this.setStartDate(time);
         }
-        this.endDate = time;
+        this.setEndDate(time);
+
         long tmp = 0;
-        for (Node i : this.activities) {
+        for (Node i : this.getActivities()) {
             tmp += i.getDuration();
         }
-        this.duration = tmp;
+        this.setDuration(tmp);
 
-        if (this.parent != null) {
+        if (this.getParent() != null) {
             this.parent.updateData(time);
         }
     }
 
-    @Override
-    public String toString() {
-        return this.getName() + "\t" + this.getStartDate() + "\t" + this.getEndDate() + "\t" + this.getDuration() + "\t" + (this.getParent() == null ? "null" : this.getParent().getName());
-    }
-
-    @Override
-    public Project getParent() {
-        return (Project) parent;
-    }
-
-
+    /**
+     * Entrance method for the visitor and doing tasks for the Project class
+     *
+     * @param visitor the visitor
+     */
     @Override
     public void accept(Visitor visitor) {
         visitor.visitProject(this);
     }
+
+    /**
+     * Method that gives all relevant information about a project with the format:
+     * Name StartDate EndDate Duration ParentName/None
+     *
+     * @return String with all the data separated by one tab (\t)
+     */
+    @Override
+    public String toString() {
+        return this.getName() + "\t" + this.getStartDate() + "\t" + this.getEndDate() + "\t" + this.getDuration()
+                + "\t" + (this.getParent() == null ? "None" : this.getParent().getName());
+    }
+
+    /**
+     * Getter for the activity list of this node
+     *
+     * @return Collection of Nodes with all the node's activities (Tasks and Subprojects)
+     */
+    public Collection<Node> getActivities() {
+        return activities;
+    }
+
+
+    /**
+     * Getter for the parent's project. It calls the Node version and casts it to Project because
+     * a Project parent is always another Project
+     * @return The project's parent
+     */
+    @Override
+    public Project getParent() {
+        return (Project) super.getParent();
+    }
+
 }

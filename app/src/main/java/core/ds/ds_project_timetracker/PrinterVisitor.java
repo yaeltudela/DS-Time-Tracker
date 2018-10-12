@@ -38,7 +38,7 @@ public class PrinterVisitor implements Visitor, Observer {
 
     @Override
     public void visitInterval(Interval interval) {
-        //System.out.println(interval.toString());
+        //System.out.println("\t" + interval.toString());
 
 
     }

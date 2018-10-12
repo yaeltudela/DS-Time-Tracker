@@ -7,8 +7,10 @@ public class LimitedTask extends TaskDecorator {
     private Date deathLine;
     private int totalSeconds = -1;
 
+
     public LimitedTask(Task task, Date deathLine) {
         super(task);
+        this.getParent().getActivities().add(this);
         this.deathLine = deathLine;
     }
 
@@ -39,5 +41,6 @@ public class LimitedTask extends TaskDecorator {
         }
 
     }
+
 
 }

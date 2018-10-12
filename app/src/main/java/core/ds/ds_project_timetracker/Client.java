@@ -85,7 +85,7 @@ public class Client {
             t3.startInterval();
             Thread.sleep(2000);
             t3.stopInterval(); //t3 = 8
-        }catch(InterruptedException e){
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
@@ -147,7 +147,7 @@ public class Client {
             undecoratedTask.stopInterval();
             Thread.sleep(4000);
             //T25 --> U = 14; P = 14; L = 12; B = 14;
-            programmedTask.stopInterval();
+            //programmedTask.stopInterval();
             Thread.sleep(20000);
 
 

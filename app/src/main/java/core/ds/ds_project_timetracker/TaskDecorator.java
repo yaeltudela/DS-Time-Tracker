@@ -1,5 +1,9 @@
 package core.ds.ds_project_timetracker;
 
+
+/**
+ * Abstract class used for generalize all the decorators for Task.
+ */
 public abstract class TaskDecorator extends Task {
 
     protected Task baseTask;
@@ -8,17 +12,17 @@ public abstract class TaskDecorator extends Task {
         this.baseTask = baseTask;
 
         this.intervals = baseTask.intervals;
-        this.parent = baseTask.parent;
-        this.startDate = baseTask.startDate;
-        this.endDate = baseTask.endDate;
-        this.active = baseTask.active;
+        this.setParent(baseTask.parent);
+        this.setStartDate(baseTask.startDate);
+        this.setEndDate(baseTask.endDate);
+        this.setActive(baseTask.active);
     }
 
-    protected void updateValues() {
-        this.baseTask.startDate = this.startDate;
-        this.baseTask.endDate = this.endDate;
-        this.baseTask.duration = this.duration;
 
+    protected void updateValues() {
+        this.baseTask.setStartDate(this.getStartDate());
+        this.baseTask.setEndDate(this.getEndDate());
+        this.baseTask.setDuration(this.getDuration());
     }
 
 }
