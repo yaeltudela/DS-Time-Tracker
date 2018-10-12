@@ -38,8 +38,7 @@ public abstract class Task extends Node implements Serializable {
             }
 
         } else {
-            System.out.println("Task already running!");
-            //TODO THROW EXCEPTION OR SOMETHING
+            throw new IllegalStateException("Task already running");
         }
 
     }
@@ -50,8 +49,7 @@ public abstract class Task extends Node implements Serializable {
             Clock.getInstance().deleteObserver(this.getIntervals().get(this.getIntervals().size() - 1));
             setActive(false);
         } else {
-            System.out.println("Task isn't running");
-            //TODO THROW EXCEPTION OR SOMETHING
+            throw new IllegalStateException("Task isn't running");
         }
     }
 

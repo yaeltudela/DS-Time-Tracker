@@ -74,5 +74,9 @@ public class Clock extends Observable {
         this.timer.cancel();
     }
 
+    public long getMs() {
+        return clock.getTime().getTime();
+    }
+
 
 }
