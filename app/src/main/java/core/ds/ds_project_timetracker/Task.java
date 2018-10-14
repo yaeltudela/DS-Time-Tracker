@@ -94,6 +94,11 @@ public abstract class Task extends Node implements Serializable {
     }
 
 
+    /**
+     * Entrance method for the visitor to do tasks for the Task class
+     *
+     * @param visitor the visitor
+     */
     @Override
     public void accept(Visitor visitor) {
         visitor.visitTask(this);
@@ -106,26 +111,50 @@ public abstract class Task extends Node implements Serializable {
 
     //GETTERS AND SETTERS
 
+    /**
+     * Getter for the parent field
+     *
+     * @return Task parent
+     */
     @Override
     public Project getParent() {
         return (Project) parent;
     }
 
+    /**
+     * Getter for the Intervals field
+     *
+     * @return Interval collection from the Task
+     */
     public ArrayList<Interval> getIntervals() {
         return (ArrayList<Interval>) intervals;
     }
 
+    /**
+     * Setter for the Intervals field
+     *
+     * @param intervals An arrayList with all the Intervals for this task
+     */
+    public void setIntervals(ArrayList<Interval> intervals) {
+        this.intervals = intervals;
+    }
+
+    /**
+     * Getter for the Active field
+     *
+     * @return Boolean with the active status
+     */
     public boolean isActive() {
         return active;
     }
 
+    /**
+     * Setter for the Active field
+     *
+     * @param state the state
+     */
     public void setActive(boolean state) {
         this.active = state;
-    }
-
-
-    public void setIntervals(ArrayList<Interval> intervals) {
-        this.intervals = intervals;
     }
 }
 

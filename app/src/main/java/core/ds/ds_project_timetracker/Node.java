@@ -61,6 +61,11 @@ public abstract class Node implements Serializable, Visitable {
         return name;
     }
 
+    /**
+     * Setter for the name node
+     *
+     * @param name String with name of the Node
+     */
     public void setName(String name) {
         this.name = name;
     }
@@ -74,6 +79,10 @@ public abstract class Node implements Serializable, Visitable {
         return description;
     }
 
+    /**
+     * Setter for the description node
+     * @param description String with description of the Node
+     */
     public void setDescription(String description) {
         this.description = description;
     }
@@ -87,6 +96,10 @@ public abstract class Node implements Serializable, Visitable {
         return duration;
     }
 
+    /**
+     * Setter for the duration node
+     * @param duration The duration of the Node
+     */
     public void setDuration(long duration) {
         this.duration = duration;
     }
@@ -99,6 +112,10 @@ public abstract class Node implements Serializable, Visitable {
         return startDate;
     }
 
+    /**
+     * Setter for the startDate node
+     * @param startDate The startDate of the Node
+     */
     public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
@@ -111,6 +128,10 @@ public abstract class Node implements Serializable, Visitable {
         return endDate;
     }
 
+    /**
+     * Setter for the endDate node
+     * @param endDate The endDate of the Node
+     */
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }

@@ -52,7 +52,7 @@ public class Project extends Node implements Serializable {
     }
 
     /**
-     * Entrance method for the visitor and doing tasks for the Project class
+     * Entrance method for the visitor to do tasks for the Project class
      *
      * @param visitor the visitor
      */

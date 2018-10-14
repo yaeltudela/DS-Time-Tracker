@@ -126,7 +126,7 @@ public class Client {
         Project p2 = new Project("P2", "", p1);
         Task limitedTask = new LimitedTask(new BaseTask("Limited", "limitedDesc", p2), 12);
         Task programmedTask = new ProgrammedTask(new BaseTask("Programmed", "programmedDesc", p2), 10);
-        Task bothDecorators = new LimitedTask(new ProgrammedTask(new BaseTask("Both", "bothdecorators", p2), 8), 15);
+        Task bothDecorators = new LimitedTask(new ProgrammedTask(new BaseTask("Both", "bothdecorators", p2), 8), 14);
 
         printerVisitor = new PrinterVisitor(root);
         configClock(printerVisitor);
@@ -147,8 +147,9 @@ public class Client {
             undecoratedTask.stopInterval();
             Thread.sleep(4000);
             //T25 --> U = 14; P = 14; L = 12; B = 14;
-            //programmedTask.stopInterval();
-            Thread.sleep(20000);
+            programmedTask.stopInterval();
+            Thread.sleep(5000);
+            //T25 --> U = 14; P = 14; L = 12; B = 14; // B = 22; BothDecorators didn't stops :'(
 
 
         } catch (InterruptedException e) {
