@@ -36,7 +36,7 @@ public class Clock extends Observable {
      *
      * @return the Clock instance
      */
-    public static Clock getInstance() {
+    public static synchronized Clock getInstance() {
         if (Clock.clock == null) {
             Clock.clock = new Clock();
         }

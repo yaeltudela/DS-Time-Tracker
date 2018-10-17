@@ -16,22 +16,26 @@ public abstract class TaskDecorator extends Task {
     public TaskDecorator(Task baseTask) {
         this.baseTask = baseTask;
 
-        this.setIntervals(baseTask.getIntervals());
-        this.setParent(baseTask.getParent());
+        this.setName(baseTask.name);
+        this.setDescription(baseTask.description);
         this.setStartDate(baseTask.getStartDate());
         this.setEndDate(baseTask.getEndDate());
+        this.setIntervals(baseTask.getIntervals());
+        this.setParent(baseTask.getParent());
         this.setActive(baseTask.isActive());
+
     }
 
 
     /**
      * Method that updates all the BaseTask data with the updated data from the decorated Task
      */
-    protected void updateValues() {
+    protected synchronized void updateValues() {
         this.baseTask.setIntervals(this.getIntervals());
         this.baseTask.setStartDate(this.getStartDate());
         this.baseTask.setEndDate(this.getEndDate());
         this.baseTask.setDuration(this.getDuration());
+        this.baseTask.setActive(this.isActive());
     }
 
 }

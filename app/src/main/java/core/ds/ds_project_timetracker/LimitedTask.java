@@ -21,6 +21,7 @@ public class LimitedTask extends TaskDecorator {
         super(baseTask);
         this.getParent().getActivities().add(this);
         this.deathLine = deathLine;
+        this.updateValues();
     }
 
 
@@ -56,14 +57,15 @@ public class LimitedTask extends TaskDecorator {
      */
     @Override
     public void updateData(Date time) {
+
         this.endDate = time;
         if (this.endDate.before(this.deathLine)) {
             super.updateData(time);
-            this.updateValues();
 
         } else {
             this.stopInterval();
         }
+        this.updateValues();
 
     }
 

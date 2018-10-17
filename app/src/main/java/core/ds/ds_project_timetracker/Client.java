@@ -5,6 +5,7 @@ public class Client {
 
     public static void main(String[] args) {
 
+
         Project root, p1, p2;
         root = p1 = p2 = null;
         Task t1, t2, t3;
@@ -12,22 +13,60 @@ public class Client {
         boolean load = true;
         boolean save = true;
         PrinterVisitor printerVisitor = null;
-
-
         root = new Project("/", "rootProject", null);
+
+
         /*
-        p1 = new Project("P1", "P1 desc", root);
-        t3 = new BaseTask("T3", "T3 desc", p1);
-        p2 = new Project("P2", "P1 desc", p1);
-        t1 = new BaseTask("T1", "T1 desc", p2);
-        t2 = new BaseTask("T2", "T2 desc", p2);
-        */
+        Serializable test is formed by two executions (one for saving the data (3) and another
+            for loading the saved data(4)) and must be executed in order.
 
+            1: A1
+            2: A2
+            3: Serializable (Test A1)
+            4: Serializable (Load data from test A1)
+            5: A3 (Decorators)
+         */
 
-        //testA1(root, p1, p2, t1, t2, t3);
-        //testA2(root, p1, p2, t1, t2, t3);
-        //testSerializable(load, save,root, p1, p2, t1, t2, t3, printerVisitor);
-        testA3(root, printerVisitor);
+        int test = 5;
+        switch (test) {
+            case 1:
+                p1 = new Project("P1", "P1 desc", root);
+                t3 = new BaseTask("T3", "T3 desc", p1);
+                p2 = new Project("P2", "P1 desc", p1);
+                t1 = new BaseTask("T1", "T1 desc", p2);
+                t2 = new BaseTask("T2", "T2 desc", p2);
+
+                testA1(root, p1, p2, t1, t2, t3, printerVisitor);
+                break;
+            case 2:
+                p1 = new Project("P1", "P1 desc", root);
+                t3 = new BaseTask("T3", "T3 desc", p1);
+                p2 = new Project("P2", "P1 desc", p1);
+                t1 = new BaseTask("T1", "T1 desc", p2);
+                t2 = new BaseTask("T2", "T2 desc", p2);
+
+                testA2(root, p1, p2, t1, t2, t3, printerVisitor);
+                break;
+            case 3:
+                p1 = new Project("P1", "P1 desc", root);
+                t3 = new BaseTask("T3", "T3 desc", p1);
+                p2 = new Project("P2", "P1 desc", p1);
+                t1 = new BaseTask("T1", "T1 desc", p2);
+                t2 = new BaseTask("T2", "T2 desc", p2);
+
+                load = false;
+                save = true;
+                testSerializable(load, save, root, p1, p2, t1, t2, t3, printerVisitor);
+                break;
+            case 4:
+
+                load = true;
+                testSerializable(load, save, root, p1, p2, t1, t2, t3, printerVisitor);
+                break;
+            case 5:
+                testA3(root, printerVisitor);
+                break;
+        }
 
     }
 

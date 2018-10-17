@@ -23,6 +23,7 @@ public class ProgrammedTask extends TaskDecorator implements Observer {
         super(baseTask);
         this.dateToStart = dateToStart;
         Clock.getInstance().addObserver(this);
+        this.updateValues();
 
     }
 
