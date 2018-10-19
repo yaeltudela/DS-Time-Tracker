@@ -7,7 +7,7 @@ import java.util.Date;
  */
 public class LimitedTask extends TaskDecorator {
 
-    private Date deathLine;
+    private Date deathLine = null;
     private int totalSeconds = -1;
 
 
@@ -19,9 +19,7 @@ public class LimitedTask extends TaskDecorator {
      */
     public LimitedTask(Task baseTask, Date deathLine) {
         super(baseTask);
-        this.getParent().getActivities().add(this);
         this.deathLine = deathLine;
-        this.updateValues();
     }
 
 
@@ -34,22 +32,7 @@ public class LimitedTask extends TaskDecorator {
     public LimitedTask(Task baseTask, int totalSeconds) {
         super(baseTask);
         this.totalSeconds = totalSeconds;
-        this.deathLine = null;
     }
-
-    /**
-     * Method that checks if the decorator has been instantiated with the totalseconds constructor
-     * (and sets up the deathLine date) and call the parent method
-     */
-    @Override
-    public void startInterval() {
-        if (totalSeconds != -1) {
-            this.deathLine = new Date();
-            deathLine.setTime(deathLine.getTime() + 1000 * totalSeconds);
-        }
-        super.startInterval();
-    }
-
 
     /**
      * Method that checks if the deathline has been passed to stop the Task
@@ -57,17 +40,20 @@ public class LimitedTask extends TaskDecorator {
      */
     @Override
     public void updateData(Date time) {
-
-        this.endDate = time;
-        if (this.endDate.before(this.deathLine)) {
-            super.updateData(time);
-
+        if (deathLine == null) {
+            totalSeconds -= Clock.REFRESH_RATE;
+            if (this.totalSeconds < 0) {
+                this.stopInterval();
+            } else {
+                super.updateData(time);
+            }
         } else {
-            this.stopInterval();
+            if (this.endDate.after(this.deathLine)) {
+                this.stopInterval();
+            } else {
+                super.updateData(time);
+            }
         }
-        this.updateValues();
-
     }
-
-
 }
+

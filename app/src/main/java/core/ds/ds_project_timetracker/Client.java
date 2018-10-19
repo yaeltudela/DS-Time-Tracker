@@ -29,7 +29,7 @@ public class Client {
 
         int test = 5;
         switch (test) {
-            case 1:
+            case 1: //Test A1
                 p1 = new Project("P1", "P1 desc", root);
                 t3 = new BaseTask("T3", "T3 desc", p1);
                 p2 = new Project("P2", "P1 desc", p1);
@@ -38,7 +38,7 @@ public class Client {
 
                 testA1(root, p1, p2, t1, t2, t3, printerVisitor);
                 break;
-            case 2:
+            case 2: //Test A2
                 p1 = new Project("P1", "P1 desc", root);
                 t3 = new BaseTask("T3", "T3 desc", p1);
                 p2 = new Project("P2", "P1 desc", p1);
@@ -47,7 +47,7 @@ public class Client {
 
                 testA2(root, p1, p2, t1, t2, t3, printerVisitor);
                 break;
-            case 3:
+            case 3: //Test A1 saving to a file
                 p1 = new Project("P1", "P1 desc", root);
                 t3 = new BaseTask("T3", "T3 desc", p1);
                 p2 = new Project("P2", "P1 desc", p1);
@@ -58,17 +58,27 @@ public class Client {
                 save = true;
                 testSerializable(load, save, root, p1, p2, t1, t2, t3, printerVisitor);
                 break;
-            case 4:
-
+            case 4: //Loading from file
                 load = true;
                 testSerializable(load, save, root, p1, p2, t1, t2, t3, printerVisitor);
                 break;
-            case 5:
+            case 5: //Custom Test
                 testA3(root, printerVisitor);
+                break;
+            case 6: //Test decorator (A1 with task1 programmed and limited)
+                p1 = new Project("P1", "P1 desc", root);
+                t3 = new BaseTask("T3", "T3 desc", p1);
+                p2 = new Project("P2", "P1 desc", p1);
+                t1 = new ProgrammedTask(new LimitedTask(new BaseTask("T1", "T1 desc", p2), 3), 4);
+
+                t2 = new BaseTask("T2", "T2 desc", p2);
+
+                testA4(root, p1, p2, t1, t2, t3, printerVisitor);
                 break;
         }
 
     }
+
 
     private static void configClock(PrinterVisitor printerVisitor) {
         Clock.getInstance().setRefreshTicks(2);
@@ -76,6 +86,11 @@ public class Client {
     }
 
     private static void endTest(PrinterVisitor printerVisitor) {
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         Clock.getInstance().deleteObserver(printerVisitor);
         Clock.getInstance().stopClock();
         System.out.println("Test ended.");
@@ -163,16 +178,16 @@ public class Client {
         Project p1 = new Project("P1", "", root);
         Task undecoratedTask = new BaseTask("Undecorated", "undecoratedDesc", p1);
         Project p2 = new Project("P2", "", p1);
-        Task limitedTask = new LimitedTask(new BaseTask("Limited", "limitedDesc", p2), 12);
+        Task limitedTask = new LimitedTask(new BaseTask("Limited", "limitedDesc", p2), 8);
         Task programmedTask = new ProgrammedTask(new BaseTask("Programmed", "programmedDesc", p2), 10);
-        Task bothDecorators = new LimitedTask(new ProgrammedTask(new BaseTask("Both", "bothdecorators", p2), 8), 14);
+        Task bothDecorators = new ProgrammedTask(new LimitedTask(new BaseTask("Both", "bothdecorators", p2), 12), 8);
 
         printerVisitor = new PrinterVisitor(root);
         configClock(printerVisitor);
 
         try {
-            //T0 --> U = 0; P = 0; L = 0; B = 0;
             Thread.sleep(1000);
+            //T0 --> U = 0; P = 0; L = 0; B = 0;
             undecoratedTask.startInterval();
             Thread.sleep(4000);
             //T5 --> U = 4; P = 0; L = 0; B = 0; //Programmed starts in 5; Both starts in 3
@@ -182,18 +197,44 @@ public class Client {
             //T11 --> U = 4; P = 0; L = 6; B = 2;
             undecoratedTask.startInterval();
             Thread.sleep(10000);
-            //T21 --> U = 14; P = 10; L = 12; B = 12;
+            //T21 --> U = 14; P = 10; L = 8; B = 12;
             undecoratedTask.stopInterval();
             Thread.sleep(4000);
-            //T25 --> U = 14; P = 14; L = 12; B = 14;
+            //T25 --> U = 14; P = 14; L = 8; B = 12;
             programmedTask.stopInterval();
             Thread.sleep(5000);
-            //T25 --> U = 14; P = 14; L = 12; B = 14; // B = 22; BothDecorators didn't stops :'(
+            //T25 --> U = 14; P = 14; L = 8; B = 12;
 
 
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
+    }
+
+    private static void testA4(Project root, Project p1, Project p2, Task t1, Task t2, Task t3, PrinterVisitor printerVisitor) {
+        printerVisitor = new PrinterVisitor(root);
+        configClock(printerVisitor);
+
+        try {
+            t3.startInterval();
+            Thread.sleep(3000);
+            //T1 = 0; T2 = 0; T3 = 2;
+            t3.stopInterval();
+            Thread.sleep(7000);
+            //T1 = 2; T2 = 0; T3 = 2;
+            t2.startInterval();
+            Thread.sleep(10000);
+            //T1 = 2; T2 = 0; T3 = 2;
+            t2.stopInterval();
+            t3.startInterval();
+            Thread.sleep(2000);
+            //T1 = 2; T2 = 10; T3 = 4;
+            t3.stopInterval();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        endTest(printerVisitor);
     }
 }

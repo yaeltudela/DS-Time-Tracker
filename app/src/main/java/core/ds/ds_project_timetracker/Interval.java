@@ -42,6 +42,7 @@ public class Interval implements Observer, Serializable, Visitable {
         this.startDate = startDate;
         this.endDate = endDate;
         this.duration = (this.endDate.getTime() - this.startDate.getTime()) / 1000;
+
     }
 
     /**

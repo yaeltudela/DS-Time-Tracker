@@ -18,27 +18,6 @@ public abstract class Node implements Serializable, Visitable {
     protected Node parent;
 
     /**
-     * Node constructor that setup all the shared fields. Name is required and must be non-empty string
-     *
-     * @param name        Name of the node
-     * @param description Description of the node
-     * @param parent      Parent of the node. Null if is the root node
-     */
-    public Node(String name, String description, Node parent) {
-        if (name != null && !name.isEmpty()) {
-            this.setName(name);
-            this.setDescription(description);
-            this.setParent(parent);
-            this.setDuration(0);
-            this.setStartDate(null);
-            this.setEndDate(null);
-        } else {
-            throw new IllegalArgumentException("Project must have a name");
-        }
-
-    }
-
-    /**
      * Empty constructor
      */
     public Node() {

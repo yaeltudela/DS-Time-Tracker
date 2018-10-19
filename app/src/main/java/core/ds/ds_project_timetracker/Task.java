@@ -2,43 +2,12 @@ package core.ds.ds_project_timetracker;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
 
 /**
  * Abstract class who extends from Node and it's used to define a generic Task.
  * It must be serializable as the Node, so it can be saved/loaded to/from disk
  */
 public abstract class Task extends Node implements Serializable {
-
-    protected Collection<Interval> intervals;
-    protected boolean active;
-
-    /**
-     * Constructor for the Task objects. It calls the Node constructor and also initialices
-     * the intervals Collection.
-     *
-     * @param name        Task's Name. Must be non empty String
-     * @param description Task's Description
-     * @param project     Task's parent project. Must be a project
-     */
-    public Task(String name, String description, Project project) {
-        super(name, description, project);
-
-        this.setIntervals(new ArrayList<Interval>());
-        this.setParent(project);
-        this.setStartDate(null);
-        this.setEndDate(null);
-        this.setActive(false);
-    }
-
-
-    /**
-     * Task empty Constructor
-     */
-    public Task() {
-
-    }
 
     /**
      * Method that checks if the task isn't running and creates a new Interval object and makes
@@ -47,8 +16,7 @@ public abstract class Task extends Node implements Serializable {
     public void startInterval() {
         if (!this.isActive()) {
             this.setActive(true);
-            Date startDate = Clock.getInstance().getTime();
-            Interval interval = new Interval(startDate, this);
+            Interval interval = new Interval(Clock.getInstance().getTime(), this);
             this.getIntervals().add(interval);
             Clock.getInstance().addObserver(interval);
         } else {
@@ -70,39 +38,8 @@ public abstract class Task extends Node implements Serializable {
         }
     }
 
-    /**
-     * Method that updates all the data for the current task and calls recursively to it's project
-     *
-     * @param time time to do the update. Usually the actual Clock time
-     */
-    public void updateData(Date time) {
-
-        if (this.getStartDate() == null) {
-            this.setStartDate(time);
-        }
-
-        this.setEndDate(time);
-
-        long duration = 0;
-        for (Interval i : this.getIntervals()) {
-            duration += i.getDuration();
-        }
-        this.setDuration(duration);
-
-        this.getParent().updateData(time);
-
-    }
 
 
-    /**
-     * Entrance method for the visitor to do tasks for the Task class
-     *
-     * @param visitor the visitor
-     */
-    @Override
-    public void accept(Visitor visitor) {
-        visitor.visitTask(this);
-    }
 
     @Override
     public String toString() {
@@ -117,44 +54,34 @@ public abstract class Task extends Node implements Serializable {
      * @return Task parent
      */
     @Override
-    public Project getParent() {
-        return (Project) parent;
-    }
+    public abstract Project getParent();
 
     /**
      * Getter for the Intervals field
      *
      * @return Interval collection from the Task
      */
-    public ArrayList<Interval> getIntervals() {
-        return (ArrayList<Interval>) intervals;
-    }
+    public abstract ArrayList<Interval> getIntervals();
 
     /**
      * Setter for the Intervals field
      *
      * @param intervals An arrayList with all the Intervals for this task
      */
-    public void setIntervals(ArrayList<Interval> intervals) {
-        this.intervals = intervals;
-    }
+    public abstract void setIntervals(ArrayList<Interval> intervals);
 
     /**
      * Getter for the Active field
      *
      * @return Boolean with the active status
      */
-    public boolean isActive() {
-        return active;
-    }
+    public abstract boolean isActive();
 
     /**
      * Setter for the Active field
      *
      * @param state the state
      */
-    public void setActive(boolean state) {
-        this.active = state;
-    }
+    public abstract void setActive(boolean state);
 }
 

@@ -23,8 +23,6 @@ public class ProgrammedTask extends TaskDecorator implements Observer {
         super(baseTask);
         this.dateToStart = dateToStart;
         Clock.getInstance().addObserver(this);
-        this.updateValues();
-
     }
 
 
@@ -43,16 +41,6 @@ public class ProgrammedTask extends TaskDecorator implements Observer {
     }
 
     /**
-     * Method that updates data and updates the values of the baseTask
-     */
-    @Override
-    public void updateData(Date time) {
-        super.updateData(time);
-        this.updateValues();
-    }
-
-
-    /**
      * Method that starts the task when it's time and deletes from observing the clock
      * @param o -
      * @param arg The Clock object
@@ -62,15 +50,16 @@ public class ProgrammedTask extends TaskDecorator implements Observer {
         if (this.delay != -1) {
 
             if (((Clock) arg).getMs() >= dateToStart.getTime() + delay * 1000) {
-                this.startInterval();
                 ((Clock) arg).deleteObserver(this);
+                super.startInterval();
             }
         } else {
             if (((Clock) arg).getTime().after(dateToStart)) {
-                this.startInterval();
                 ((Clock) arg).deleteObserver(this);
+                super.startInterval();
             }
         }
 
     }
+
 }

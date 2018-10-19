@@ -19,7 +19,16 @@ public class Project extends Node implements Serializable {
      * @param parent      Project's parent. Null if it's root project
      */
     public Project(String name, String description, Project parent) {
-        super(name, description, parent);
+        if (name != null && !name.isEmpty()) {
+            this.setName(name);
+            this.setDescription(description);
+            this.setParent(parent);
+            this.setDuration(0);
+            this.setStartDate(null);
+            this.setEndDate(null);
+        } else {
+            throw new IllegalArgumentException("Project must have a name");
+        }
 
         activities = new ArrayList<>();
 
