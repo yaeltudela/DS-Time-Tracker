@@ -17,12 +17,6 @@ public abstract class Node implements Serializable, Visitable {
     protected Date endDate;
     protected Node parent;
 
-    /**
-     * Empty constructor
-     */
-    public Node() {
-        //TODO ask if it's necessary or correct
-    }
 
     /**
      * Abstract method used for the refresh of all the modified data

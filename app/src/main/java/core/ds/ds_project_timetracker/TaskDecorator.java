@@ -21,7 +21,6 @@ public abstract class TaskDecorator extends Task {
 
     }
 
-
     @Override
     public void updateData(Date time) {
         this.baseTask.updateData(time);
