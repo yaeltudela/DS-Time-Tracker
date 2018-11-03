@@ -16,7 +16,7 @@ public class PrinterVisitor implements Visitor, Observer {
      *
      * @param rootProject The starter visitable object
      */
-    public PrinterVisitor(Project rootProject) {
+    PrinterVisitor(Project rootProject) {
         this.rootVisitable = rootProject;
     }
 
@@ -67,8 +67,8 @@ public class PrinterVisitor implements Visitor, Observer {
 
     /**
      * Method that calls the rootVisitable accept to print all the data
-     * @param o
-     * @param arg
+     * @param o The Observable object
+     * @param arg The Clock object
      */
     @Override
     public void update(Observable o, Object arg) {

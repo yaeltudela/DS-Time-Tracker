@@ -32,7 +32,7 @@ public class ProgrammedTask extends TaskDecorator implements Observer {
      * @param delay The time the task must wait before start.
      */
 
-    public ProgrammedTask(Task baseTask, int delay) {
+    ProgrammedTask(Task baseTask, int delay) {
         super(baseTask);
         this.delay = delay;
         dateToStart = new Date();

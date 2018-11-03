@@ -7,8 +7,8 @@ import java.util.Date;
 
 public class BaseTask extends Task {
 
-    protected Collection<Interval> intervals;
-    protected boolean active;
+    private Collection<Interval> intervals;
+    private boolean active;
 
     /**
      * BaseTask constructor. Calls the Task constructor and adds itself to it's parent activities
@@ -17,7 +17,7 @@ public class BaseTask extends Task {
      * @param description BaseTask's description
      * @param project     BaseTask's parent project
      */
-    public BaseTask(String name, String description, Project project) {
+    BaseTask(String name, String description, Project project) {
         this.setName(name);
         this.setDescription(description);
         this.setDuration(0);

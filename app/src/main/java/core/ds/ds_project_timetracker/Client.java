@@ -1,5 +1,7 @@
 package core.ds.ds_project_timetracker;
 
+import java.util.Date;
+
 public class Client {
 
     public static void main(String[] args) {
@@ -76,6 +78,15 @@ public class Client {
                 break;
         }
 
+
+        Date d0 = new Date();
+        d0.setTime(d0.getTime() - 20000);
+        Date d = new Date();
+        Period period = new Period(d0, d);
+
+        Report report = new ShortReport(root, period);
+        report.generateReport();
+        ReportGenerator reportGenerator = new TXTReportGenerator(report);
     }
 
 

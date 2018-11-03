@@ -29,7 +29,7 @@ public class LimitedTask extends TaskDecorator {
      * @param baseTask     The task that decorates
      * @param totalSeconds The maximum time that the task will be running
      */
-    public LimitedTask(Task baseTask, int totalSeconds) {
+    LimitedTask(Task baseTask, int totalSeconds) {
         super(baseTask);
         this.totalSeconds = totalSeconds;
     }

@@ -12,8 +12,8 @@ public abstract class Node implements Serializable, Visitable {
 
     protected String name;
     protected String description;
-    protected long duration;
-    protected Date startDate;
+    private long duration;
+    private Date startDate;
     protected Date endDate;
     protected Node parent;
 
@@ -124,6 +124,8 @@ public abstract class Node implements Serializable, Visitable {
     public void setParent(Node parent) {
         this.parent = parent;
     }
+
+
 }
 
 

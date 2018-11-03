@@ -15,19 +15,18 @@ import java.io.Serializable;
 public class DataManager implements Serializable {
 
     private String filename;
-    private boolean error;
 
     /**
      * Constructor for DataManager. It checks if the file exists and creates if not (in root folder)
      *
      * @param file name of the file to load and save the data
      */
-    public DataManager(String file) {
+    DataManager(String file) {
         this.filename = file;
         File f = new File(this.filename);
         if (!f.exists()) {
             try {
-                error = f.createNewFile();
+                boolean error = f.createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -22,7 +22,7 @@ public class Interval implements Observer, Serializable, Visitable {
      * @param startDate  Time when the Interval starts (usually current time)
      * @param parentTask The task that contains the Interval object
      */
-    public Interval(Date startDate, Task parentTask) {
+    Interval(Date startDate, Task parentTask) {
         this.duration = 0;
         this.startDate = startDate;
         this.endDate = null;

@@ -9,14 +9,14 @@ import java.util.Date;
  */
 public abstract class TaskDecorator extends Task {
 
-    protected Task baseTask;
+    private Task baseTask;
 
     /**
      * Default constructor that updates the decorated data with all the baseTask data.
      *
-     * @param baseTask
+     * @param baseTask Task to be decorated
      */
-    public TaskDecorator(Task baseTask) {
+    TaskDecorator(Task baseTask) {
         this.baseTask = baseTask;
 
     }

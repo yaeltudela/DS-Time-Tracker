@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
-public class Project extends Node implements Serializable {
+public class Project extends Node implements Serializable, Visitable {
 
     private Collection<Node> activities;
 
@@ -18,7 +18,7 @@ public class Project extends Node implements Serializable {
      * @param description Project's Description
      * @param parent      Project's parent. Null if it's root project
      */
-    public Project(String name, String description, Project parent) {
+    Project(String name, String description, Project parent) {
         if (name != null && !name.isEmpty()) {
             this.setName(name);
             this.setDescription(description);
