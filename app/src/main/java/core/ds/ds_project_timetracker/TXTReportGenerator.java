@@ -19,18 +19,24 @@ public class TXTReportGenerator extends ReportGenerator {
     protected void saveReportToDisk() {
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(file);
+            for (Table t : this.report.getTables()) {
 
-            for (ArrayList<String> line : this.report.reportPeriod.getData()) {
-                for (String w : line) {
-                    fileOutputStream.write((w + "\t").getBytes());
+                for (ArrayList<String> line : t.getData()) {
+                    for (String w : line) {
+                        fileOutputStream.write((w + "\t").getBytes());
+                    }
+                    fileOutputStream.write(("\n").getBytes());
                 }
-                fileOutputStream.write(("\n").getBytes());
+                fileOutputStream.write(("\n\n").getBytes());
+
             }
 
 
+            fileOutputStream.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
 

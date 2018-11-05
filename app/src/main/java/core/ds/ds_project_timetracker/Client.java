@@ -28,7 +28,7 @@ public class Client {
             5: A3 (Decorators)
          */
 
-        int test = 5;
+        int test = 7;
         switch (test) {
             case 1: //Test A1
                 p1 = new Project("P1", "P1 desc", root);
@@ -76,17 +76,66 @@ public class Client {
 
                 testA4(root, p1, p2, t1, t2, t3, printerVisitor);
                 break;
+
+            case 7: //Test entrega 2
+                p1 = new Project("P1", "P1 desc", root);
+                p2 = new Project("P2", "P2 desc", root);
+                Project p1_2 = new Project("P1_2", "P1.2 desc", p1);
+                t1 = new BaseTask("T1", "T1 desc", p1);
+                t2 = new BaseTask("T2", "T2 desc", p1);
+                Task t4 = new BaseTask("T4", "T4 desc", p1_2);
+                t3 = new BaseTask("T3", "T3 desc", p2);
+
+                testEntrega2(p1, p2, p1_2, t1, t2, t3, t4, printerVisitor, root);
+
+
+                break;
         }
 
+    }
 
-        Date d0 = new Date();
-        d0.setTime(d0.getTime() - 20000);
-        Date d = new Date();
-        Period period = new Period(d0, d);
+    private static void testEntrega2(Project p1, Project p2, Project p1_2, Task t1, Task t2, Task t3, Task t4, PrinterVisitor printerVisitor, Project root) {
+        printerVisitor = new PrinterVisitor(root);
+        configClock(printerVisitor);
 
-        Report report = new ShortReport(root, period);
-        report.generateReport();
-        ReportGenerator reportGenerator = new TXTReportGenerator(report);
+        try {
+            t1.startInterval();
+            t4.startInterval();
+
+            Thread.sleep(4000);
+            Date d0 = new Date();
+            t1.stopInterval();
+            t2.startInterval();
+
+            Thread.sleep(6000);
+            t2.stopInterval();
+            t4.stopInterval();
+            t3.startInterval();
+
+            Thread.sleep(4000);
+            t3.stopInterval();
+            t2.startInterval();
+
+            Date d = new Date();
+
+            Thread.sleep(2000);
+            t3.startInterval();
+
+            Thread.sleep(4000);
+            t2.stopInterval();
+            t3.stopInterval();
+
+            Period period = new Period(d0, d);
+            Report report = new DetailedReport(root, period);
+            report.generateReport();
+            ReportGenerator reportGenerator = new TXTReportGenerator(report);
+
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        endTest(printerVisitor);
     }
 
 

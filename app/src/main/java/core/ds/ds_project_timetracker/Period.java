@@ -1,25 +1,20 @@
 package core.ds.ds_project_timetracker;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 
 class Period {
     private Date startDate;
     private Date endDate;
-    private Collection<Collection<String>> data;
     private Date reportDate;
+    private long duration;
 
     Period(Date startDate, Date endDate) {
         this.startDate = startDate;
         this.endDate = endDate;
-        this.data = new ArrayList<>();
         this.reportDate = new Date();
+        this.duration = (endDate.getTime() - startDate.getTime()) / 1000;
     }
 
-    public ArrayList<ArrayList<String>> getData() {
-        return (ArrayList) data;
-    }
 
     public Date getStartDate() {
         return startDate;
@@ -31,5 +26,9 @@ class Period {
 
     public Date getReportDate() {
         return reportDate;
+    }
+
+    public long getDuration() {
+        return duration;
     }
 }
