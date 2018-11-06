@@ -29,15 +29,16 @@ public class TXTReportGenerator extends ReportGenerator {
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(file);
             for (Table t : this.report.getTables()) {
-
-                for (ArrayList<String> line : t.getData()) {
-                    for (String w : line) {
-                        fileOutputStream.write((w + "\t").getBytes());
+                if (t == null) {
+                    fileOutputStream.write(("------------------------------------------------------------------------------------------------------\n").getBytes());
+                } else {
+                    for (ArrayList<String> line : t.getData()) {
+                        for (String w : line) {
+                            fileOutputStream.write((w + "\t").getBytes());
+                        }
+                        fileOutputStream.write(("\n").getBytes());
                     }
-                    fileOutputStream.write(("\n").getBytes());
                 }
-                fileOutputStream.write(("\n\n").getBytes());
-
             }
 
 

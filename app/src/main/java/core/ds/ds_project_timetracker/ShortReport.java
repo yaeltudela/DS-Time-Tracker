@@ -9,9 +9,12 @@ public class ShortReport extends Report implements Visitor {
 
     public ShortReport(final Project rootVisitable, final Period reportPeriod) {
         super(rootVisitable, reportPeriod);
-        this.name = "Detailed Report";
 
+        createSectionTable("Short Report", null);
+        createSeparatorTable();
+        createCommonTables();
     }
+
 
     @Override
     public void visitProject(final Project project) {

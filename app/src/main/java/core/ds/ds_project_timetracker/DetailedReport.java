@@ -7,8 +7,7 @@ import java.util.Date;
 
 /**
  * Concrete class to store data from a Detailed Report.
- * It contains all the projects, subprojects,
- * tasks and intervals.
+ * It contains all the projects, subprojects, tasks and intervals.
  */
 public class DetailedReport extends Report implements Visitor {
 
@@ -19,15 +18,47 @@ public class DetailedReport extends Report implements Visitor {
 
     protected DetailedReport(Project rootVisitable, Period reportPeriod) {
         super(rootVisitable, reportPeriod);
-        this.name = "Detailed Report";
+
+        createSeparatorTable();
+        createSectionTable("Detailed Report", null);
+        createSeparatorTable();
+
+        createCommonTables();
+        createSubprojectTable();
+        createTaskTable();
+        createIntervalsTable();
+
+
+    }
+
+    private void createSubprojectTable() {
+        createSectionTable("Subprojects", "Subtitle");
 
         this.subrojectsTable = new Table(0, 4);
-        this.tasksTable = new Table(0, 5);
-        this.intervalsTable = new Table(0, 6);
-
         this.tables.add(this.subrojectsTable);
+        ArrayList<String> subProjectHeader = new ArrayList<>(Arrays.asList("Name", "Start Date", "End Date", "Duration"));
+
+        this.subrojectsTable.addRow(subProjectHeader);
+        createSeparatorTable();
+    }
+
+    private void createTaskTable() {
+        createSectionTable("Tasks", "Subtitle");
+        this.tasksTable = new Table(0, 5);
         this.tables.add(this.tasksTable);
+        ArrayList<String> tasksHeader = new ArrayList<>(Arrays.asList("Name", "Start Date", "End Date", "Duration"));
+
+        this.tasksTable.addRow(tasksHeader);
+        createSeparatorTable();
+    }
+
+    private void createIntervalsTable() {
+        createSectionTable("Intervals", "Subtitle");
+        this.intervalsTable = new Table(0, 6);
         this.tables.add(this.intervalsTable);
+        ArrayList<String> intervalsHeaders = new ArrayList<>(Arrays.asList("Name", "Start Date", "End Date", "Duration"));
+        this.intervalsTable.addRow(intervalsHeaders);
+        createSeparatorTable();
     }
 
     @Override
