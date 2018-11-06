@@ -1,3 +1,4 @@
+
 package core.ds.ds_project_timetracker;
 
 import java.io.File;
@@ -14,35 +15,46 @@ import java.io.Serializable;
  */
 public class DataManager implements Serializable {
 
+    /**
+     * String with the name of the file.
+     */
     private String filename;
 
     /**
-     * Constructor for DataManager. It checks if the file exists and creates if not (in root folder)
+     * Constructor for DataManager. It checks if the file exists and
+     * creates if not (in root folder).
      *
      * @param file name of the file to load and save the data
      */
-    DataManager(String file) {
+    DataManager(final String file) {
         this.filename = file;
+        boolean error = false;
         File f = new File(this.filename);
         if (!f.exists()) {
             try {
-                boolean error = f.createNewFile();
+                error = f.createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();
+                if (error) {
+                    e.printStackTrace();
+                }
             }
         }
 
     }
 
     /**
-     * Generic method for save an unique object to the file associated to the DataManager object
+     * Generic method for save an unique object to the file associated
+     * to the DataManager object.
      *
      * @param object The object to save
      */
-    public void saveData(Object object) {
+    public void saveData(final Object object) {
         try {
             FileOutputStream fOutStream = new FileOutputStream(this.filename);
-            ObjectOutputStream outputStream = new ObjectOutputStream(fOutStream);
+            ObjectOutputStream outputStream
+                    = new ObjectOutputStream(fOutStream);
+            //TODO ID
             outputStream.writeObject(object);
             outputStream.flush();
             outputStream.close();
@@ -54,7 +66,8 @@ public class DataManager implements Serializable {
     }
 
     /**
-     * Generic method to load a single object from the associated file to the DataManager object.
+     * Generic method to load a single object from the associated file
+     * to the DataManager object.
      *
      * @return The loaded Object. (Must be casted to the correct type)
      */
@@ -63,7 +76,8 @@ public class DataManager implements Serializable {
         try {
             FileInputStream fInStream = new FileInputStream(this.filename);
             if (fInStream.available() > 0) {
-                ObjectInputStream inputStream = new ObjectInputStream(fInStream);
+                ObjectInputStream inputStream
+                        = new ObjectInputStream(fInStream);
                 if (fInStream.available() > 0) {
                     data = inputStream.readObject();
                 }

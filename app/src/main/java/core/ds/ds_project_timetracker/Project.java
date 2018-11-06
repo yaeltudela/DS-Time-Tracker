@@ -1,3 +1,4 @@
+
 package core.ds.ds_project_timetracker;
 
 import java.io.Serializable;
@@ -5,15 +6,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
+/**
+ * Structural representation of a project.
+ */
 public class Project extends Node implements Serializable, Visitable {
 
     private Collection<Node> activities;
 
-
     /**
-     * Constructor for the Project objects. It calls the Node constructor
-     * and also initialices the activity Collection and add its
-     * to his parent's activity Collection
+     * Constructor for the Project objects.
+     * It calls the constructor and also init the activity Collection
+     * and add its to his parent's activity Collection
      *
      * @param name        Project's Name. Must be non empty String
      * @param description Project's Description
@@ -45,7 +48,7 @@ public class Project extends Node implements Serializable, Visitable {
      * @param time time to do the update. Usually the actual Clock time
      */
     @Override
-    public void updateData(Date time) {
+    public void updateData(final Date time) {
         if (this.getStartDate() == null) {
             this.setStartDate(time);
         }
@@ -63,7 +66,7 @@ public class Project extends Node implements Serializable, Visitable {
     }
 
     /**
-     * Entrance method for the visitor to do tasks for the Project class
+     * Entrance method for the visitor to do tasks for the Project class.
      *
      * @param visitor the visitor
      */
@@ -73,7 +76,8 @@ public class Project extends Node implements Serializable, Visitable {
     }
 
     /**
-     * Method that gives all relevant information about a project with the format:
+     * Method that gives all relevant information
+     * about a project with the format.
      * Name StartDate EndDate Duration ParentName/None
      *
      * @return String with all the data separated by one tab (\t)
@@ -94,7 +98,8 @@ public class Project extends Node implements Serializable, Visitable {
     /**
      * Getter for the activity list of this node.
      *
-     * @return Collection of Nodes with all the node's activities (Tasks and Subprojects)
+     * @return Collection of Nodes with all the node's
+     *  activities (Tasks and Subprojects)
      */
     public Collection<Node> getActivities() {
         return activities;

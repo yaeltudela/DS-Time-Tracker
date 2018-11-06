@@ -1,3 +1,4 @@
+
 package core.ds.ds_project_timetracker;
 
 
@@ -36,7 +37,7 @@ public class BaseTask extends Task {
      *
      * @param time time to do the update. Usually the actual Clock time
      */
-    public void updateData(Date time) {
+    public void updateData(final Date time) {
 
         if (this.getStartDate() == null) {
             this.setStartDate(time);
@@ -84,7 +85,7 @@ public class BaseTask extends Task {
      *
      * @param intervals An arrayList with all the Intervals for this task
      */
-    public void setIntervals(ArrayList<Interval> intervals) {
+    public void setIntervals(final ArrayList<Interval> intervals) {
         this.intervals = intervals;
     }
 
@@ -98,21 +99,21 @@ public class BaseTask extends Task {
     }
 
     /**
-     * Setter for the Active field
+     * Setter for the Active field.
      *
      * @param state the state
      */
-    public void setActive(boolean state) {
+    public void setActive(final boolean state) {
         this.active = state;
     }
 
     /**
-     * Entrance method for the visitor to do tasks for the Task class
+     * Entrance method for the visitor to do tasks for the Task class.
      *
      * @param visitor the visitor
      */
     @Override
-    public void accept(Visitor visitor) {
+    public void accept(final Visitor visitor) {
         visitor.visitTask(this);
     }
 }

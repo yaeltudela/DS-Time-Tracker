@@ -1,18 +1,23 @@
+
 package core.ds.ds_project_timetracker;
 
 import java.util.Date;
 
+/**
+ * Fragment of time delimited by two dates.
+ */
 class Period {
     private Date startDate;
     private Date endDate;
     private Date reportDate;
-    private long duration;
+    private final int MS_ON_SEC = 1000;
+    private long maxDuration;
 
-    Period(Date startDate, Date endDate) {
+    Period(final Date startDate, final Date endDate) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.reportDate = new Date();
-        this.duration = (endDate.getTime() - startDate.getTime()) / 1000;
+        this.maxDuration = (endDate.getTime() - startDate.getTime()) / MS_ON_SEC;
     }
 
 
@@ -28,7 +33,7 @@ class Period {
         return reportDate;
     }
 
-    public long getDuration() {
-        return duration;
+    public long getMaxDuration() {
+        return maxDuration;
     }
 }

@@ -1,3 +1,4 @@
+
 package core.ds.ds_project_timetracker;
 
 import java.util.ArrayList;
@@ -7,40 +8,45 @@ import java.util.Date;
 
 public abstract class Report implements Visitor {
 
+    protected String name;
     protected final Project rootVisitable;
     protected final Period reportPeriod;
     protected Collection<Table> tables;
 
     protected Table reportTable;
     protected Table rootProjectsTable;
-    protected Table subrojectsTable = null;
-    protected Table tasksTable = null;
-    protected Table intervalsTable = null;
-
-
 
     protected Report(Project rootVisitable, Period reportPeriod) {
         this.rootVisitable = rootVisitable;
         this.reportPeriod = reportPeriod;
         this.tables = new ArrayList<>();
 
-        this.reportTable = new Table(3, 2);
-        this.rootProjectsTable = new Table(0, 4);
+        createCommonTables();
+
+
+    }
+
+    protected void createCommonTables() {
+
+        this.reportTable = new Table(0, 2);
         this.tables.add(this.reportTable);
-        this.tables.add(this.rootProjectsTable);
         createReportEntries();
+
+        this.rootProjectsTable = new Table(0, 4);
+        this.tables.add(this.rootProjectsTable);
         ArrayList<String> rootProjectHeader = new ArrayList<>(Arrays.asList("Name", "Start Date", "End Date", "Duration"));
+
         this.rootProjectsTable.addRow(rootProjectHeader);
     }
 
     protected void createReportEntries() {
 
         ArrayList<String> reportStartEntry = new ArrayList<>(Arrays.asList("From: ", reportPeriod.getStartDate().toString()));
-        this.rootProjectsTable.addRow(reportStartEntry);
+        this.reportTable.addRow(reportStartEntry);
         ArrayList<String> reportEndEntry = new ArrayList<>(Arrays.asList("To: ", reportPeriod.getEndDate().toString()));
-        this.rootProjectsTable.addRow(reportEndEntry);
+        this.reportTable.addRow(reportEndEntry);
         ArrayList<String> reportGenerationDateEntry = new ArrayList<>(Arrays.asList("Report generated at: ", reportPeriod.getReportDate().toString()));
-        this.rootProjectsTable.addRow(reportGenerationDateEntry);
+        this.reportTable.addRow(reportGenerationDateEntry);
     }
 
     protected void generateReport() {
@@ -55,6 +61,30 @@ public abstract class Report implements Visitor {
 
     protected boolean isInPeriod(Date startDate, Date endDate) {
         return endDate.after(this.reportPeriod.getStartDate()) || startDate.before(this.reportPeriod.getEndDate());
+    }
+
+    protected Date getNewStartDate(Date startDate) {
+        if (startDate.before(this.reportPeriod.getStartDate())) {
+            return this.reportPeriod.getStartDate();
+        } else {
+            return startDate;
+        }
+    }
+
+    protected Date getNewEndDate(Date endDate) {
+        if (endDate.after(this.reportPeriod.getEndDate())) {
+            return this.reportPeriod.getStartDate();
+        } else {
+            return endDate;
+        }
+    }
+
+    protected long getNewDuration(Date startDate, Date endDate, long duration) {
+        if (startDate.before(this.reportPeriod.getStartDate()) && endDate.after(this.reportPeriod.getEndDate())) {
+            return this.reportPeriod.getMaxDuration();
+        } else {
+            return duration;
+        }
     }
 
 

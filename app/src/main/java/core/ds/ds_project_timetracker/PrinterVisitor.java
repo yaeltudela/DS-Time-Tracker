@@ -1,3 +1,4 @@
+
 package core.ds.ds_project_timetracker;
 
 import java.util.Observable;
@@ -8,6 +9,9 @@ import java.util.Observer;
  */
 public class PrinterVisitor implements Visitor, Observer {
 
+    /**
+     * The project to print from.
+     */
     private final Project rootVisitable;
 
 
@@ -42,7 +46,8 @@ public class PrinterVisitor implements Visitor, Observer {
     }
 
     /**
-     * Method to print Task objects. It prints the task data and visit's all of his intervals.
+     * Method to print Task objects. It prints the
+     * task data and visit's all of his intervals.
      * @param task The task to visit
      */
     @Override

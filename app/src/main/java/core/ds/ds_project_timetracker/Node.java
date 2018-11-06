@@ -1,3 +1,4 @@
+
 package core.ds.ds_project_timetracker;
 
 
@@ -19,14 +20,14 @@ public abstract class Node implements Serializable, Visitable {
 
 
     /**
-     * Abstract method used for the refresh of all the modified data
+     * Abstract method used for the refresh of all the modified data.
      *
      * @param time time to do the update. Usually the actual Clock time
      */
     public abstract void updateData(Date time);
 
     /**
-     * Getter for the name field
+     * Getter for the name field.
      *
      * @return String of the node's name
      */
@@ -35,16 +36,16 @@ public abstract class Node implements Serializable, Visitable {
     }
 
     /**
-     * Setter for the name node
+     * Setter for the name node.
      *
      * @param name String with name of the Node
      */
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
     /**
-     * Getter for the description field
+     * Getter for the description field.
      *
      * @return String of the node's description
      */
@@ -53,10 +54,10 @@ public abstract class Node implements Serializable, Visitable {
     }
 
     /**
-     * Setter for the description node
+     * Setter for the description node.
      * @param description String with description of the Node
      */
-    public void setDescription(String description) {
+    public void setDescription(final String description) {
         this.description = description;
     }
 
@@ -70,15 +71,15 @@ public abstract class Node implements Serializable, Visitable {
     }
 
     /**
-     * Setter for the duration node
+     * Setter for the duration node.
      * @param duration The duration of the Node
      */
-    public void setDuration(long duration) {
+    public void setDuration(final long duration) {
         this.duration = duration;
     }
 
     /**
-     * Getter for the startDate field
+     * Getter for the startDate field.
      * @return Date of the node's startDate
      */
     public Date getStartDate() {
@@ -86,15 +87,15 @@ public abstract class Node implements Serializable, Visitable {
     }
 
     /**
-     * Setter for the startDate node
+     * Setter for the startDate node.
      * @param startDate The startDate of the Node
      */
-    public void setStartDate(Date startDate) {
+    public void setStartDate(final Date startDate) {
         this.startDate = startDate;
     }
 
     /**
-     * Getter for the endDate field
+     * Getter for the endDate field.
      * @return Date of the node's endDate
      */
     public Date getEndDate() {
@@ -102,15 +103,15 @@ public abstract class Node implements Serializable, Visitable {
     }
 
     /**
-     * Setter for the endDate node
+     * Setter for the endDate node.
      * @param endDate The endDate of the Node
      */
-    public void setEndDate(Date endDate) {
+    public void setEndDate(final Date endDate) {
         this.endDate = endDate;
     }
 
     /**
-     * Getter for the parent field
+     * Getter for the parent field.
      * @return Node parent of the node. Null if is the root Node. Must be casted to Project or Task
      */
     public Node getParent() {
@@ -118,10 +119,10 @@ public abstract class Node implements Serializable, Visitable {
     }
 
     /**
-     * Setter for the parent node
+     * Setter for the parent node.
      * @param parent the parent of the node (Node, Task or Project)
      */
-    public void setParent(Node parent) {
+    public void setParent(final Node parent) {
         this.parent = parent;
     }
 

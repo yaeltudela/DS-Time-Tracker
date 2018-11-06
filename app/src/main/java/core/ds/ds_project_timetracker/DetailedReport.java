@@ -1,14 +1,29 @@
+
 package core.ds.ds_project_timetracker;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
+/**
+ * Concrete class to store data from a Detailed Report.
+ * It contains all the projects, subprojects,
+ * tasks and intervals.
+ */
 public class DetailedReport extends Report implements Visitor {
+
+
+    private Table subrojectsTable;
+    private Table tasksTable;
+    private Table intervalsTable;
 
     protected DetailedReport(Project rootVisitable, Period reportPeriod) {
         super(rootVisitable, reportPeriod);
-        this.subrojectsTable = new Table(2, 2);
-        this.tasksTable = new Table(2, 2);
-        this.intervalsTable = new Table(2, 2);
+        this.name = "Detailed Report";
+
+        this.subrojectsTable = new Table(0, 4);
+        this.tasksTable = new Table(0, 5);
+        this.intervalsTable = new Table(0, 6);
 
         this.tables.add(this.subrojectsTable);
         this.tables.add(this.tasksTable);
@@ -16,55 +31,66 @@ public class DetailedReport extends Report implements Visitor {
     }
 
     @Override
-    public void visitProject(Project project) {
-        String name = project.getName();
-        String desc = project.getDescription();
-        Date startDate = project.getStartDate();
-        Date endDate = project.getEndDate();
-        long duration = project.getDuration();
+    public void visitProject(final Project project) {
+
+        for (Node n : project.getActivities()) {
+            n.accept(this);
+        }
 
         if (isInPeriod(project.getStartDate(), project.getEndDate())) {
+            String name = project.getName();
+            String desc = project.getDescription();
+            Date startDate = getNewStartDate(project.getStartDate());
+            Date endDate = getNewEndDate(project.getEndDate());
+            long duration = getNewDuration(project.getStartDate(), project.getEndDate(), project.getDuration()); //ESTO NO ES REAL SIEMPRE
 
+
+            ArrayList<String> entry = new ArrayList<>(Arrays.asList(name, desc,
+                    startDate.toString(), endDate.toString(), String.valueOf(duration)));
             if (project.getParent().getParent() == null) {
-                this.rootProjectsTable.addRow();
-                desc, this.getNewStartDate(), this.getNewEndDate(), this.getnewDuration())
+                this.rootProjectsTable.addRow(entry);
             } else {
-                this.subrojectsTable.addRow(name, desc, this.getNewStartDate(), this.getNewEndDate(), this.getnewDuration());
-            }
-            for (Node n : project.getActivities()) {
-                n.accept(this);
+                this.subrojectsTable.addRow(entry);
             }
         }
     }
 
     @Override
-    public void visitTask(Task task) {
-
-        String name = task.getName();
-        String desc = task.getDescription();
-        Date startDate = task.getStartDate();
-        Date endDate = task.getEndDate();
-        long duration = task.getDuration();
-
-
-        this.rootProjectsTable.addRow(name, desc, this.getNewStartDate(), this.getNewEndDate(), this.getnewDuration());
+    public void visitTask(final Task task) {
 
         for (Interval i : task.getIntervals()) {
             i.accept(this);
         }
+
+        if (isInPeriod(task.getStartDate(), task.getEndDate())) {
+            String name = task.getName();
+            String desc = task.getDescription();
+            Date startDate = getNewStartDate(task.getStartDate());
+            Date endDate = getNewEndDate(task.getEndDate());
+            long duration = getNewDuration(task.getStartDate(), task.getEndDate(), task.getDuration()); //ESTO NO ES REAL SIEMPRE
+
+
+            ArrayList<String> entry = new ArrayList<>(Arrays.asList(name, desc,
+                    startDate.toString(), endDate.toString(), String.valueOf(duration)));
+            this.tasksTable.addRow(entry);
+        }
     }
 
     @Override
-    public void visitInterval(Interval interval) {
+    public void visitInterval(final Interval interval) {
         if (isInPeriod(interval.getStartDate(), interval.getEndDate())) {
             String name = interval.getParentTask().getName() + "_interval";
             String desc = interval.getParentTask().getDescription() + "_interval";
-            Date startDate = interval.getStartDate();
-            Date endDate = interval.getEndDate();
-            long duration = interval.getDuration();
+            Date startDate = getNewStartDate(interval.getStartDate());
+            Date endDate = getNewEndDate(interval.getEndDate());
+            long duration = getNewDuration(interval.getStartDate(), interval.getEndDate(), interval.getDuration()); //ESTO NO ES REAL SIEMPRE
 
-            this.rootProjectsTable.addRow(name, desc, this.getNewStartDate(), this.getNewEndDate(), this.getnewDuration());
 
+            ArrayList<String> entry = new ArrayList<>(Arrays.asList(name, desc,
+                    startDate.toString(), endDate.toString(), String.valueOf(duration)));
+            this.intervalsTable.addRow(entry);
         }
     }
+
+
 }

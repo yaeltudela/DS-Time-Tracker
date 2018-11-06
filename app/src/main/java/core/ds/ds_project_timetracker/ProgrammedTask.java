@@ -1,3 +1,4 @@
+
 package core.ds.ds_project_timetracker;
 
 import java.util.Date;
@@ -14,12 +15,12 @@ public class ProgrammedTask extends TaskDecorator implements Observer {
     private int delay = -1;
 
     /**
-     * Constructor with Date input
+     * Constructor with Date input.
      *
      * @param baseTask    The task that decorates
      * @param dateToStart The date when the task must start
      */
-    public ProgrammedTask(Task baseTask, Date dateToStart) {
+    public ProgrammedTask(final Task baseTask, final Date dateToStart) {
         super(baseTask);
         this.dateToStart = dateToStart;
         Clock.getInstance().addObserver(this);
@@ -27,12 +28,12 @@ public class ProgrammedTask extends TaskDecorator implements Observer {
 
 
     /**
-     * Constructor with seconds input
+     * Constructor with seconds input.
      * @param baseTask The task that decorates
      * @param delay The time the task must wait before start.
      */
 
-    ProgrammedTask(Task baseTask, int delay) {
+    ProgrammedTask(final Task baseTask, final int delay) {
         super(baseTask);
         this.delay = delay;
         dateToStart = new Date();
@@ -41,12 +42,13 @@ public class ProgrammedTask extends TaskDecorator implements Observer {
     }
 
     /**
-     * Method that starts the task when it's time and deletes from observing the clock
+     * Method that starts the task when it's time and
+     * deletes from observing the clock.
      * @param o -
      * @param arg The Clock object
      */
     @Override
-    public void update(Observable o, Object arg) {
+    public void update(final Observable o, final Object arg) {
         if (this.delay != -1) {
 
             if (((Clock) arg).getMs() >= dateToStart.getTime() + delay * 1000) {

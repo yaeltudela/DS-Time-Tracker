@@ -1,3 +1,4 @@
+
 package core.ds.ds_project_timetracker;
 
 import java.io.Serializable;
@@ -10,8 +11,8 @@ import java.util.ArrayList;
 public abstract class Task extends Node implements Serializable {
 
     /**
-     * Method that checks if the task isn't running and creates a new Interval object and makes
-     * it an Observer
+     * Method that checks if the task isn't running and
+     * creates a new Interval object and makes it an Observer.
      */
     public void startInterval() {
         if (!this.isActive()) {
@@ -26,8 +27,9 @@ public abstract class Task extends Node implements Serializable {
     }
 
     /**
-     * Method that checks if the task is running, and deletes the last interval (the one that
-     * is running) from being an Observer (making he don't refresh it's state more)
+     * Method that checks if the task is running, and deletes
+     * the last interval (the one that is running) from being an
+     * Observer (making he don't refresh it's state more).
      */
     public void stopInterval() {
         if (this.isActive()) {
@@ -49,7 +51,7 @@ public abstract class Task extends Node implements Serializable {
     //GETTERS AND SETTERS
 
     /**
-     * Getter for the parent field
+     * Getter for the parent field.
      *
      * @return Task parent
      */
@@ -57,28 +59,28 @@ public abstract class Task extends Node implements Serializable {
     public abstract Project getParent();
 
     /**
-     * Getter for the Intervals field
+     * Getter for the Intervals field.
      *
      * @return Interval collection from the Task
      */
     public abstract ArrayList<Interval> getIntervals();
 
     /**
-     * Setter for the Intervals field
+     * Setter for the Intervals field.
      *
      * @param intervals An arrayList with all the Intervals for this task
      */
     public abstract void setIntervals(ArrayList<Interval> intervals);
 
     /**
-     * Getter for the Active field
+     * Getter for the Active field.
      *
      * @return Boolean with the active status
      */
     public abstract boolean isActive();
 
     /**
-     * Setter for the Active field
+     * Setter for the Active field.
      *
      * @param state the state
      */

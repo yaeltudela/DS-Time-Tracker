@@ -1,18 +1,27 @@
+
 package core.ds.ds_project_timetracker;
 
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * Concrete class for saving the generated reports in TXT format.
+ */
 public class TXTReportGenerator extends ReportGenerator {
 
-    TXTReportGenerator(Report report) {
+    /**
+     * Default constructor.
+     *
+     * @param report Report to save
+     */
+    TXTReportGenerator(final Report report) {
         super(report);
     }
 
     @Override
     protected String createFileName() {
-        return "report - " + (new Date().toString()) + ".txt";
+        return "reportTXT - " + (new Date().toString()) + ".txt";
     }
 
     @Override

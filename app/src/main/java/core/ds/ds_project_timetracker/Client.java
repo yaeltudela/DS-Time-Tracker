@@ -1,16 +1,29 @@
+
 package core.ds.ds_project_timetracker;
 
 import java.util.Date;
 
+/**
+ * Class for make all the test.
+ */
 public class Client {
 
+    /**
+     * Main function.
+     *
+     * @param args none
+     */
     public static void main(String[] args) {
 
 
         Project root, p1, p2;
-        root = p1 = p2 = null;
+        root = null;
+        p1 = null;
+        p2 = null;
         Task t1, t2, t3;
-        t1 = t2 = t3 = null;
+        t1 = null;
+        t2 = null;
+        t3 = null;
         boolean load = true;
         boolean save = true;
         PrinterVisitor printerVisitor = null;
@@ -89,6 +102,8 @@ public class Client {
                 testEntrega2(p1, p2, p1_2, t1, t2, t3, t4, printerVisitor, root);
 
 
+                break;
+            default:
                 break;
         }
 

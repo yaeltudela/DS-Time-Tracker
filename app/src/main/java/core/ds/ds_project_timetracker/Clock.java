@@ -1,3 +1,4 @@
+
 package core.ds.ds_project_timetracker;
 
 
@@ -12,8 +13,8 @@ import java.util.TimerTask;
  * Observable Singleton.
  * It refreshes with a settable rate.
  */
-public class Clock extends Observable {
-    public static int REFRESH_RATE = 1;
+public final class Clock extends Observable {
+    public static int REFRESHRATE = 1;
 
     private static Clock clock = null;
     private Date date;
@@ -44,7 +45,8 @@ public class Clock extends Observable {
     }
 
     /**
-     * Set up the timer to refresh with the user Refresh rate to call an update method with this
+     * Set up the timer to refresh with the user Refresh
+     * rate to call an update method with this
      * periodicity
      */
     private void setupTimer() {
@@ -54,7 +56,7 @@ public class Clock extends Observable {
             public void run() {
                 updateClock();
             }
-        }, 0, Clock.REFRESH_RATE * msInSec);
+        }, 0, Clock.REFRESHRATE * msInSec);
     }
 
 
@@ -69,15 +71,15 @@ public class Clock extends Observable {
 
 
     /**
-     * Method to set up the refresh rate (checking min value) and re-setup the clock with the
-     * new configuration
+     * Method to set up the refresh rate (checking min
+     * value) and re-setup the clock with the new configuration.
      *
      * @param secs the seconds wanted for refresh rate
      */
-    public void setRefreshTicks(int secs) {
+    public void setRefreshTicks(final int secs) {
         if (secs >= 1) {
-            Clock.REFRESH_RATE = secs;
-            System.out.println("Refresh time has been set to " + REFRESH_RATE);
+            Clock.REFRESHRATE = secs;
+            System.out.println("Refresh time has been set to " + REFRESHRATE);
             if (this.timer != null) {
                 this.tt.cancel();
                 setupTimer();
@@ -89,7 +91,7 @@ public class Clock extends Observable {
     }
 
     /**
-     * Method that interupts the thread and cancel the task
+     * Method that interupts the thread and cancel the task.
      */
     public void stopClock() {
         this.tt.cancel();
@@ -98,7 +100,7 @@ public class Clock extends Observable {
 
 
     /**
-     * Method to get the date in Date format
+     * Method to get the date in Date format.
      *
      * @return Date object with clock's date
      */
@@ -106,12 +108,12 @@ public class Clock extends Observable {
         return date;
     }
 
-    private void setTime(Date date) {
+    private void setTime(final Date date) {
         this.date = date;
     }
 
     /**
-     * Method to get the date in ms (long)
+     * Method to get the date in ms (long).
      *
      * @return long with clock's date
      */

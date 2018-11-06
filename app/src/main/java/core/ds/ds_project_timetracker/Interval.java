@@ -1,3 +1,4 @@
+
 package core.ds.ds_project_timetracker;
 
 
@@ -7,7 +8,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 /**
- * Class that represent every time that a task has been active
+ * Class that represent every time that a task has been active.
  */
 public class Interval implements Observer, Serializable, Visitable {
 
@@ -22,7 +23,7 @@ public class Interval implements Observer, Serializable, Visitable {
      * @param startDate  Time when the Interval starts (usually current time)
      * @param parentTask The task that contains the Interval object
      */
-    Interval(Date startDate, Task parentTask) {
+    Interval(final Date startDate, final Task parentTask) {
         this.duration = 0;
         this.startDate = startDate;
         this.endDate = null;
@@ -37,7 +38,7 @@ public class Interval implements Observer, Serializable, Visitable {
      * @param endDate Time when the Interval ends
      * @param parentTask The task that contains the Interval object
      */
-    public Interval(Date startDate, Date endDate, Task parentTask) {
+    public Interval(final Date startDate, final Date endDate, final Task parentTask) {
         this.parentTask = parentTask;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -46,14 +47,15 @@ public class Interval implements Observer, Serializable, Visitable {
     }
 
     /**
-     * Method that updates the end date, the interval's duration and the parents data
+     * Method that updates the end date, the interval's
+     * duration and the parents data.
      * @param o -
      * @param arg Clock instance
      */
     @Override
-    public void update(Observable o, Object arg) {
+    public void update(final Observable o, final Object arg) {
         this.endDate = ((Clock) arg).getTime();
-        this.duration += Clock.REFRESH_RATE;
+        this.duration += Clock.REFRESHRATE;
         this.parentTask.updateData(this.endDate);
     }
 
@@ -68,7 +70,7 @@ public class Interval implements Observer, Serializable, Visitable {
         return this.parentTask;
     }
 
-    public void setParentTask(Task parentTask) {
+    public void setParentTask(final Task parentTask) {
         this.parentTask = parentTask;
     }
 
@@ -86,7 +88,7 @@ public class Interval implements Observer, Serializable, Visitable {
      * @param visitor the visitor
      */
     @Override
-    public void accept(Visitor visitor) {
+    public void accept(final Visitor visitor) {
         visitor.visitInterval(this);
 
     }

@@ -1,3 +1,4 @@
+
 package core.ds.ds_project_timetracker;
 
 
@@ -16,18 +17,18 @@ public abstract class TaskDecorator extends Task {
      *
      * @param baseTask Task to be decorated
      */
-    TaskDecorator(Task baseTask) {
+    TaskDecorator(final Task baseTask) {
         this.baseTask = baseTask;
 
     }
 
     @Override
-    public void updateData(Date time) {
+    public void updateData(final Date time) {
         this.baseTask.updateData(time);
     }
 
     @Override
-    public void accept(Visitor visitor) {
+    public void accept(final Visitor visitor) {
         this.baseTask.accept(visitor);
     }
 
@@ -38,7 +39,7 @@ public abstract class TaskDecorator extends Task {
     }
 
     @Override
-    public void setParent(Node parent) {
+    public void setParent(final Node parent) {
         this.baseTask.setParent(parent);
     }
 
@@ -48,7 +49,7 @@ public abstract class TaskDecorator extends Task {
     }
 
     @Override
-    public void setStartDate(Date startDate) {
+    public void setStartDate(final Date startDate) {
         this.baseTask.setStartDate(startDate);
     }
 
@@ -58,7 +59,7 @@ public abstract class TaskDecorator extends Task {
     }
 
     @Override
-    public void setEndDate(Date endDate) {
+    public void setEndDate(final Date endDate) {
         this.baseTask.setEndDate(endDate);
     }
 
@@ -68,7 +69,7 @@ public abstract class TaskDecorator extends Task {
     }
 
     @Override
-    public void setDuration(long duration) {
+    public void setDuration(final long duration) {
         this.baseTask.setDuration(duration);
     }
 
@@ -78,7 +79,7 @@ public abstract class TaskDecorator extends Task {
     }
 
     @Override
-    public void setName(String name) {
+    public void setName(final String name) {
         this.baseTask.setName(name);
     }
 
@@ -88,7 +89,7 @@ public abstract class TaskDecorator extends Task {
     }
 
     @Override
-    public void setDescription(String description) {
+    public void setDescription(final String description) {
         this.baseTask.setDescription(description);
     }
 
@@ -98,7 +99,7 @@ public abstract class TaskDecorator extends Task {
     }
 
     @Override
-    public void setIntervals(ArrayList<Interval> intervals) {
+    public void setIntervals(final ArrayList<Interval> intervals) {
         this.baseTask.setIntervals(intervals);
     }
 
@@ -108,7 +109,7 @@ public abstract class TaskDecorator extends Task {
     }
 
     @Override
-    public void setActive(boolean state) {
+    public void setActive(final boolean state) {
         this.baseTask.setActive(state);
     }
 
