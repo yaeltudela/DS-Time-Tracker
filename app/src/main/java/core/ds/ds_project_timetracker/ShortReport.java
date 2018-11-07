@@ -4,13 +4,18 @@ import java.util.Date;
 
 public class ShortReport extends Report implements Visitor {
 
-    public ShortReport(Project rootVisitable, Period reportPeriod) {
+    public ShortReport(final Project rootVisitable, final Period reportPeriod) {
         super(rootVisitable, reportPeriod);
 
     }
 
     @Override
-    public void visitProject(Project project) {
+    public void visitProject(final Project project) {
+        long newDuration = 0;
+        for (Node n : project.getActivities()) {
+            newDuration += n.getNewDuration(this);
+        }
+
         if (isInPeriod(project.getStartDate(), project.getEndDate())) {
 
             String name = project.getName();
@@ -18,6 +23,7 @@ public class ShortReport extends Report implements Visitor {
             Date startDate = project.getStartDate();
             Date endDate = project.getEndDate();
             long duration = project.getDuration();
+
 
             //Caso sobresale por los dos lados
             if (project.getStartDate().before(this.reportPeriod.getStartDate()) && project.getEndDate().after(this.reportPeriod.getEndDate())) {
@@ -41,12 +47,12 @@ public class ShortReport extends Report implements Visitor {
     }
 
     @Override
-    public void visitTask(Task task) {
-        //Do nothing
+    public void visitTask(final Task task) {
+
     }
 
     @Override
-    public void visitInterval(Interval interval) {
+    public void visitInterval(final Interval interval) {
         //Do nothing
     }
 

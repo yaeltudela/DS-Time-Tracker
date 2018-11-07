@@ -11,14 +11,15 @@ public class Project extends Node implements Serializable, Visitable {
 
 
     /**
-     * Constructor for the Project objects. It calls the Node constructor and also initialices
-     * the activity Collection and add its to his parent's activity Collection
+     * Constructor for the Project objects. It calls the Node constructor
+     * and also initialices the activity Collection and add its
+     * to his parent's activity Collection
      *
      * @param name        Project's Name. Must be non empty String
      * @param description Project's Description
      * @param parent      Project's parent. Null if it's root project
      */
-    Project(String name, String description, Project parent) {
+    Project(final String name, final String description, final Project parent) {
         if (name != null && !name.isEmpty()) {
             this.setName(name);
             this.setDescription(description);
@@ -38,7 +39,8 @@ public class Project extends Node implements Serializable, Visitable {
     }
 
     /**
-     * Method that updates all the data for the current project and calls recursively to it's parent
+     * Method that updates all the data for the current project
+     * and calls recursively to it's parent.
      *
      * @param time time to do the update. Usually the actual Clock time
      */
@@ -66,7 +68,7 @@ public class Project extends Node implements Serializable, Visitable {
      * @param visitor the visitor
      */
     @Override
-    public void accept(Visitor visitor) {
+    public void accept(final Visitor visitor) {
         visitor.visitProject(this);
     }
 
@@ -78,12 +80,19 @@ public class Project extends Node implements Serializable, Visitable {
      */
     @Override
     public String toString() {
-        return this.getName() + "\t" + this.getStartDate() + "\t" + this.getEndDate() + "\t" + this.getDuration()
-                + "\t" + (this.getParent() == null ? "None" : this.getParent().getName());
+        String parent;
+        if (this.getParent() == null) {
+            parent = "None";
+        } else {
+            parent = this.getParent().getName();
+        }
+
+        return this.getName() + "\t" + this.getStartDate() + "\t"
+                + this.getEndDate() + "\t" + this.getDuration() + "\t" + parent;
     }
 
     /**
-     * Getter for the activity list of this node
+     * Getter for the activity list of this node.
      *
      * @return Collection of Nodes with all the node's activities (Tasks and Subprojects)
      */
@@ -93,8 +102,9 @@ public class Project extends Node implements Serializable, Visitable {
 
 
     /**
-     * Getter for the parent's project. It calls the Node version and casts it to Project because
-     * a Project parent is always another Project
+     * Getter for the parent's project. It calls the Node
+     * version and casts it to Project because
+     * a Project parent is always another Project.
      * @return The project's parent
      */
     @Override

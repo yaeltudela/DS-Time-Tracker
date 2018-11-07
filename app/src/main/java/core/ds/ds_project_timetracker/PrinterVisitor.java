@@ -4,7 +4,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 /**
- * Concrete Class for printing all the visitable class starting from a root
+ * Concrete Class for printing all the visitable class starting from a root.
  */
 public class PrinterVisitor implements Visitor, Observer {
 
@@ -16,16 +16,17 @@ public class PrinterVisitor implements Visitor, Observer {
      *
      * @param rootProject The starter visitable object
      */
-    PrinterVisitor(Project rootProject) {
+    PrinterVisitor(final Project rootProject) {
         this.rootVisitable = rootProject;
     }
 
     /**
-     * Method to print Project objects. It prints the project data and visit's all of his sons.
+     * Method to print Project objects. It prints the project data and* visit's
+     * all of his sons.
      * @param project The project to visit
      */
     @Override
-    public void visitProject(Project project) {
+    public void visitProject(final Project project) {
         System.out.println(project.toString());
         for (Node n : project.getActivities()) {
             if (n instanceof Task) {
@@ -45,7 +46,7 @@ public class PrinterVisitor implements Visitor, Observer {
      * @param task The task to visit
      */
     @Override
-    public void visitTask(Task task) {
+    public void visitTask(final Task task) {
         System.out.println(task.toString());
         for (Interval i : task.getIntervals()) {
             i.accept(this);
@@ -54,11 +55,11 @@ public class PrinterVisitor implements Visitor, Observer {
     }
 
     /**
-     * Method to print Interval objects. It prints the Interval data
+     * Method to print Interval objects. It prints the Interval data.
      * @param interval The Interval to visit
      */
     @Override
-    public void visitInterval(Interval interval) {
+    public void visitInterval(final Interval interval) {
         //System.out.println("\t" + interval.toString());
 
 
@@ -66,12 +67,12 @@ public class PrinterVisitor implements Visitor, Observer {
 
 
     /**
-     * Method that calls the rootVisitable accept to print all the data
+     * Method that calls the rootVisitable accept to print all the data.
      * @param o The Observable object
      * @param arg The Clock object
      */
     @Override
-    public void update(Observable o, Object arg) {
+    public void update(final Observable o, final Object arg) {
         System.out.println("--------------------------------------");
         this.rootVisitable.accept(this);
         System.out.println("--------------------------------------");

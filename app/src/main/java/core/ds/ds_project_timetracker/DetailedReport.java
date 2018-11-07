@@ -17,48 +17,19 @@ public class DetailedReport extends Report implements Visitor {
 
     @Override
     public void visitProject(Project project) {
+        String name = project.getName();
+        String desc = project.getDescription();
+        Date startDate = project.getStartDate();
+        Date endDate = project.getEndDate();
+        long duration = project.getDuration();
+
         if (isInPeriod(project.getStartDate(), project.getEndDate())) {
-            String name = project.getName();
-            String desc = project.getDescription();
-            Date startDate = project.getStartDate();
-            Date endDate = project.getEndDate();
-            long duration = project.getDuration();
+
             if (project.getParent().getParent() == null) {
-                //Caso sobresale por los dos lados
-                if (project.getStartDate().before(this.reportPeriod.getStartDate()) && project.getEndDate().after(this.reportPeriod.getEndDate())) {
-                    this.rootProjectsTable.addRow(name, desc, startDate, endDate, this.reportPeriod.getDuration());
-                } else {
-                    //Caso mediofuera principio TODO preguntar como trato la duracion
-                    if (project.getStartDate().before(this.reportPeriod.getStartDate())) {
-                        this.rootProjectsTable.addRow(name, desc, startDate, endDate, duration);
-                    } else {
-                        //Caso mediofuera final TODO preguntar como trato la duracion
-                        if (project.getEndDate().after(this.reportPeriod.getEndDate())) {
-                            this.rootProjectsTable.addRow(name, desc, startDate, endDate, duration);
-                        } else {
-                            //Caso totalmente dentro
-                            this.rootProjectsTable.addRow(name, desc, startDate, endDate, duration);
-                        }
-                    }
-                }
+                this.rootProjectsTable.addRow();
+                desc, this.getNewStartDate(), this.getNewEndDate(), this.getnewDuration())
             } else {
-                //Caso sobresale por los dos lados
-                if (project.getStartDate().before(this.reportPeriod.getStartDate()) && project.getEndDate().after(this.reportPeriod.getEndDate())) {
-                    this.subrojectsTable.addRow(name, desc, startDate, endDate, this.reportPeriod.getDuration());
-                } else {
-                    //Caso mediofuera principio TODO preguntar como trato la duracion
-                    if (project.getStartDate().before(this.reportPeriod.getStartDate())) {
-                        this.subrojectsTable.addRow(name, desc, startDate, endDate, duration);
-                    } else {
-                        //Caso mediofuera final TODO preguntar como trato la duracion
-                        if (project.getEndDate().after(this.reportPeriod.getEndDate())) {
-                            this.subrojectsTable.addRow(name, desc, startDate, endDate, duration);
-                        } else {
-                            //Caso totalmente dentro
-                            this.subrojectsTable.addRow(name, desc, startDate, endDate, duration);
-                        }
-                    }
-                }
+                this.subrojectsTable.addRow(name, desc, this.getNewStartDate(), this.getNewEndDate(), this.getnewDuration());
             }
             for (Node n : project.getActivities()) {
                 n.accept(this);
@@ -76,22 +47,7 @@ public class DetailedReport extends Report implements Visitor {
         long duration = task.getDuration();
 
 
-        if (task.getStartDate().before(this.reportPeriod.getStartDate()) && task.getEndDate().after(this.reportPeriod.getEndDate())) {
-            this.tasksTable.addRow(name, desc, startDate, endDate, this.reportPeriod.getDuration());
-        } else {
-            //Caso mediofuera principio TODO preguntar como trato la duracion
-            if (task.getStartDate().before(this.reportPeriod.getStartDate())) {
-                this.tasksTable.addRow(name, desc, startDate, endDate, duration);
-            } else {
-                //Caso mediofuera final TODO preguntar como trato la duracion
-                if (task.getEndDate().after(this.reportPeriod.getEndDate())) {
-                    this.tasksTable.addRow(name, desc, startDate, endDate, duration);
-                } else {
-                    //Caso totalmente dentro
-                    this.tasksTable.addRow(name, desc, startDate, endDate, duration);
-                }
-            }
-        }
+        this.rootProjectsTable.addRow(name, desc, this.getNewStartDate(), this.getNewEndDate(), this.getnewDuration());
 
         for (Interval i : task.getIntervals()) {
             i.accept(this);
@@ -107,23 +63,8 @@ public class DetailedReport extends Report implements Visitor {
             Date endDate = interval.getEndDate();
             long duration = interval.getDuration();
 
-            //Caso sobresale por los dos lados
-            if (interval.getStartDate().before(this.reportPeriod.getStartDate()) && interval.getEndDate().after(this.reportPeriod.getEndDate())) {
-                this.intervalsTable.addRow(name, desc, startDate, endDate, this.reportPeriod.getDuration());
-            } else {
-                //Caso mediofuera principio TODO preguntar como trato la duracion
-                if (interval.getStartDate().before(this.reportPeriod.getStartDate())) {
-                    this.intervalsTable.addRow(name, desc, startDate, endDate, duration);
-                } else {
-                    //Caso mediofuera final TODO preguntar como trato la duracion
-                    if (interval.getEndDate().after(this.reportPeriod.getEndDate())) {
-                        this.intervalsTable.addRow(name, desc, startDate, endDate, duration);
-                    } else {
-                        //Caso totalmente dentro
-                        this.intervalsTable.addRow(name, desc, startDate, endDate, duration);
-                    }
-                }
-            }
+            this.rootProjectsTable.addRow(name, desc, this.getNewStartDate(), this.getNewEndDate(), this.getnewDuration());
+
         }
     }
 }
