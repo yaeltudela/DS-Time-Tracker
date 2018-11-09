@@ -9,7 +9,14 @@ import java.util.Date;
  * Concrete class that represent a basic and Short Report.
  * It contains only the Report data and the rootProjects data.
  */
-public class ShortReport extends Report implements Visitor {
+public class ShortReport extends Report {
+
+    private Container title = new Title("Short Report");
+    private Container subtitleReports = new Subtitle("Period");
+    private Container subtitleRootProjects = new Subtitle("Root Projects");
+    private Container footer = new Text("Time Tracker 1.0");
+
+
 
     /**
      * Constructor for the ShortReport.
@@ -18,24 +25,29 @@ public class ShortReport extends Report implements Visitor {
      * @param rootVisitable the first Visitable to visit.
      * @param reportPeriod  The period to be reported.
      */
-    public ShortReport(final Project rootVisitable, final Period reportPeriod) {
-        super(rootVisitable, reportPeriod);
+    public ShortReport(final Project rootVisitable, final Period reportPeriod, final ReportGenerator reportGenerator) {
+        super(rootVisitable, reportPeriod, reportGenerator);
 
-        createSectionTable("Short Report", null);
-        createSeparatorTable();
-        createCommonTables();
+    }
+
+    @Override
+    public void createReport() {
+
+        this.addToReport(new Separator());
+        this.addToReport(this.title);
+        this.addToReport(new Separator());
+        this.addToReport(this.subtitleReports);
+        this.addToReport(createReportTable());
+        this.addToReport(new Separator());
+        this.addToReport(this.subtitleRootProjects);
+        this.addToReport();
+        this.addToReport(new Separator());
+        this.addToReport(footer);
     }
 
 
     @Override
     public void visitProject(final Project project) {
-        /*
-        long newDuration = 0;
-        for (Node n : project.getActivities()) {
-            newDuration += n.getNewDuration(this);
-        }
-
-         */
 
         if (isInPeriod(project.getStartDate(), project.getEndDate())) {
 
@@ -55,14 +67,25 @@ public class ShortReport extends Report implements Visitor {
     }
 
     @Override
-    public void visitTask(final Task task) {
+    public long visitTask(final Task task) {
+
+        long taskduration = 0;
+        for (Interval i : task.getIntervals()) {
+            if (isInPeriod(i.getStartDate(), i.getEndDate())) {
+                taskduration += i.getDuration();
+            }
+        }
+
+    }
+
+
+    @Override
+    public void visitTable(Table table) {
 
     }
 
     @Override
-    public void visitInterval(final Interval interval) {
-        //Do nothing
+    public void visitSubtitle(Subtitle subtitle) {
+
     }
-
-
 }

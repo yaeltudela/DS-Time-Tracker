@@ -113,7 +113,7 @@ public class BaseTask extends Task {
      * @param visitor the visitor
      */
     @Override
-    public void accept(final Visitor visitor) {
+    public void accept(final TreeVisitor visitor) {
         visitor.visitTask(this);
     }
 }

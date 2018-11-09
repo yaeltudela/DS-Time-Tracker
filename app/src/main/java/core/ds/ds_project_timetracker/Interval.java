@@ -20,29 +20,29 @@ public class Interval implements Observer, Serializable, Visitable {
     /**
      * Default Interval constructor. It sets up the fields.
      *
-     * @param startDate  Time when the Interval starts (usually current time)
-     * @param parentTask The task that contains the Interval object
+     * @param start  Time when the Interval starts (usually current time)
+     * @param parent The task that contains the Interval object
      */
-    Interval(final Date startDate, final Task parentTask) {
+    Interval(final Date start, final Task parent) {
         this.duration = 0;
-        this.startDate = startDate;
+        this.startDate = start;
         this.endDate = null;
-        this.parentTask = parentTask;
+        this.parentTask = parent;
 
     }
 
     /**
      * Interval contructor for the user-input intervals. (Not implemented yet)
      *
-     * @param startDate Time when the Interval starts
-     * @param endDate Time when the Interval ends
-     * @param parentTask The task that contains the Interval object
+     * @param start Time when the Interval starts
+     * @param end Time when the Interval ends
+     * @param parent The task that contains the Interval object
      */
-    public Interval(final Date startDate, final Date endDate, final Task parentTask) {
-        this.parentTask = parentTask;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.duration = (this.endDate.getTime() - this.startDate.getTime()) / 1000;
+    public Interval(final Date start, final Date end, final Task parent) {
+        this.parentTask = parent;
+        this.startDate = start;
+        this.endDate = end;
+        this.duration = (this.endDate.getTime() - this.startDate.getTime()) / Clock.MS_IN_SEC;
 
     }
 
@@ -70,8 +70,8 @@ public class Interval implements Observer, Serializable, Visitable {
         return this.parentTask;
     }
 
-    public void setParentTask(final Task parentTask) {
-        this.parentTask = parentTask;
+    public void setParentTask(final Task parent) {
+        this.parentTask = parent;
     }
 
     public Date getStartDate() {
@@ -88,7 +88,7 @@ public class Interval implements Observer, Serializable, Visitable {
      * @param visitor the visitor
      */
     @Override
-    public void accept(final Visitor visitor) {
+    public void accept(final TreeVisitor visitor) {
         visitor.visitInterval(this);
 
     }

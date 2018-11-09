@@ -8,7 +8,7 @@ import java.util.Date;
 /**
  * Concrete class to save to disk reports as an HTML file.
  */
-public class HTMLReportGenerator extends ReportGenerator {
+public class HTMLReportGenerator extends ReportGenerator implements ReportVisitor {
 
     private Webpage webpage;
 
@@ -22,17 +22,43 @@ public class HTMLReportGenerator extends ReportGenerator {
         this.webpage = new Webpage();
     }
 
+
+    @Override
+    public void visitSubtitle(final Subtitle subtitle) {
+        this.webpage.addHeader(subtitle.getText(), 3, false);
+    }
+
+    @Override
+    public void visitText(final Text text) {
+        this.webpage.addText(text.getText());
+    }
+
+    @Override
+    public void visitSeparator(final Separator separator) {
+        this.webpage.addSeparationLine();
+    }
+
+    @Override
+    public void visitTable(final Table table) {
+        this.webpage.addTable(table.getData(), false, false);
+    }
+
+    @Override
+    public void visitTitle(final Title title) {
+        this.webpage.addHeader(title.getText(), 1, true);
+    }
+
+
     @Override
     protected String createFileName() {
         return "reportHTML - " + (new Date().toString()) + ".html";
     }
 
-
     @Override
     protected void saveReportToDisk() {
         for (Table t : this.report.getTables()) {
             if (t == null) {
-                this.webpage.afegeixLiniaSeparacio();
+                this.webpage.addSeparationLine();
             } else {
                 this.webpage.addTable(t.getData(), false, false);
             }

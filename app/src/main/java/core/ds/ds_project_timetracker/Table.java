@@ -2,7 +2,7 @@ package core.ds.ds_project_timetracker;
 
 import java.util.ArrayList;
 
-public class Table {
+public class Table extends Container {
 
     private int rows;
     private int cols;
@@ -48,5 +48,19 @@ public class Table {
     public void addRow(final ArrayList<String> entry) {
         this.data.add(entry);
         this.rows++;
+    }
+
+    @Override
+    public String getText() {
+        return null;
+    }
+
+    public void printTable() {
+        System.out.println(this.getData());
+    }
+
+    @Override
+    public void accept(TreeVisitor visitor) {
+        ((ReportVisitor) visitor).visitTable(this);
     }
 }

@@ -6,7 +6,7 @@ import java.util.Observer;
 /**
  * Concrete Class for printing all the visitable class starting from a root.
  */
-public class PrinterVisitor implements Visitor, Observer {
+public class PrinterVisitor implements TreeVisitor, Observer {
 
     /**
      * The project to print from.

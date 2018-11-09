@@ -40,6 +40,9 @@ public final class Clock extends Observable {
      */
     private TimerTask tt = null;
 
+    /**
+     * Private constructor. It creates the timer and sets the date.
+     */
     private Clock() {
         this.timer = new Timer(true);
         this.date = new Date();
@@ -63,7 +66,7 @@ public final class Clock extends Observable {
     /**
      * Set up the timer to refresh with the user Refresh
      * rate to call an update method with this
-     * periodicity
+     * periodicity.
      */
     private void setupTimer() {
         this.timer.scheduleAtFixedRate(this.tt = new TimerTask() {
@@ -123,8 +126,13 @@ public final class Clock extends Observable {
         return date;
     }
 
-    private void setTime(final Date date) {
-        this.date = date;
+    /**
+     * Setter for the actual time.
+     *
+     * @param time the actual time.
+     */
+    private void setTime(final Date time) {
+        this.date = time;
     }
 
     /**

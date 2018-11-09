@@ -10,15 +10,19 @@ import java.util.Date;
  * Abstract class that represents a Report.
  * A report takes some tables with the tree data during a Period.
  */
-public abstract class Report implements Visitor {
+public abstract class Report {
 
     protected String name;
     protected final Project rootVisitable;
     protected final Period reportPeriod;
-    protected Collection<Table> tables;
+    protected Collection<Container> tables;
+    private ReportGenerator reportGenerator;
 
-    protected Table reportTable;
-    protected Table rootProjectsTable;
+
+    private Container title = new Title("Short Report");
+    private Container subtitleReports = new Subtitle("Period");
+    private Container subtitleProjects = new Subtitle("Root Projects");
+
 
     /**
      * Report constructor. It set's up the main table with all the contents.
@@ -26,11 +30,23 @@ public abstract class Report implements Visitor {
      * @param rootVisitable The first node to be visited.
      * @param reportPeriod  The associated period with the report.
      */
-    protected Report(final Project rootVisitable, final Period reportPeriod) {
+    Report(final Project rootVisitable, final Period reportPeriod, ReportGenerator reportGenerator) {
         this.rootVisitable = rootVisitable;
         this.reportPeriod = reportPeriod;
+        this.reportGenerator = reportGenerator;
         this.tables = new ArrayList<>();
+
     }
+
+
+    protected void addToReport(final Container container) {
+        tables.add(container);
+    }
+
+    /**
+     * Abstract method to implement the create the tables by type.
+     */
+    public abstract void createReport();
 
     /**
      * Method to check if the Node or Interval needs to be evaluated.
@@ -39,7 +55,7 @@ public abstract class Report implements Visitor {
      * @param endDate   final date to verify.
      * @return True if is inside or intersect the period; false otherwise.
      */
-    protected boolean isInPeriod(final Date startDate, final Date endDate) {
+    boolean isInPeriod(final Date startDate, final Date endDate) {
         return endDate.after(this.reportPeriod.getStartDate()) || startDate.before(this.reportPeriod.getEndDate());
     }
 
@@ -50,52 +66,28 @@ public abstract class Report implements Visitor {
         this.tables.add(null);
     }
 
-    /**
-     * Method that creates and add a table with a Title and,
-     * optionally a subtitle.
-     *
-     * @param title    The title of section.
-     * @param subtitle null or subtitle of section.
-     */
-    void createSectionTable(final String title, String subtitle) {
-        Table section = new Table(2, 1);
-        section.setCell(0, 0, title);
-        if (subtitle == null) {
-            subtitle = "";
-        }
-        section.setCell(1, 0, subtitle);
-        this.tables.add(section);
-    }
 
-    protected void createReportTable() {
-        this.reportTable = new Table(0, 2);
-        this.tables.add(this.reportTable);
+    protected Table createReportTable() {
 
-        ArrayList<String> reportStartEntry = new ArrayList<>(Arrays.asList("From: ", reportPeriod.getStartDate().toString()));
-        this.reportTable.addRow(reportStartEntry);
-        ArrayList<String> reportEndEntry = new ArrayList<>(Arrays.asList("To: ", reportPeriod.getEndDate().toString()));
-        this.reportTable.addRow(reportEndEntry);
-        ArrayList<String> reportGenerationDateEntry = new ArrayList<>(Arrays.asList("Report generated at: ", reportPeriod.getReportDate().toString()));
-        this.reportTable.addRow(reportGenerationDateEntry);
+        Table table = new Table(4, 2);
 
-        createSeparatorTable();
+        table.setCell(0, 0, "Date: ");
+        table.setCell(1, 0, "From: ");
+        table.setCell(2, 0, "To: ");
+        table.setCell(3, 0, "Report generated at: ");
+        table.setCell(0, 1, "");
+        table.setCell(1, 1, this.reportPeriod.getStartDate().toString());
+        table.setCell(2, 1, this.reportPeriod.getEndDate().toString());
+        table.setCell(3, 1, this.reportPeriod.getReportDate().toString());
+
+        return table;
     }
 
     protected void createRootProjectTables() {
-        this.rootProjectsTable = new Table(0, 4);
-        this.tables.add(this.rootProjectsTable);
+        Table rootProjectsTable = new Table(0, 4);
         ArrayList<String> rootProjectHeader = new ArrayList<>(Arrays.asList("Name", "Start Date", "End Date", "Duration"));
+        rootProjectsTable.addRow(rootProjectHeader);
 
-        this.rootProjectsTable.addRow(rootProjectHeader);
-
-        createSeparatorTable();
-    }
-
-
-    protected void createCommonTables() {
-        createReportTable();
-        createSectionTable("Root projects", null);
-        createRootProjectTables();
     }
 
 
@@ -104,7 +96,7 @@ public abstract class Report implements Visitor {
      */
     protected void generateReport() {
         for (Node p : rootVisitable.getActivities()) {
-            p.accept(this);
+            p.accept(this.);
         }
     }
 
@@ -113,7 +105,7 @@ public abstract class Report implements Visitor {
      * @param startDate Date to recalculate
      * @return startDate or the new date (Period startDate)
      */
-    protected Date getNewStartDate(Date startDate) {
+    protected Date getNewStartDate(final Date startDate) {
         if (startDate.before(this.reportPeriod.getStartDate())) {
             return this.reportPeriod.getStartDate();
         } else {
@@ -126,7 +118,7 @@ public abstract class Report implements Visitor {
      * @param endDate Date to recalculate
      * @return endDate or the new date (Period endDate)
      */
-    protected Date getNewEndDate(Date endDate) {
+    protected Date getNewEndDate(final Date endDate) {
         if (endDate.after(this.reportPeriod.getEndDate())) {
             return this.reportPeriod.getStartDate();
         } else {

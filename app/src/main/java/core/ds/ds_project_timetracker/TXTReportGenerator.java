@@ -8,7 +8,7 @@ import java.util.Date;
 /**
  * Concrete class for saving the generated reports in TXT format.
  */
-public class TXTReportGenerator extends ReportGenerator {
+public class TXTReportGenerator extends ReportGenerator implements ReportVisitor {
 
     /**
      * Default constructor.
@@ -50,4 +50,31 @@ public class TXTReportGenerator extends ReportGenerator {
     }
 
 
+    @Override
+    public void visitTable(Table table) {
+
+    }
+
+    @Override
+    public void visitTitle(Title title) {
+        this.printWriter.println(title.getText());
+
+    }
+
+    @Override
+    public void visitSubtitle(Subtitle subtitle) {
+        this.printWriter.println(subtitle.getText());
+
+    }
+
+    @Override
+    public void visitText(Text text) {
+        this.printWriter.println(text.getText());
+
+    }
+
+    @Override
+    public void visitSeparator(Separator separator) {
+        this.printWriter.println(separator.getText());
+    }
 }

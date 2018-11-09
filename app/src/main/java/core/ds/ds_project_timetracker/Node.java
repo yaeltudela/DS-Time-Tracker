@@ -38,10 +38,10 @@ public abstract class Node implements Serializable, Visitable {
     /**
      * Setter for the name node.
      *
-     * @param name String with name of the Node
+     * @param title String with name of the Node
      */
-    public void setName(final String name) {
-        this.name = name;
+    public void setName(final String title) {
+        this.name = title;
     }
 
     /**
@@ -55,14 +55,14 @@ public abstract class Node implements Serializable, Visitable {
 
     /**
      * Setter for the description node.
-     * @param description String with description of the Node
+     * @param desc String with description of the Node
      */
-    public void setDescription(final String description) {
-        this.description = description;
+    public void setDescription(final String desc) {
+        this.description = desc;
     }
 
     /**
-     * Getter for the duration field
+     * Getter for the duration field.
      *
      * @return long of the node's duration
      */
@@ -72,10 +72,10 @@ public abstract class Node implements Serializable, Visitable {
 
     /**
      * Setter for the duration node.
-     * @param duration The duration of the Node
+     * @param time The duration of the Node
      */
-    public void setDuration(final long duration) {
-        this.duration = duration;
+    public void setDuration(final long time) {
+        this.duration = time;
     }
 
     /**
@@ -88,10 +88,10 @@ public abstract class Node implements Serializable, Visitable {
 
     /**
      * Setter for the startDate node.
-     * @param startDate The startDate of the Node
+     * @param start The startDate of the Node
      */
-    public void setStartDate(final Date startDate) {
-        this.startDate = startDate;
+    public void setStartDate(final Date start) {
+        this.startDate = start;
     }
 
     /**
@@ -104,15 +104,16 @@ public abstract class Node implements Serializable, Visitable {
 
     /**
      * Setter for the endDate node.
-     * @param endDate The endDate of the Node
+     * @param end The endDate of the Node
      */
-    public void setEndDate(final Date endDate) {
-        this.endDate = endDate;
+    public void setEndDate(final Date end) {
+        this.endDate = end;
     }
 
     /**
      * Getter for the parent field.
-     * @return Node parent of the node. Null if is the root Node. Must be casted to Project or Task
+     * @return Node parent of the node. Null if is the root Node.
+     *             Must be casted to Project or Task
      */
     public Node getParent() {
         return parent;
@@ -120,13 +121,10 @@ public abstract class Node implements Serializable, Visitable {
 
     /**
      * Setter for the parent node.
-     * @param parent the parent of the node (Node, Task or Project)
+     * @param father the parent of the node (Node, Task or Project)
      */
-    public void setParent(final Node parent) {
-        this.parent = parent;
+    public void setParent(final Node father) {
+        this.parent = father;
     }
 
-
 }
-
-
