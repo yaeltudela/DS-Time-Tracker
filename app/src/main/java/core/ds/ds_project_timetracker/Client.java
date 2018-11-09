@@ -141,9 +141,9 @@ public class Client {
             t3.stopInterval();
 
             Period period = new Period(d0, d);
-            Report report = new DetailedReport(root, period);
-            report.generateReport();
-            ReportGenerator reportGenerator = new HTMLReportGenerator(report);
+            ReportGenerator reportGenerator = new TXTReportGenerator();
+            Report report = new DetailedReport(root, period, reportGenerator);
+            report.createReport();
             reportGenerator.saveReportToDisk();
 
 

@@ -88,8 +88,8 @@ public class Interval implements Observer, Serializable, Visitable {
      * @param visitor the visitor
      */
     @Override
-    public void accept(final TreeVisitor visitor) {
-        visitor.visitInterval(this);
+    public void accept(final Visitor visitor) {
+        ((TreeVisitor) visitor).visitInterval(this);
 
     }
 

@@ -1,7 +1,10 @@
 
 package core.ds.ds_project_timetracker;
 
-import java.io.FileOutputStream;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -10,13 +13,20 @@ import java.util.Date;
  */
 public class TXTReportGenerator extends ReportGenerator implements ReportVisitor {
 
+    private PrintWriter printWriter;
+
     /**
      * Default constructor.
      *
-     * @param report Report to save
      */
-    TXTReportGenerator(final Report report) {
-        super(report);
+    TXTReportGenerator() {
+        super();
+        try {
+            this.printWriter = new PrintWriter(new BufferedWriter(new FileWriter(this.file)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -26,33 +36,19 @@ public class TXTReportGenerator extends ReportGenerator implements ReportVisitor
 
     @Override
     protected void saveReportToDisk() {
-        try {
-            FileOutputStream fileOutputStream = new FileOutputStream(file);
-            for (Table t : this.report.getTables()) {
-                if (t == null) {
-                    fileOutputStream.write(("------------------------------------------------------------------------------------------------------\n").getBytes());
-                } else {
-                    for (ArrayList<String> line : t.getData()) {
-                        for (String w : line) {
-                            fileOutputStream.write((w + "\t").getBytes());
-                        }
-                        fileOutputStream.write(("\n").getBytes());
-                    }
-                }
-            }
-
-
-            fileOutputStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        this.printWriter.close();
     }
 
 
     @Override
     public void visitTable(Table table) {
-
+        for (ArrayList<String> line : table.getData()) {
+            for (String word : line) {
+                this.printWriter.print(word);
+                this.printWriter.print("\t");
+            }
+            this.printWriter.print("\n");
+        }
     }
 
     @Override

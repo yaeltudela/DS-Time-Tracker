@@ -60,7 +60,7 @@ public class Table extends Container {
     }
 
     @Override
-    public void accept(TreeVisitor visitor) {
+    public void accept(final Visitor visitor) {
         ((ReportVisitor) visitor).visitTable(this);
     }
 }

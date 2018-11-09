@@ -74,8 +74,8 @@ public class Project extends Node implements Serializable, Visitable {
      * @param visitor the visitor
      */
     @Override
-    public void accept(final TreeVisitor visitor) {
-        visitor.visitProject(this);
+    public void accept(final Visitor visitor) {
+        ((TreeVisitor) visitor).visitProject(this);
     }
 
     /**
@@ -119,5 +119,6 @@ public class Project extends Node implements Serializable, Visitable {
     public Project getParent() {
         return (Project) super.getParent();
     }
+
 
 }

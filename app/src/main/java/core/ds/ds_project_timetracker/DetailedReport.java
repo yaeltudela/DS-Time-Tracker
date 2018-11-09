@@ -1,10 +1,6 @@
 
 package core.ds.ds_project_timetracker;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-
 /**
  * Concrete class to store data from a Detailed Report.
  * It contains all the projects, subprojects, tasks and intervals.
@@ -14,7 +10,7 @@ public class DetailedReport extends Report implements TreeVisitor {
 
     private Container title = new Title("Detailed Report");
     private Container subtitleReports = new Subtitle("Period");
-    private Container subtitleProjects = new Subtitle("Root Projects");
+    private Container subtitleRootProjects = new Subtitle("Root Projects");
     private Container subtitleSubProjects = new Subtitle("Subprojects");
     private Container textSubProjects = new Text("Subtitle subprojects");
     private Container subtitleTasks = new Subtitle("Task");
@@ -31,34 +27,50 @@ public class DetailedReport extends Report implements TreeVisitor {
 
     @Override
     public void createReport() {
-
-        this.addToReport(new Separator());
-        this.addToReport(this.title);
-        this.addToReport(new Separator());
-        this.addToReport(this.subtitleReports);
-        this.addToReport(createReportTable());
-        this.addToReport(new Separator());
-        this.addToReport(this.subtitleProjects);
-        this.addToReport();
-        this.addToReport(new Separator());
-        this.addToReport(this.subtitleSubProjects);
-        this.addToReport(this.textSubProjects);
-        this.addToReport();
-        this.addToReport(new Separator());
-        this.addToReport(this.subtitleTasks);
-        this.addToReport(this.textTask);
-        this.addToReport();
-        this.addToReport(new Separator());
-        this.addToReport(this.subtitleIntervals);
-        this.addToReport(this.textIntervals);
-        this.addToReport();
-        this.addToReport(new Separator());
-        this.addToReport(footer);
+        this.reportGenerator.visitSeparator(new Separator());
+        this.reportGenerator.visitTitle((Title) this.title);
+        this.reportGenerator.visitSeparator(new Separator());
+        this.reportGenerator.visitSubtitle((Subtitle) this.subtitleReports);
+        this.reportGenerator.visitTable(createReportTable());
+        this.reportGenerator.visitSeparator(new Separator());
+        this.reportGenerator.visitSubtitle((Subtitle) this.subtitleRootProjects);
+        //this.reportGenerator.visitTable();
+        this.reportGenerator.visitSeparator(new Separator());
+        this.reportGenerator.visitSubtitle((Subtitle) this.subtitleSubProjects);
+        this.reportGenerator.visitText((Text) this.textSubProjects);
+        //this.reportGenerator.visitTable();
+        this.reportGenerator.visitSeparator(new Separator());
+        this.reportGenerator.visitSubtitle((Subtitle) this.subtitleTasks);
+        this.reportGenerator.visitText((Text) this.textTask);
+        //this.reportGenerator.visitTable();
+        this.reportGenerator.visitSeparator(new Separator());
+        this.reportGenerator.visitSubtitle((Subtitle) this.subtitleIntervals);
+        this.reportGenerator.visitText((Text) this.textIntervals);
+        //this.reportGenerator.visit();
+        this.reportGenerator.visitSeparator(new Separator());
+        this.reportGenerator.visitText((Text) footer);
 
 
     }
 
     @Override
+    public void visitProject(Project project) {
+
+    }
+
+    @Override
+    public void visitTask(Task task) {
+
+    }
+
+    @Override
+    public void visitInterval(Interval interval) {
+
+    }
+
+    /*
+    *
+    * @Override
     public void visitProject(final Project project) {
         if (isInPeriod(project.getStartDate(), project.getEndDate())) {
             String name = project.getName();
@@ -119,4 +131,7 @@ public class DetailedReport extends Report implements TreeVisitor {
         }
     }
 
+    */
+
 }
+

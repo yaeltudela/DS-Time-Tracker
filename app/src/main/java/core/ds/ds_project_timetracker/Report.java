@@ -16,7 +16,7 @@ public abstract class Report {
     protected final Project rootVisitable;
     protected final Period reportPeriod;
     protected Collection<Container> tables;
-    private ReportGenerator reportGenerator;
+    protected ReportGenerator reportGenerator;
 
 
     private Container title = new Title("Short Report");
@@ -94,11 +94,7 @@ public abstract class Report {
     /**
      * Method that starts visiting every element of the rootVisitable.
      */
-    protected void generateReport() {
-        for (Node p : rootVisitable.getActivities()) {
-            p.accept(this.);
-        }
-    }
+
 
     /**
      * Method that recalculates, if needed, the new StartDate.

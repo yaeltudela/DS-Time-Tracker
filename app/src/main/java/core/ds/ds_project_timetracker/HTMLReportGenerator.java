@@ -15,17 +15,26 @@ public class HTMLReportGenerator extends ReportGenerator implements ReportVisito
     /**
      * Constructor for the HTML report Generator.
      *
-     * @param report The report to save.
      */
-    HTMLReportGenerator(final Report report) {
-        super(report);
+    HTMLReportGenerator() {
+        super();
         this.webpage = new Webpage();
     }
 
 
     @Override
+    public void visitTitle(final Title title) {
+        this.webpage.addHeader(title.getText(), 1, true);
+    }
+
+    @Override
     public void visitSubtitle(final Subtitle subtitle) {
-        this.webpage.addHeader(subtitle.getText(), 3, false);
+        this.webpage.addHeader(subtitle.getText(), 2, false);
+    }
+
+    @Override
+    public void visitTable(final Table table) {
+        this.webpage.addTable(table.getData(), true, true);
     }
 
     @Override
@@ -38,16 +47,6 @@ public class HTMLReportGenerator extends ReportGenerator implements ReportVisito
         this.webpage.addSeparationLine();
     }
 
-    @Override
-    public void visitTable(final Table table) {
-        this.webpage.addTable(table.getData(), false, false);
-    }
-
-    @Override
-    public void visitTitle(final Title title) {
-        this.webpage.addHeader(title.getText(), 1, true);
-    }
-
 
     @Override
     protected String createFileName() {
@@ -56,13 +55,7 @@ public class HTMLReportGenerator extends ReportGenerator implements ReportVisito
 
     @Override
     protected void saveReportToDisk() {
-        for (Table t : this.report.getTables()) {
-            if (t == null) {
-                this.webpage.addSeparationLine();
-            } else {
-                this.webpage.addTable(t.getData(), false, false);
-            }
-        }
+
         PrintStream file = null;
         try {
             file = new PrintStream(this.filename);

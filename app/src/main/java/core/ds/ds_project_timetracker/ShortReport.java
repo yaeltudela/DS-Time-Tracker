@@ -9,14 +9,12 @@ import java.util.Date;
  * Concrete class that represent a basic and Short Report.
  * It contains only the Report data and the rootProjects data.
  */
-public class ShortReport extends Report {
+public class ShortReport extends Report implements TreeVisitor {
 
     private Container title = new Title("Short Report");
     private Container subtitleReports = new Subtitle("Period");
     private Container subtitleRootProjects = new Subtitle("Root Projects");
     private Container footer = new Text("Time Tracker 1.0");
-
-
 
     /**
      * Constructor for the ShortReport.
@@ -30,19 +28,20 @@ public class ShortReport extends Report {
 
     }
 
+
     @Override
     public void createReport() {
+        this.reportGenerator.visitSeparator(new Separator());
+        this.reportGenerator.visitTitle((Title) this.title);
+        this.reportGenerator.visitSeparator(new Separator());
+        this.reportGenerator.visitSubtitle((Subtitle) this.subtitleReports);
+        this.reportGenerator.visitTable(createReportTable());
+        this.reportGenerator.visitSeparator(new Separator());
+        this.reportGenerator.visitSubtitle((Subtitle) this.subtitleRootProjects);
+        //this.reportGenerator.visitTable();
+        this.reportGenerator.visitSeparator(new Separator());
+        this.reportGenerator.visitText((Text) footer);
 
-        this.addToReport(new Separator());
-        this.addToReport(this.title);
-        this.addToReport(new Separator());
-        this.addToReport(this.subtitleReports);
-        this.addToReport(createReportTable());
-        this.addToReport(new Separator());
-        this.addToReport(this.subtitleRootProjects);
-        this.addToReport();
-        this.addToReport(new Separator());
-        this.addToReport(footer);
     }
 
 
@@ -61,13 +60,13 @@ public class ShortReport extends Report {
                     startDate.toString(), endDate.toString(),
                     String.valueOf(duration)));
 
-            this.rootProjectsTable.addRow(entry);
+            //this.rootProjectsTable.addRow(entry);
         }
 
     }
 
     @Override
-    public long visitTask(final Task task) {
+    public void visitTask(final Task task) {
 
         long taskduration = 0;
         for (Interval i : task.getIntervals()) {
@@ -78,14 +77,9 @@ public class ShortReport extends Report {
 
     }
 
-
     @Override
-    public void visitTable(Table table) {
-
+    public void visitInterval(Interval interval) {
+        return;
     }
 
-    @Override
-    public void visitSubtitle(Subtitle subtitle) {
-
-    }
 }

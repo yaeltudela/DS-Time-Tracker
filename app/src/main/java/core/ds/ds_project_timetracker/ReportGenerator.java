@@ -3,17 +3,14 @@ package core.ds.ds_project_timetracker;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 
-public abstract class ReportGenerator {
+public abstract class ReportGenerator implements ReportVisitor {
 
-    protected PrintWriter printWriter;
     protected File file;
     protected Report report;
     protected String filename;
 
-    ReportGenerator(Report report) {
-        this.report = report;
+    ReportGenerator() {
         this.filename = createFileName();
         this.file = createFile();
     }

@@ -9,11 +9,13 @@ public class Subtitle extends Container {
     }
 
     @Override
-    public void accept(final ReportVisitor visitor) {
-        visitor.visitSubtitle(this);
+    public void accept(final Visitor visitor) {
+        ((ReportVisitor) visitor).visitSubtitle(this);
     }
 
     public String getText() {
         return subtitle;
     }
+
+
 }

@@ -12,8 +12,9 @@ public class Text extends Container {
         return this.text;
     }
 
+
     @Override
-    public void accept(ReportVisitor visitor) {
+    public void accept(Visitor visitor) {
 
     }
 }
