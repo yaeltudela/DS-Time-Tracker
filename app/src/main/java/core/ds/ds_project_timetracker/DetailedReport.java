@@ -1,6 +1,10 @@
 
 package core.ds.ds_project_timetracker;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+
 /**
  * Concrete class to store data from a Detailed Report.
  * It contains all the projects, subprojects, tasks and intervals.
@@ -8,21 +12,54 @@ package core.ds.ds_project_timetracker;
 public class DetailedReport extends Report implements TreeVisitor {
 
 
-    private Container title = new Title("Detailed Report");
-    private Container subtitleReports = new Subtitle("Period");
-    private Container subtitleRootProjects = new Subtitle("Root Projects");
-    private Container subtitleSubProjects = new Subtitle("Subprojects");
-    private Container textSubProjects = new Text("Subtitle subprojects");
-    private Container subtitleTasks = new Subtitle("Task");
-    private Container textTask = new Text("Subtitle tasks");
-    private Container subtitleIntervals = new Subtitle("Intervals");
-    private Container textIntervals = new Text("Subtitle intervals");
-    private Container footer = new Text("Time Tracker 1.0");
+    private Container title;
+    private Container subtitleReports;
+    private Container reportTable;
+
+    private Container subtitleRootProjects;
+    private Container rootProjectsTable;
+
+    private Container subtitleSubProjects;
+    private Container textSubProjects;
+    private Container subProjectsTable;
 
 
-    protected DetailedReport(final Project rootVisitable, final Period reportPeriod, final ReportGenerator reportGenerator) {
+    private Container subtitleTasks;
+    private Container textTask;
+    private Container taskTable;
+
+    private Container subtitleIntervals;
+    private Container textIntervals;
+    private Container intervalsTable;
+
+    private Container footer;
+
+
+    DetailedReport(final Project rootVisitable, final Period reportPeriod, final ReportGenerator reportGenerator) {
         super(rootVisitable, reportPeriod, reportGenerator);
 
+        this.title = new Title("Detailed Report");
+        this.subtitleReports = new Subtitle("Period");
+        this.reportTable = createReportTable();
+
+        this.subtitleRootProjects = new Subtitle("Root Projects");
+        this.rootProjectsTable = new Table(0, 5);
+
+        this.subtitleSubProjects = new Subtitle("Subprojects");
+        this.textSubProjects = new Text("Subtitle subprojects");
+        this.subProjectsTable = new Table(0, 5);
+
+        this.subtitleTasks = new Subtitle("Task");
+        this.textTask = new Text("Subtitle tasks");
+        this.taskTable = new Table(0, 5);
+
+        this.subtitleIntervals = new Subtitle("Intervals");
+        this.textIntervals = new Text("Subtitle intervals");
+        this.intervalsTable = new Table(0, 5);
+
+        this.footer = new Text("Time Tracker 1.0");
+
+        createTables();
     }
 
     @Override
@@ -30,49 +67,63 @@ public class DetailedReport extends Report implements TreeVisitor {
         this.reportGenerator.visitSeparator(new Separator());
         this.reportGenerator.visitTitle((Title) this.title);
         this.reportGenerator.visitSeparator(new Separator());
+
         this.reportGenerator.visitSubtitle((Subtitle) this.subtitleReports);
-        this.reportGenerator.visitTable(createReportTable());
+        this.reportGenerator.visitTable((Table) this.reportTable);
         this.reportGenerator.visitSeparator(new Separator());
+
         this.reportGenerator.visitSubtitle((Subtitle) this.subtitleRootProjects);
-        //this.reportGenerator.visitTable();
+        this.reportGenerator.visitTable((Table) this.rootProjectsTable);
         this.reportGenerator.visitSeparator(new Separator());
+
         this.reportGenerator.visitSubtitle((Subtitle) this.subtitleSubProjects);
         this.reportGenerator.visitText((Text) this.textSubProjects);
-        //this.reportGenerator.visitTable();
+        this.reportGenerator.visitTable((Table) this.subProjectsTable);
         this.reportGenerator.visitSeparator(new Separator());
+
         this.reportGenerator.visitSubtitle((Subtitle) this.subtitleTasks);
         this.reportGenerator.visitText((Text) this.textTask);
-        //this.reportGenerator.visitTable();
+        this.reportGenerator.visitTable((Table) this.taskTable);
         this.reportGenerator.visitSeparator(new Separator());
+
         this.reportGenerator.visitSubtitle((Subtitle) this.subtitleIntervals);
         this.reportGenerator.visitText((Text) this.textIntervals);
-        //this.reportGenerator.visit();
+        this.reportGenerator.visitTable((Table) this.intervalsTable);
         this.reportGenerator.visitSeparator(new Separator());
+
         this.reportGenerator.visitText((Text) footer);
 
 
     }
 
-    @Override
-    public void visitProject(Project project) {
+    private void createTables() {
+        ArrayList<String> headerProjects = new ArrayList<>(Arrays.asList("Id", "Project Name", "Start Date", "End Date", "Duration"));
+        ArrayList<String> headerTasks = new ArrayList<>(Arrays.asList("Id", "Task Name", "Start Date", "End Date", "Duration"));
+        ArrayList<String> headerIntervals = new ArrayList<>(Arrays.asList("Id", "Task Name", "Start Date", "End Date", "Duration"));
 
+        ((Table) this.rootProjectsTable).addRow(headerProjects);
+        ((Table) this.subProjectsTable).addRow(headerProjects);
+        ((Table) this.taskTable).addRow(headerTasks);
+        ((Table) this.intervalsTable).addRow(headerIntervals);
+
+        for (Node n : rootVisitable.getActivities()) {
+            n.accept(this);
+        }
     }
 
-    @Override
-    public void visitTask(Task task) {
-
-    }
 
     @Override
-    public void visitInterval(Interval interval) {
-
-    }
-
-    /*
-    *
-    * @Override
     public void visitProject(final Project project) {
         if (isInPeriod(project.getStartDate(), project.getEndDate())) {
+
+            for (Node n : project.getActivities()) {
+                if (isInPeriod(n.getStartDate(), n.getEndDate())) {
+                    n.accept(this);
+                }
+            }
+
+
+
             String name = project.getName();
             String desc = project.getDescription();
             Date startDate = getNewStartDate(project.getStartDate());
@@ -83,9 +134,9 @@ public class DetailedReport extends Report implements TreeVisitor {
             ArrayList<String> entry = new ArrayList<>(Arrays.asList(name, desc,
                     startDate.toString(), endDate.toString(), String.valueOf(duration)));
             if (project.getParent().getParent() == null) {
-                this.rootProjectsTable.addRow(entry);
+                ((Table) this.rootProjectsTable).addRow(entry);
             } else {
-                this.subrojectsTable.addRow(entry);
+                ((Table) this.subProjectsTable).addRow(entry);
             }
         }
     }
@@ -111,7 +162,7 @@ public class DetailedReport extends Report implements TreeVisitor {
 
             ArrayList<String> entry = new ArrayList<>(Arrays.asList(name, desc,
                     startDate.toString(), endDate.toString(), String.valueOf(duration)));
-            this.tasksTable.addRow(entry);
+            ((Table) this.taskTable).addRow(entry);
         }
     }
 
@@ -125,13 +176,12 @@ public class DetailedReport extends Report implements TreeVisitor {
             long duration = getNewDuration(interval.getStartDate(), interval.getEndDate(), interval.getDuration()); //ESTO NO ES REAL SIEMPRE
 
 
-            ArrayList<String> entry = new ArrayList<>(Arrays.asList(name, desc,
-                    startDate.toString(), endDate.toString(), String.valueOf(duration)));
-            this.intervalsTable.addRow(entry);
+            ArrayList<String> entry = new ArrayList<>(Arrays.asList(
+                    name, desc, startDate.toString(),
+                    endDate.toString(), String.valueOf(duration)));
+            ((Table) this.intervalsTable).addRow(entry);
         }
     }
-
-    */
 
 }
 

@@ -13,7 +13,7 @@ public class Client {
      *
      * @param args none
      */
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
 
 
         Project root, p1, p2;
@@ -31,15 +31,15 @@ public class Client {
 
 
         /*
-        Serializable test is formed by two executions (one for saving the data (3) and another
-            for loading the saved data(4)) and must be executed in order.
-
+        Serializable test is formed by two executions
+        (one for saving the data (3) and another for loading the saved data(4))
+        and must be executed in order.
             1: A1
             2: A2
             3: Serializable (Test A1)
             4: Serializable (Load data from test A1)
             5: A3 (Decorators)
-         */
+            */
 
         int test = 7;
         switch (test) {
@@ -141,7 +141,7 @@ public class Client {
             t3.stopInterval();
 
             Period period = new Period(d0, d);
-            ReportGenerator reportGenerator = new TXTReportGenerator();
+            ReportGenerator reportGenerator = new HTMLReportGenerator();
             Report report = new DetailedReport(root, period, reportGenerator);
             report.createReport();
             reportGenerator.saveReportToDisk();
@@ -155,12 +155,12 @@ public class Client {
     }
 
 
-    private static void configClock(PrinterVisitor printerVisitor) {
+    private static void configClock(final PrinterVisitor printerVisitor) {
         Clock.getInstance().setRefreshTicks(2);
         Clock.getInstance().addObserver(printerVisitor);
     }
 
-    private static void endTest(PrinterVisitor printerVisitor) {
+    private static void endTest(final PrinterVisitor printerVisitor) {
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
