@@ -11,6 +11,9 @@ import java.util.Date;
  */
 public class Project extends Node implements Serializable, Visitable {
 
+    /**
+     * Collection that contains all the activities (Projects or Tasks).
+     */
     private Collection<Node> activities;
 
     /**

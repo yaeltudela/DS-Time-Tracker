@@ -14,7 +14,6 @@ public abstract class ReportGenerator {
         this.report = report;
         this.filename = createFileName();
         this.file = createFile();
-        saveReportToDisk();
     }
 
     protected File createFile() {

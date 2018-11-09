@@ -143,7 +143,8 @@ public class Client {
             Period period = new Period(d0, d);
             Report report = new DetailedReport(root, period);
             report.generateReport();
-            ReportGenerator reportGenerator = new TXTReportGenerator(report);
+            ReportGenerator reportGenerator = new HTMLReportGenerator(report);
+            reportGenerator.saveReportToDisk();
 
 
         } catch (InterruptedException e) {

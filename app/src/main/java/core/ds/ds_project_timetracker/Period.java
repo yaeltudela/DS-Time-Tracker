@@ -10,14 +10,13 @@ class Period {
     private Date startDate;
     private Date endDate;
     private Date reportDate;
-    private final int MS_ON_SEC = 1000;
     private long maxDuration;
 
     Period(final Date startDate, final Date endDate) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.reportDate = new Date();
-        this.maxDuration = (endDate.getTime() - startDate.getTime()) / MS_ON_SEC;
+        this.maxDuration = (endDate.getTime() - startDate.getTime()) / Clock.MS_IN_SEC;
     }
 
 

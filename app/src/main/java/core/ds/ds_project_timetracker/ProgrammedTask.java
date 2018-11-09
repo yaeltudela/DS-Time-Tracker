@@ -11,7 +11,15 @@ import java.util.Observer;
  */
 public class ProgrammedTask extends TaskDecorator implements Observer {
 
+    /**
+     * Starting date of the programmed Task.
+     */
     private Date dateToStart;
+
+    /**
+     * Default delay. If it's not changed, will use the date;
+     * otherwise the delay in seconds.
+     */
     private int delay = -1;
 
     /**

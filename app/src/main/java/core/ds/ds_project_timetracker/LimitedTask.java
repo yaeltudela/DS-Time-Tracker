@@ -8,7 +8,13 @@ import java.util.Date;
  */
 public class LimitedTask extends TaskDecorator {
 
+    /**
+     * Maximum date to end the task.
+     */
     private Date deathLine = null;
+    /**
+     * Maximum seconds that the task will be running.
+     */
     private int totalSeconds = -1;
 
 
@@ -18,7 +24,7 @@ public class LimitedTask extends TaskDecorator {
      * @param baseTask  The task that decorates
      * @param deathLine The date when the task must stop
      */
-    public LimitedTask(Task baseTask, final Date deathLine) {
+    public LimitedTask(final Task baseTask, final Date deathLine) {
         super(baseTask);
         this.deathLine = deathLine;
     }
@@ -40,7 +46,7 @@ public class LimitedTask extends TaskDecorator {
      * @param time time to do the update. Usually the actual Clock time
      */
     @Override
-    public void updateData(Date time) {
+    public void updateData(final Date time) {
         if (deathLine == null) {
             totalSeconds -= Clock.REFRESHRATE;
             if (this.totalSeconds < 0) {

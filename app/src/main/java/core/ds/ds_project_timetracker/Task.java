@@ -17,7 +17,8 @@ public abstract class Task extends Node implements Serializable {
     public void startInterval() {
         if (!this.isActive()) {
             this.setActive(true);
-            Interval interval = new Interval(Clock.getInstance().getTime(), this);
+            Interval interval = new Interval(Clock.getInstance()
+                    .getTime(), this);
             this.getIntervals().add(interval);
             Clock.getInstance().addObserver(interval);
         } else {
@@ -33,7 +34,8 @@ public abstract class Task extends Node implements Serializable {
      */
     public void stopInterval() {
         if (this.isActive()) {
-            Clock.getInstance().deleteObserver(this.getIntervals().get(this.getIntervals().size() - 1));
+            Clock.getInstance().deleteObserver(this.getIntervals().get(
+                    this.getIntervals().size() - 1));
             this.setActive(false);
         } else {
             throw new IllegalStateException("Task isn't running");

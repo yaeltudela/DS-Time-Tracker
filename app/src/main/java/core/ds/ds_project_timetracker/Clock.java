@@ -14,16 +14,32 @@ import java.util.TimerTask;
  * It refreshes with a settable rate.
  */
 public final class Clock extends Observable {
-    public static int REFRESHRATE = 1;
-
-    private static Clock clock = null;
-    private Date date;
-    private Timer timer;
-    private TimerTask tt = null;
-
     /**
      * Create the timer in another thread and is setup.
      */
+
+    public static final int MS_IN_SEC = 1000;
+    /**
+     * Frequency (in seconds) used to update the clock.
+     */
+    public static int REFRESHRATE = 1;
+    /**
+     * the Clock instance
+     */
+    private static Clock clock = null;
+    /**
+     * the Clock date
+     */
+    private Date date;
+    /**
+     * Timer used to schedule the updates.
+     */
+    private Timer timer;
+    /**
+     * Task that runs on a thread.
+     */
+    private TimerTask tt = null;
+
     private Clock() {
         this.timer = new Timer(true);
         this.date = new Date();
@@ -50,13 +66,12 @@ public final class Clock extends Observable {
      * periodicity
      */
     private void setupTimer() {
-        int msInSec = 1000;
         this.timer.scheduleAtFixedRate(this.tt = new TimerTask() {
             @Override
             public void run() {
                 updateClock();
             }
-        }, 0, Clock.REFRESHRATE * msInSec);
+        }, 0, Clock.REFRESHRATE * Clock.MS_IN_SEC);
     }
 
 
