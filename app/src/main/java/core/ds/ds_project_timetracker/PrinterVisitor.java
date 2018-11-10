@@ -26,6 +26,7 @@ public class PrinterVisitor implements TreeVisitor, Observer {
     /**
      * Method to print Project objects. It prints the project data and* visit's
      * all of his sons.
+     *
      * @param project The project to visit
      */
     @Override
@@ -47,6 +48,7 @@ public class PrinterVisitor implements TreeVisitor, Observer {
     /**
      * Method to print Task objects. It prints the
      * task data and visit's all of his intervals.
+     *
      * @param task The task to visit
      */
     @Override
@@ -60,6 +62,7 @@ public class PrinterVisitor implements TreeVisitor, Observer {
 
     /**
      * Method to print Interval objects. It prints the Interval data.
+     *
      * @param interval The Interval to visit
      */
     @Override
@@ -72,7 +75,8 @@ public class PrinterVisitor implements TreeVisitor, Observer {
 
     /**
      * Method that calls the rootVisitable accept to print all the data.
-     * @param o The Observable object
+     *
+     * @param o   The Observable object
      * @param arg The Clock object
      */
     @Override

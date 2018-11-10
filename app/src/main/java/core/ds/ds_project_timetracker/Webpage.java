@@ -7,7 +7,6 @@ import html.Attribute;
 import html.Tag;
 
 public class Webpage {
-
     private Tag webpage = new Tag("html");
     private Tag head = new Tag("head");
     private Tag body = new Tag("body");
@@ -51,22 +50,22 @@ public class Webpage {
          * Exemple : taula amb capsalera a la primera fila
          *
          * <table style= "text-align: left; width: 842px;" border="1" cellpadding="2" cellspacing="2">
-         * 		<tbody>
-         * 			<tr>
-         * 				<th style="background-color: rgb(102, 255, 255);">No.</th>
-         * 				<th style="background-color: rgb(102, 255, 255);">Projecte</th>
-         * 				<th style="background-color: rgb(102, 255, 255);">Data d'inici</th>
-         * 				<th style="background-color: rgb(102, 255, 255);">Data final</th>
-         * 				<th style="background-color: rgb(102, 255, 255);">Temps total</th>
-         * 			</tr>
-         * 			<tr>
-         * 				<td style="background-color: rgb(204, 255, 255);">1</td>
-         * 				<td style="background-color: rgb(204, 255, 255);">P&agrave;gina web personal</td>
-         * 				<td style="background-color: rgb(204, 255, 255);">15/11/2006, 19:00h</td>
-         * 				<td style="background-color: rgb(204, 255, 255);">25/11/2006, 20:00h</td>
-         * 				<td style="background-color: rgb(204, 255, 255);">25h 45m 0s</td>
-         * 			</tr>
-         * 		</tbody>
+         *      <tbody>
+         *          <tr>
+         *              <th style="background-color: rgb(102, 255, 255);">No.</th>
+         *              <th style="background-color: rgb(102, 255, 255);">Projecte</th>
+         *              <th style="background-color: rgb(102, 255, 255);">Data d'inici</th>
+         *              <th style="background-color: rgb(102, 255, 255);">Data final</th>
+         *              <th style="background-color: rgb(102, 255, 255);">Temps total</th>
+         *          </tr>
+         *          <tr>
+         *              <td style="background-color: rgb(204, 255, 255);">1</td>
+         *              <td style="background-color: rgb(204, 255, 255);">P&agrave;gina web personal</td>
+         *              <td style="background-color: rgb(204, 255, 255);">15/11/2006, 19:00h</td>
+         *              <td style="background-color: rgb(204, 255, 255);">25/11/2006, 20:00h</td>
+         *              <td style="background-color: rgb(204, 255, 255);">25h 45m 0s</td>
+         *          </tr>
+         *      </tbody>
          * </table>
          */
         Tag t = new Tag("table");
@@ -82,7 +81,7 @@ public class Webpage {
         Attribute estilTd = new Attribute("style", "background-color: rgb(204, 255, 255);");
 
         Iterator itFiles = table.iterator();
-        Iterator itColumnes = null;
+        Iterator itColumnes;
         boolean primeraFila = true;
         while (itFiles.hasNext()) {
             Tag tr = new Tag("tr"); // cada fila de la taula

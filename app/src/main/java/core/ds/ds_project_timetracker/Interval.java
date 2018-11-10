@@ -1,4 +1,3 @@
-
 package core.ds.ds_project_timetracker;
 
 
@@ -12,8 +11,8 @@ import java.util.Observer;
  */
 public class Interval implements Observer, Serializable, Visitable {
 
-    private Task parentTask;
-    private Date startDate;
+    private final Task parentTask;
+    private final Date startDate;
     private Date endDate;
     private long duration;
 
@@ -34,8 +33,8 @@ public class Interval implements Observer, Serializable, Visitable {
     /**
      * Interval contructor for the user-input intervals. (Not implemented yet)
      *
-     * @param start Time when the Interval starts
-     * @param end Time when the Interval ends
+     * @param start  Time when the Interval starts
+     * @param end    Time when the Interval ends
      * @param parent The task that contains the Interval object
      */
     public Interval(final Date start, final Date end, final Task parent) {
@@ -49,7 +48,8 @@ public class Interval implements Observer, Serializable, Visitable {
     /**
      * Method that updates the end date, the interval's
      * duration and the parents data.
-     * @param o -
+     *
+     * @param o   -
      * @param arg Clock instance
      */
     @Override
@@ -62,28 +62,44 @@ public class Interval implements Observer, Serializable, Visitable {
 
     //Getters & Setters
 
+    /**
+     * Getter for the duration field.
+     *
+     * @return long with the interval duration
+     */
     public long getDuration() {
         return this.duration;
     }
 
+    /**
+     * Getter for the parent field.
+     *
+     * @return Task with the interval parent
+     */
     public Task getParentTask() {
         return this.parentTask;
     }
 
-    public void setParentTask(final Task parent) {
-        this.parentTask = parent;
-    }
-
+    /**
+     * Getter for the StartDate field.
+     *
+     * @return Date with the interval startDate
+     */
     public Date getStartDate() {
         return startDate;
     }
 
+    /**
+     * Getter for the endDate field.
+     *
+     * @return Date with the interval endDate
+     */
     public Date getEndDate() {
         return endDate;
     }
 
     /**
-     * Entrance method for the visitor to do tasks for the Interval class
+     * Entrance method for the visitor to do tasks for the Interval class.
      *
      * @param visitor the visitor
      */
@@ -95,7 +111,7 @@ public class Interval implements Observer, Serializable, Visitable {
 
     @Override
     public String toString() {
-        return "\t" + this.parentTask.getName() + " Interval \t" + this.duration;
+        return "\t" + this.parentTask.getName() + "Interval \t" + this.duration;
     }
 }
 

@@ -1,4 +1,3 @@
-
 package core.ds.ds_project_timetracker;
 
 
@@ -6,19 +5,24 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
+/**
+ * Class that represents a task without decorators.
+ * Basetask instaciates Intervals and control when starts or stop.
+ */
 public class BaseTask extends Task {
 
     private Collection<Interval> intervals;
     private boolean active;
 
     /**
-     * BaseTask constructor. Calls the Task constructor and adds itself to it's parent activities
+     * BaseTask constructor. Calls the Task constructor
+     * and adds itself to it's parent activities.
      *
      * @param name        BaseTask's name
      * @param description BaseTask's description
      * @param project     BaseTask's parent project
      */
-    BaseTask(String name, String description, Project project) {
+    BaseTask(final String name, final String description, final Project project) {
         this.setName(name);
         this.setDescription(description);
         this.setDuration(0);
@@ -33,7 +37,8 @@ public class BaseTask extends Task {
     }
 
     /**
-     * Method that updates all the data for the current task and calls recursively to it's project
+     * Method that updates all the data for the current task
+     * and calls recursively to it's project.
      *
      * @param time time to do the update. Usually the actual Clock time
      */
@@ -62,7 +67,7 @@ public class BaseTask extends Task {
     //GETTERS AND SETTERS
 
     /**
-     * Getter for the parent field
+     * Getter for the parent field.
      *
      * @return Task parent
      */
@@ -72,7 +77,7 @@ public class BaseTask extends Task {
     }
 
     /**
-     * Getter for the Intervals field
+     * Getter for the Intervals field.
      *
      * @return Interval collection from the Task
      */
@@ -81,16 +86,16 @@ public class BaseTask extends Task {
     }
 
     /**
-     * Setter for the Intervals field
+     * Setter for the Intervals field.
      *
-     * @param intervals An arrayList with all the Intervals for this task
+     * @param intervalList An arrayList with all the Intervals for this task
      */
-    public void setIntervals(final ArrayList<Interval> intervals) {
-        this.intervals = intervals;
+    public void setIntervals(final ArrayList<Interval> intervalList) {
+        this.intervals = intervalList;
     }
 
     /**
-     * Getter for the Active field
+     * Getter for the Active field.
      *
      * @return Boolean with the active status
      */

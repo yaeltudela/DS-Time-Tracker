@@ -1,4 +1,3 @@
-
 package core.ds.ds_project_timetracker;
 
 import java.io.Serializable;
@@ -37,7 +36,7 @@ public class Project extends Node implements Serializable, Visitable {
             throw new IllegalArgumentException("Project must have a name");
         }
 
-        activities = new ArrayList<>();
+        this.activities = new ArrayList<>();
 
         if (this.getParent() != null) {
             this.getParent().getActivities().add(this);
@@ -102,10 +101,10 @@ public class Project extends Node implements Serializable, Visitable {
      * Getter for the activity list of this node.
      *
      * @return Collection of Nodes with all the node's
-     *  activities (Tasks and Subprojects)
+     * activities (Tasks and Subprojects)
      */
     public Collection<Node> getActivities() {
-        return activities;
+        return this.activities;
     }
 
 
@@ -113,6 +112,7 @@ public class Project extends Node implements Serializable, Visitable {
      * Getter for the parent's project. It calls the Node
      * version and casts it to Project because
      * a Project parent is always another Project.
+     *
      * @return The project's parent
      */
     @Override

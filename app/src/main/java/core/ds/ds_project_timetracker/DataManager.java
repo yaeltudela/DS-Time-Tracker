@@ -1,4 +1,3 @@
-
 package core.ds.ds_project_timetracker;
 
 import java.io.File;
@@ -18,7 +17,7 @@ public class DataManager implements Serializable {
     /**
      * String with the name of the file.
      */
-    private String filename;
+    private final String filename;
 
     /**
      * Constructor for DataManager. It checks if the file exists and

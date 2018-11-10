@@ -1,4 +1,3 @@
-
 package core.ds.ds_project_timetracker;
 
 
@@ -13,16 +12,16 @@ public abstract class TaskDecorator extends Task {
     /**
      * The task to be decorated.
      */
-    private Task baseTask;
+    private final Task baseTask;
 
     /**
      * Default constructor that updates the decorated
      * data with all the baseTask data.
      *
-     * @param baseTask Task to be decorated
+     * @param task Task to be decorated
      */
-    TaskDecorator(final Task baseTask) {
-        this.baseTask = baseTask;
+    TaskDecorator(final Task task) {
+        this.baseTask = task;
 
     }
 

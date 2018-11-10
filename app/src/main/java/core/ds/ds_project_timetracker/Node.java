@@ -1,4 +1,3 @@
-
 package core.ds.ds_project_timetracker;
 
 
@@ -7,17 +6,17 @@ import java.util.Date;
 
 /**
  * Abstract class that represent a generic node on the tree (Task and Projects).
- * It's serializable and Visitable so it can be saved to a file and can accept visitors.
+ * It's serializable and Visitable so it can be saved to
+ * a file and can accept visitors.
  */
 public abstract class Node implements Serializable, Visitable {
 
     protected String name;
     protected String description;
-    private long duration;
-    private Date startDate;
     protected Date endDate;
     protected Node parent;
-
+    private long duration;
+    private Date startDate;
 
     /**
      * Abstract method used for the refresh of all the modified data.
@@ -55,6 +54,7 @@ public abstract class Node implements Serializable, Visitable {
 
     /**
      * Setter for the description node.
+     *
      * @param desc String with description of the Node
      */
     public void setDescription(final String desc) {
@@ -72,6 +72,7 @@ public abstract class Node implements Serializable, Visitable {
 
     /**
      * Setter for the duration node.
+     *
      * @param time The duration of the Node
      */
     public void setDuration(final long time) {
@@ -80,6 +81,7 @@ public abstract class Node implements Serializable, Visitable {
 
     /**
      * Getter for the startDate field.
+     *
      * @return Date of the node's startDate
      */
     public Date getStartDate() {
@@ -88,6 +90,7 @@ public abstract class Node implements Serializable, Visitable {
 
     /**
      * Setter for the startDate node.
+     *
      * @param start The startDate of the Node
      */
     public void setStartDate(final Date start) {
@@ -96,6 +99,7 @@ public abstract class Node implements Serializable, Visitable {
 
     /**
      * Getter for the endDate field.
+     *
      * @return Date of the node's endDate
      */
     public Date getEndDate() {
@@ -104,6 +108,7 @@ public abstract class Node implements Serializable, Visitable {
 
     /**
      * Setter for the endDate node.
+     *
      * @param end The endDate of the Node
      */
     public void setEndDate(final Date end) {
@@ -112,8 +117,9 @@ public abstract class Node implements Serializable, Visitable {
 
     /**
      * Getter for the parent field.
+     *
      * @return Node parent of the node. Null if is the root Node.
-     *             Must be casted to Project or Task
+     * Must be casted to Project or Task
      */
     public Node getParent() {
         return parent;
@@ -121,6 +127,7 @@ public abstract class Node implements Serializable, Visitable {
 
     /**
      * Setter for the parent node.
+     *
      * @param father the parent of the node (Node, Task or Project)
      */
     public void setParent(final Node father) {

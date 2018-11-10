@@ -1,4 +1,3 @@
-
 package core.ds.ds_project_timetracker;
 
 import java.io.FileNotFoundException;
@@ -10,11 +9,10 @@ import java.util.Date;
  */
 public class HTMLReportGenerator extends ReportGenerator implements ReportVisitor {
 
-    private Webpage webpage;
+    private final Webpage webpage;
 
     /**
      * Constructor for the HTML report Generator.
-     *
      */
     HTMLReportGenerator() {
         super();
@@ -56,7 +54,7 @@ public class HTMLReportGenerator extends ReportGenerator implements ReportVisito
     @Override
     protected void saveReportToDisk() {
 
-        PrintStream file = null;
+        PrintStream file;
         try {
             file = new PrintStream(this.filename);
             System.setOut(file);

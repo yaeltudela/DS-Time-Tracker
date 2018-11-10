@@ -1,4 +1,3 @@
-
 package core.ds.ds_project_timetracker;
 
 import java.io.Serializable;
@@ -41,8 +40,6 @@ public abstract class Task extends Node implements Serializable {
             throw new IllegalStateException("Task isn't running");
         }
     }
-
-
 
 
     @Override

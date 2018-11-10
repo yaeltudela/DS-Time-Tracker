@@ -10,9 +10,10 @@ import java.util.Date;
  */
 public abstract class Report implements TreeVisitor {
 
-    protected long currentDuration;
+    protected final Date reportDate;
     protected final Project rootVisitable;
     protected final Period reportPeriod;
+    protected long currentDuration;
     protected Collection<Container> tables;
     protected ReportGenerator reportGenerator;
 
@@ -32,6 +33,7 @@ public abstract class Report implements TreeVisitor {
      * @param reportPeriod  The associated period with the report.
      */
     Report(final Project rootVisitable, final Period reportPeriod, ReportGenerator reportGenerator) {
+        this.reportDate = new Date();
         this.rootVisitable = rootVisitable;
         this.reportPeriod = reportPeriod;
         this.reportGenerator = reportGenerator;
@@ -66,7 +68,7 @@ public abstract class Report implements TreeVisitor {
         table.setCell(0, 1, "Date");
         table.setCell(1, 1, this.reportPeriod.getStartDate().toString());
         table.setCell(2, 1, this.reportPeriod.getEndDate().toString());
-        table.setCell(3, 1, this.reportPeriod.getReportDate().toString());
+        table.setCell(3, 1, this.reportDate.toString());
 
         return table;
     }
@@ -79,11 +81,6 @@ public abstract class Report implements TreeVisitor {
         ((Table) this.rootProjectsTable).setCell(0, 3, "End Date");
         ((Table) this.rootProjectsTable).setCell(0, 4, "Duration");
     }
-
-
-    /**
-     * Method that starts visiting every element of the rootVisitable.
-     */
 
     /**
      * Method that recalculates, if needed, the new StartDate.

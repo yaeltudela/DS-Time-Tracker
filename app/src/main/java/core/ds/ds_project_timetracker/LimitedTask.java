@@ -1,4 +1,3 @@
-
 package core.ds.ds_project_timetracker;
 
 import java.util.Date;
@@ -21,28 +20,29 @@ public class LimitedTask extends TaskDecorator {
     /**
      * Constructor with Date input.
      *
-     * @param baseTask  The task that decorates
-     * @param deathLine The date when the task must stop
+     * @param baseTask The task that decorates
+     * @param maxDate  The date when the task must stop
      */
-    public LimitedTask(final Task baseTask, final Date deathLine) {
+    public LimitedTask(final Task baseTask, final Date maxDate) {
         super(baseTask);
-        this.deathLine = deathLine;
+        this.deathLine = maxDate;
     }
 
 
     /**
      * Constructor with seconds input.
      *
-     * @param baseTask     The task that decorates
-     * @param totalSeconds The maximum time that the task will be running
+     * @param baseTask   The task that decorates
+     * @param maxSeconds The maximum time that the task will be running
      */
-    LimitedTask(final Task baseTask, final int totalSeconds) {
+    LimitedTask(final Task baseTask, final int maxSeconds) {
         super(baseTask);
-        this.totalSeconds = totalSeconds;
+        this.totalSeconds = maxSeconds;
     }
 
     /**
      * Method that checks if the deathline has been passed to stop the Task.
+     *
      * @param time time to do the update. Usually the actual Clock time
      */
     @Override

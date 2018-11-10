@@ -2,6 +2,10 @@ package core.ds.ds_project_timetracker;
 
 import java.util.ArrayList;
 
+/**
+ * Class that represents a Table for the report representation.
+ * It usually contains tree data.
+ */
 public class Table extends Container {
 
     private int rows;

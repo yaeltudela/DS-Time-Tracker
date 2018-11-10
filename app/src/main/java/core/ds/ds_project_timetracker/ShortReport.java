@@ -1,4 +1,3 @@
-
 package core.ds.ds_project_timetracker;
 
 /**
@@ -7,10 +6,10 @@ package core.ds.ds_project_timetracker;
  */
 public class ShortReport extends Report implements TreeVisitor {
 
-    private Container title;
-    private Container subtitleReports;
-    private Container subtitleRootProjects;
-    private Container footer;
+    private final Container title;
+    private final Container subtitleReports;
+    private final Container subtitleRootProjects;
+    private final Container footer;
 
     /**
      * Constructor for the ShortReport.
@@ -18,6 +17,7 @@ public class ShortReport extends Report implements TreeVisitor {
      *
      * @param rootVisitable the first Visitable to visit.
      * @param reportPeriod  The period to be reported.
+     * @param reportGenerator The strategy used to generate the report.
      */
     public ShortReport(final Project rootVisitable, final Period reportPeriod, final ReportGenerator reportGenerator) {
         super(rootVisitable, reportPeriod, reportGenerator);

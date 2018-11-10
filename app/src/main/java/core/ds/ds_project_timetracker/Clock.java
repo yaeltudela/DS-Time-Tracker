@@ -1,4 +1,3 @@
-
 package core.ds.ds_project_timetracker;
 
 
@@ -34,7 +33,7 @@ public final class Clock extends Observable {
     /**
      * Timer used to schedule the updates.
      */
-    private Timer timer;
+    private final Timer timer;
     /**
      * Task that runs on a thread.
      */

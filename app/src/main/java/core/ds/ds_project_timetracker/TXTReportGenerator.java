@@ -1,4 +1,3 @@
-
 package core.ds.ds_project_timetracker;
 
 import java.io.BufferedWriter;
@@ -17,7 +16,6 @@ public class TXTReportGenerator extends ReportGenerator implements ReportVisitor
 
     /**
      * Default constructor.
-     *
      */
     TXTReportGenerator() {
         super();
