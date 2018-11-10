@@ -65,30 +65,49 @@ public class ShortReport extends Report implements TreeVisitor {
 
     @Override
     public void visitProject(final Project project) {
+        long acc = this.currentDuration;
+        this.currentDuration = 0;
+        if (isOnPeriod(project.getStartDate(), project.getEndDate())) {
 
-        long projectduration = 0;
-        for (Node n : project.getActivities()) {
-            if (isOnPeriod(n.getStartDate(), n.getEndDate())) {
-                projectduration += calcDuration(n.getStartDate(), n.getEndDate(), n.getDuration());
+            long projectduration = 0;
+            for (Node n : project.getActivities()) {
+                if (isOnPeriod(n.getStartDate(), n.getEndDate())) {
+                    n.accept(this);
+                }
+            }
+
+            if (project.isRootNode()) {
+                ((Table) this.rootProjectsTable).addRow();
+                int index = ((Table) this.rootProjectsTable).getRows() - 1;
+
+                ((Table) this.rootProjectsTable).setCell(index, 0, "id");
+                ((Table) this.rootProjectsTable).setCell(index, 1, project.name);
+                ((Table) this.rootProjectsTable).setCell(index, 2, calcStartDate(project.getStartDate(), project.getEndDate()).toString());
+                ((Table) this.rootProjectsTable).setCell(index, 3, calcEndDate(project.getStartDate(), project.getEndDate()).toString());
+                ((Table) this.rootProjectsTable).setCell(index, 4, String.valueOf(this.currentDuration));
             }
         }
-
-        if (project.isRootNode()) {
-            ((Table) this.rootProjectsTable).addRow();
-            int index = ((Table) this.rootProjectsTable).getRows() - 1;
-
-            ((Table) this.rootProjectsTable).setCell(index, 0, "id");
-            ((Table) this.rootProjectsTable).setCell(index, 1, project.name);
-            ((Table) this.rootProjectsTable).setCell(index, 2, calcStartDate(project.getStartDate(), project.getEndDate()).toString());
-            ((Table) this.rootProjectsTable).setCell(index, 3, calcEndDate(project.getStartDate(), project.getEndDate()).toString());
-            ((Table) this.rootProjectsTable).setCell(index, 4, String.valueOf(projectduration));
-        }
+        this.currentDuration = acc;
 
     }
 
     @Override
     public void visitTask(final Task task) {
+        long taskDuration = 0;
+        if (isOnPeriod(task.getStartDate(), task.getEndDate())) {
 
+            for (Interval i : task.getIntervals()) {
+                if (isOnPeriod(i.getStartDate(), i.getEndDate())) {
+                    i.accept(this);
+                    long addDuration = calcDuration(i.getStartDate(), i.getEndDate(), i.getDuration());
+                    if (addDuration >= Clock.REFRESHRATE) {
+                        taskDuration += addDuration;
+                    }
+                }
+            }
+        }
+
+        this.currentDuration += taskDuration;
 
     }
 

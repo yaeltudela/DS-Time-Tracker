@@ -14,6 +14,8 @@ public class Project extends Node implements Serializable, Visitable {
      * Collection that contains all the activities (Projects or Tasks).
      */
     private Collection<Node> activities;
+    //final Logger LOGGER = LoggerFactory.getLogger(Project.class);
+
 
     /**
      * Constructor for the Project objects.
@@ -74,6 +76,7 @@ public class Project extends Node implements Serializable, Visitable {
      */
     @Override
     public void accept(final Visitor visitor) {
+        //LOGGER.info("Visitor accepts in project" + this.getName());
         ((TreeVisitor) visitor).visitProject(this);
     }
 

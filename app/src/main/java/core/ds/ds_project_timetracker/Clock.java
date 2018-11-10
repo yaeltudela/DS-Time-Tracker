@@ -13,31 +13,14 @@ import java.util.TimerTask;
  * It refreshes with a settable rate.
  */
 public final class Clock extends Observable {
-    /**
-     * Create the timer in another thread and is setup.
-     */
 
     public static final int MS_IN_SEC = 1000;
-    /**
-     * Frequency (in seconds) used to update the clock.
-     */
     public static int REFRESHRATE = 1;
-    /**
-     * the Clock instance
-     */
     private static Clock clock = null;
-    /**
-     * the Clock date
-     */
     private Date date;
-    /**
-     * Timer used to schedule the updates.
-     */
     private final Timer timer;
-    /**
-     * Task that runs on a thread.
-     */
     private TimerTask tt = null;
+    //static final Logger LOGGER = LoggerFactory.getLogger(Clock.class);
 
     /**
      * Private constructor. It creates the timer and sets the date.
@@ -46,6 +29,7 @@ public final class Clock extends Observable {
         this.timer = new Timer(true);
         this.date = new Date();
         setupTimer();
+        //Clock.LOGGER.info("Call to private Clock constructor. Clock instanciated");
     }
 
     /**
@@ -95,8 +79,8 @@ public final class Clock extends Observable {
      */
     public void setRefreshTicks(final int secs) {
         if (secs >= 1) {
+            //Clock.LOGGER.info("The clock chande the REFRESHRATE to " + secs);
             Clock.REFRESHRATE = secs;
-            System.out.println("Refresh time has been set to " + REFRESHRATE);
             if (this.timer != null) {
                 this.tt.cancel();
                 setupTimer();
@@ -113,6 +97,8 @@ public final class Clock extends Observable {
     public void stopClock() {
         this.tt.cancel();
         this.timer.cancel();
+        //Clock.LOGGER.info("The clock has been stopped");
+
     }
 
 

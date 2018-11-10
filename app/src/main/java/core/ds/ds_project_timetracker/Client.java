@@ -7,6 +7,10 @@ import java.util.Date;
  */
 public class Client {
 
+    private static Project root;
+    private static Project p1, p2;
+    private static Task t1, t2, t3;
+
     /**
      * Main function.
      *
@@ -14,15 +18,6 @@ public class Client {
      */
     public static void main(final String[] args) {
 
-
-        Project root, p1, p2;
-        root = null;
-        p1 = null;
-        p2 = null;
-        Task t1, t2, t3;
-        t1 = null;
-        t2 = null;
-        t3 = null;
         boolean load = true;
         boolean save = true;
         PrinterVisitor printerVisitor = null;
@@ -140,7 +135,7 @@ public class Client {
 
             Period period = new Period(d0, d);
             ReportGenerator reportGenerator = new HTMLReportGenerator();
-            Report report = new DetailedReport(root, period, reportGenerator);
+            Report report = new ShortReport(root, period, reportGenerator);
             report.createReport();
             reportGenerator.saveReportToDisk();
 
