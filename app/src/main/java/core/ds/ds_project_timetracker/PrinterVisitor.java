@@ -64,7 +64,7 @@ public class PrinterVisitor implements TreeVisitor, Observer {
      */
     @Override
     public void visitInterval(final Interval interval) {
-        //System.out.println("\t" + interval.toString());
+        System.out.println("\t" + interval.toString());
 
 
     }

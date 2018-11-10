@@ -1,20 +1,16 @@
 
 package core.ds.ds_project_timetracker;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-
 /**
  * Concrete class that represent a basic and Short Report.
  * It contains only the Report data and the rootProjects data.
  */
 public class ShortReport extends Report implements TreeVisitor {
 
-    private Container title = new Title("Short Report");
-    private Container subtitleReports = new Subtitle("Period");
-    private Container subtitleRootProjects = new Subtitle("Root Projects");
-    private Container footer = new Text("Time Tracker 1.0");
+    private Container title;
+    private Container subtitleReports;
+    private Container subtitleRootProjects;
+    private Container footer;
 
     /**
      * Constructor for the ShortReport.
@@ -26,6 +22,19 @@ public class ShortReport extends Report implements TreeVisitor {
     public ShortReport(final Project rootVisitable, final Period reportPeriod, final ReportGenerator reportGenerator) {
         super(rootVisitable, reportPeriod, reportGenerator);
 
+        this.title = new Title("Detailed Report");
+        this.subtitleReports = new Subtitle("Period");
+        this.reportTable = createReportTable();
+
+        this.subtitleRootProjects = new Subtitle("Root Projects");
+        this.rootProjectsTable = new Table(0, 5);
+
+        this.footer = new Text("Time Tracker 1.0");
+
+
+        createTables();
+        fillTables();
+
     }
 
 
@@ -34,13 +43,22 @@ public class ShortReport extends Report implements TreeVisitor {
         this.reportGenerator.visitSeparator(new Separator());
         this.reportGenerator.visitTitle((Title) this.title);
         this.reportGenerator.visitSeparator(new Separator());
+
         this.reportGenerator.visitSubtitle((Subtitle) this.subtitleReports);
-        this.reportGenerator.visitTable(createReportTable());
+        this.reportGenerator.visitTable((Table) this.reportTable);
         this.reportGenerator.visitSeparator(new Separator());
+
         this.reportGenerator.visitSubtitle((Subtitle) this.subtitleRootProjects);
-        //this.reportGenerator.visitTable();
+        this.reportGenerator.visitTable((Table) this.rootProjectsTable);
         this.reportGenerator.visitSeparator(new Separator());
+
         this.reportGenerator.visitText((Text) footer);
+
+    }
+
+    @Override
+    protected void createTables() {
+        this.createRootProjectTables();
 
     }
 
@@ -48,19 +66,22 @@ public class ShortReport extends Report implements TreeVisitor {
     @Override
     public void visitProject(final Project project) {
 
-        if (isInPeriod(project.getStartDate(), project.getEndDate())) {
+        long projectduration = 0;
+        for (Node n : project.getActivities()) {
+            if (isOnPeriod(n.getStartDate(), n.getEndDate())) {
+                projectduration += calcDuration(n.getStartDate(), n.getEndDate(), n.getDuration());
+            }
+        }
 
-            String name = project.getName();
-            String desc = project.getDescription();
-            Date startDate = getNewStartDate(project.getStartDate());
-            Date endDate = getNewEndDate(project.getEndDate());
-            long duration = getNewDuration(project.getStartDate(), project.getEndDate(), project.getDuration()); //TODO ESTO NO ES REAL SIEMPRE
+        if (project.isRootNode()) {
+            ((Table) this.rootProjectsTable).addRow();
+            int index = ((Table) this.rootProjectsTable).getRows() - 1;
 
-            ArrayList<String> entry = new ArrayList<>(Arrays.asList(name, desc,
-                    startDate.toString(), endDate.toString(),
-                    String.valueOf(duration)));
-
-            //this.rootProjectsTable.addRow(entry);
+            ((Table) this.rootProjectsTable).setCell(index, 0, "id");
+            ((Table) this.rootProjectsTable).setCell(index, 1, project.name);
+            ((Table) this.rootProjectsTable).setCell(index, 2, calcStartDate(project.getStartDate(), project.getEndDate()).toString());
+            ((Table) this.rootProjectsTable).setCell(index, 3, calcEndDate(project.getStartDate(), project.getEndDate()).toString());
+            ((Table) this.rootProjectsTable).setCell(index, 4, String.valueOf(projectduration));
         }
 
     }
@@ -68,18 +89,12 @@ public class ShortReport extends Report implements TreeVisitor {
     @Override
     public void visitTask(final Task task) {
 
-        long taskduration = 0;
-        for (Interval i : task.getIntervals()) {
-            if (isInPeriod(i.getStartDate(), i.getEndDate())) {
-                taskduration += i.getDuration();
-            }
-        }
 
     }
 
     @Override
     public void visitInterval(Interval interval) {
-        return;
+
     }
 
 }

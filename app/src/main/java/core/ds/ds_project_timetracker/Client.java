@@ -118,9 +118,9 @@ public class Client {
             t4.startInterval();
 
             Thread.sleep(4000);
-            Date d0 = new Date();
             t1.stopInterval();
             t2.startInterval();
+            Date d0 = new Date();
 
             Thread.sleep(6000);
             t2.stopInterval();
@@ -130,7 +130,6 @@ public class Client {
             Thread.sleep(4000);
             t3.stopInterval();
             t2.startInterval();
-
             Date d = new Date();
 
             Thread.sleep(2000);

@@ -63,4 +63,8 @@ public class Table extends Container {
     public void accept(final Visitor visitor) {
         ((ReportVisitor) visitor).visitTable(this);
     }
+
+    public int getRows() {
+        return rows;
+    }
 }

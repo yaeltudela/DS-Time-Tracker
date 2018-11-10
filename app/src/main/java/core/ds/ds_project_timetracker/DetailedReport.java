@@ -1,8 +1,5 @@
-
 package core.ds.ds_project_timetracker;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -12,28 +9,16 @@ import java.util.Date;
 public class DetailedReport extends Report implements TreeVisitor {
 
 
-    private Container title;
-    private Container subtitleReports;
-    private Container reportTable;
-
-    private Container subtitleRootProjects;
-    private Container rootProjectsTable;
-
     private Container subtitleSubProjects;
     private Container textSubProjects;
     private Container subProjectsTable;
-
-
     private Container subtitleTasks;
     private Container textTask;
     private Container taskTable;
-
     private Container subtitleIntervals;
     private Container textIntervals;
     private Container intervalsTable;
-
     private Container footer;
-
 
     DetailedReport(final Project rootVisitable, final Period reportPeriod, final ReportGenerator reportGenerator) {
         super(rootVisitable, reportPeriod, reportGenerator);
@@ -49,17 +34,20 @@ public class DetailedReport extends Report implements TreeVisitor {
         this.textSubProjects = new Text("Subtitle subprojects");
         this.subProjectsTable = new Table(0, 5);
 
+
         this.subtitleTasks = new Subtitle("Task");
         this.textTask = new Text("Subtitle tasks");
         this.taskTable = new Table(0, 5);
 
         this.subtitleIntervals = new Subtitle("Intervals");
         this.textIntervals = new Text("Subtitle intervals");
-        this.intervalsTable = new Table(0, 5);
+        this.intervalsTable = new Table(0, 6);
 
         this.footer = new Text("Time Tracker 1.0");
 
         createTables();
+        fillTables();
+
     }
 
     @Override
@@ -93,93 +81,132 @@ public class DetailedReport extends Report implements TreeVisitor {
 
         this.reportGenerator.visitText((Text) footer);
 
+        createTables();
 
     }
 
-    private void createTables() {
-        ArrayList<String> headerProjects = new ArrayList<>(Arrays.asList("Id", "Project Name", "Start Date", "End Date", "Duration"));
-        ArrayList<String> headerTasks = new ArrayList<>(Arrays.asList("Id", "Task Name", "Start Date", "End Date", "Duration"));
-        ArrayList<String> headerIntervals = new ArrayList<>(Arrays.asList("Id", "Task Name", "Start Date", "End Date", "Duration"));
+    @Override
+    protected void createTables() {
+        this.createRootProjectTables();
+        this.createSubProjectsTable();
+        this.createTaskTable();
+        this.createIntervalTable();
+    }
 
-        ((Table) this.rootProjectsTable).addRow(headerProjects);
-        ((Table) this.subProjectsTable).addRow(headerProjects);
-        ((Table) this.taskTable).addRow(headerTasks);
-        ((Table) this.intervalsTable).addRow(headerIntervals);
 
-        for (Node n : rootVisitable.getActivities()) {
-            n.accept(this);
-        }
+    private void createIntervalTable() {
+        ((Table) this.intervalsTable).addRow();
+        ((Table) this.intervalsTable).setCell(0, 0, "Project Id");
+        ((Table) this.intervalsTable).setCell(0, 1, "Task  Name");
+        ((Table) this.intervalsTable).setCell(0, 2, "Id");
+        ((Table) this.intervalsTable).setCell(0, 3, "Start Date");
+        ((Table) this.intervalsTable).setCell(0, 4, "End Date");
+        ((Table) this.intervalsTable).setCell(0, 5, "Duration");
+
+    }
+
+    private void createTaskTable() {
+        ((Table) this.taskTable).addRow();
+        ((Table) this.taskTable).setCell(0, 0, "Id");
+        ((Table) this.taskTable).setCell(0, 1, "Task Name");
+        ((Table) this.taskTable).setCell(0, 2, "Start Date");
+        ((Table) this.taskTable).setCell(0, 3, "End Date");
+        ((Table) this.taskTable).setCell(0, 4, "Duration");
+    }
+
+    private void createSubProjectsTable() {
+        ((Table) this.subProjectsTable).addRow();
+        ((Table) this.subProjectsTable).setCell(0, 0, "Id");
+        ((Table) this.subProjectsTable).setCell(0, 1, "Project Name");
+        ((Table) this.subProjectsTable).setCell(0, 2, "Start Date");
+        ((Table) this.subProjectsTable).setCell(0, 3, "End Date");
+        ((Table) this.subProjectsTable).setCell(0, 4, "Duration");
     }
 
 
     @Override
     public void visitProject(final Project project) {
-        if (isInPeriod(project.getStartDate(), project.getEndDate())) {
+        long acc = this.currentDuration;
+        this.currentDuration = 0;
+        if (isOnPeriod(project.getStartDate(), project.getEndDate())) {
 
+            long projectduration = 0;
             for (Node n : project.getActivities()) {
-                if (isInPeriod(n.getStartDate(), n.getEndDate())) {
+                if (isOnPeriod(n.getStartDate(), n.getEndDate())) {
                     n.accept(this);
                 }
             }
 
+            if (project.isRootNode()) {
+                ((Table) this.rootProjectsTable).addRow();
+                int index = ((Table) this.rootProjectsTable).getRows() - 1;
 
-
-            String name = project.getName();
-            String desc = project.getDescription();
-            Date startDate = getNewStartDate(project.getStartDate());
-            Date endDate = getNewEndDate(project.getEndDate());
-            long duration = getNewDuration(project.getStartDate(), project.getEndDate(), project.getDuration()); //ESTO NO ES REAL SIEMPRE
-
-
-            ArrayList<String> entry = new ArrayList<>(Arrays.asList(name, desc,
-                    startDate.toString(), endDate.toString(), String.valueOf(duration)));
-            if (project.getParent().getParent() == null) {
-                ((Table) this.rootProjectsTable).addRow(entry);
+                ((Table) this.rootProjectsTable).setCell(index, 0, "id");
+                ((Table) this.rootProjectsTable).setCell(index, 1, project.name);
+                ((Table) this.rootProjectsTable).setCell(index, 2, calcStartDate(project.getStartDate(), project.getEndDate()).toString());
+                ((Table) this.rootProjectsTable).setCell(index, 3, calcEndDate(project.getStartDate(), project.getEndDate()).toString());
+                ((Table) this.rootProjectsTable).setCell(index, 4, String.valueOf(this.currentDuration));
             } else {
-                ((Table) this.subProjectsTable).addRow(entry);
+                ((Table) this.subProjectsTable).addRow();
+                int index = ((Table) this.subProjectsTable).getRows() - 1;
+
+                ((Table) this.subProjectsTable).setCell(index, 0, "id");
+                ((Table) this.subProjectsTable).setCell(index, 1, project.name);
+                ((Table) this.subProjectsTable).setCell(index, 2, calcStartDate(project.getStartDate(), project.getEndDate()).toString());
+                ((Table) this.subProjectsTable).setCell(index, 3, calcEndDate(project.getStartDate(), project.getEndDate()).toString());
+                ((Table) this.subProjectsTable).setCell(index, 4, String.valueOf(this.currentDuration));
             }
         }
+
+
+        this.currentDuration = acc;
     }
 
     @Override
     public void visitTask(final Task task) {
-
         long taskDuration = 0;
-        for (Interval i : task.getIntervals()) {
-            if (isInPeriod(i.getStartDate(), i.getEndDate())) {
-                i.accept(this);
-                taskDuration += i.getDuration();
+        if (isOnPeriod(task.getStartDate(), task.getEndDate())) {
+
+            for (Interval i : task.getIntervals()) {
+                if (isOnPeriod(i.getStartDate(), i.getEndDate())) {
+                    i.accept(this);
+                    long addDuration = calcDuration(i.getStartDate(), i.getEndDate(), i.getDuration());
+                    if (addDuration >= Clock.REFRESHRATE) {
+                        taskDuration += addDuration;
+                    }
+                }
             }
         }
 
-        if (isInPeriod(task.getStartDate(), task.getEndDate())) {
-            String name = task.getName();
-            String desc = task.getDescription();
-            Date startDate = getNewStartDate(task.getStartDate());
-            Date endDate = getNewEndDate(task.getEndDate());
-            long duration = taskDuration; //ESTO NO ES REAL SIEMPRE
 
+        ((Table) this.taskTable).addRow();
+        int index = ((Table) this.taskTable).getRows() - 1;
+        ((Table) this.taskTable).setCell(index, 0, "PROJECTID"); //TODO PROJECT ID
+        ((Table) this.taskTable).setCell(index, 1, task.getName());
+        ((Table) this.taskTable).setCell(index, 2, calcStartDate(task.getStartDate(), task.getEndDate()).toString());
+        ((Table) this.taskTable).setCell(index, 3, calcEndDate(task.getStartDate(), task.getEndDate()).toString());
+        ((Table) this.taskTable).setCell(index, 4, String.valueOf(taskDuration));
 
-            ArrayList<String> entry = new ArrayList<>(Arrays.asList(name, desc,
-                    startDate.toString(), endDate.toString(), String.valueOf(duration)));
-            ((Table) this.taskTable).addRow(entry);
-        }
+        this.currentDuration += taskDuration;
+
     }
 
     @Override
     public void visitInterval(final Interval interval) {
-        if (isInPeriod(interval.getStartDate(), interval.getEndDate())) {
-            String name = interval.getParentTask().getName() + "_interval";
-            String desc = interval.getParentTask().getDescription() + "_interval";
-            Date startDate = getNewStartDate(interval.getStartDate());
-            Date endDate = getNewEndDate(interval.getEndDate());
-            long duration = getNewDuration(interval.getStartDate(), interval.getEndDate(), interval.getDuration()); //ESTO NO ES REAL SIEMPRE
+        Date intervalStartDate = calcStartDate(interval.getStartDate(), interval.getEndDate());
+        Date intervalEndDate = calcEndDate(interval.getStartDate(), interval.getEndDate());
+        long intervalDuration = calcDuration(interval.getStartDate(), interval.getEndDate(), interval.getDuration());
 
+        if (intervalDuration > Clock.REFRESHRATE) {
+            ((Table) this.intervalsTable).addRow();
+            int index = ((Table) this.intervalsTable).getRows() - 1;
 
-            ArrayList<String> entry = new ArrayList<>(Arrays.asList(
-                    name, desc, startDate.toString(),
-                    endDate.toString(), String.valueOf(duration)));
-            ((Table) this.intervalsTable).addRow(entry);
+            ((Table) this.intervalsTable).setCell(index, 0, "PROJECTID"); //TODO PROJECT ID
+            ((Table) this.intervalsTable).setCell(index, 1, interval.getParentTask().getName());
+            ((Table) this.intervalsTable).setCell(index, 2, "IDDDDD"); //TODO CREATE ID
+            ((Table) this.intervalsTable).setCell(index, 3, intervalStartDate.toString());
+            ((Table) this.intervalsTable).setCell(index, 4, intervalEndDate.toString());
+            ((Table) this.intervalsTable).setCell(index, 5, String.valueOf(intervalDuration));
         }
     }
 

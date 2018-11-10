@@ -127,4 +127,13 @@ public abstract class Node implements Serializable, Visitable {
         this.parent = father;
     }
 
+    /**
+     * Method that checks if the project is a Root Project.
+     *
+     * @return ture if it's root, false otherwise
+     */
+    public boolean isRootNode() {
+        return (this.getParent().getParent() == null);
+    }
+
 }
