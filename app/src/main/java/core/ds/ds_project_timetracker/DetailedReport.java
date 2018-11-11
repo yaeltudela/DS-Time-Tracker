@@ -141,7 +141,7 @@ public class DetailedReport extends Report implements TreeVisitor {
                 ((Table) this.rootProjectsTable).addRow();
                 int index = ((Table) this.rootProjectsTable).getRows() - 1;
 
-                ((Table) this.rootProjectsTable).setCell(index, 0, "id");
+                ((Table) this.rootProjectsTable).setCell(index, 0, project.getId().getId());
                 ((Table) this.rootProjectsTable).setCell(index, 1, project.name);
                 ((Table) this.rootProjectsTable).setCell(index, 2, calcStartDate(project.getStartDate(), project.getEndDate()).toString());
                 ((Table) this.rootProjectsTable).setCell(index, 3, calcEndDate(project.getStartDate(), project.getEndDate()).toString());
@@ -150,7 +150,7 @@ public class DetailedReport extends Report implements TreeVisitor {
                 ((Table) this.subProjectsTable).addRow();
                 int index = ((Table) this.subProjectsTable).getRows() - 1;
 
-                ((Table) this.subProjectsTable).setCell(index, 0, "id");
+                ((Table) this.subProjectsTable).setCell(index, 0, project.getId().getId());
                 ((Table) this.subProjectsTable).setCell(index, 1, project.name);
                 ((Table) this.subProjectsTable).setCell(index, 2, calcStartDate(project.getStartDate(), project.getEndDate()).toString());
                 ((Table) this.subProjectsTable).setCell(index, 3, calcEndDate(project.getStartDate(), project.getEndDate()).toString());
@@ -181,7 +181,7 @@ public class DetailedReport extends Report implements TreeVisitor {
 
         ((Table) this.taskTable).addRow();
         int index = ((Table) this.taskTable).getRows() - 1;
-        ((Table) this.taskTable).setCell(index, 0, "PROJECTID"); //TODO PROJECT ID
+        ((Table) this.taskTable).setCell(index, 0, task.getId().getId());
         ((Table) this.taskTable).setCell(index, 1, task.getName());
         ((Table) this.taskTable).setCell(index, 2, calcStartDate(task.getStartDate(), task.getEndDate()).toString());
         ((Table) this.taskTable).setCell(index, 3, calcEndDate(task.getStartDate(), task.getEndDate()).toString());
@@ -201,9 +201,9 @@ public class DetailedReport extends Report implements TreeVisitor {
             ((Table) this.intervalsTable).addRow();
             int index = ((Table) this.intervalsTable).getRows() - 1;
 
-            ((Table) this.intervalsTable).setCell(index, 0, "PROJECTID"); //TODO PROJECT ID
+            ((Table) this.intervalsTable).setCell(index, 0, interval.getParentTask().getParent().getId().getId()); //TODO PROJECT ID
             ((Table) this.intervalsTable).setCell(index, 1, interval.getParentTask().getName());
-            ((Table) this.intervalsTable).setCell(index, 2, "IDDDDD"); //TODO CREATE ID
+            ((Table) this.intervalsTable).setCell(index, 2, interval.getId().getId()); //TODO CREATE ID
             ((Table) this.intervalsTable).setCell(index, 3, intervalStartDate.toString());
             ((Table) this.intervalsTable).setCell(index, 4, intervalEndDate.toString());
             ((Table) this.intervalsTable).setCell(index, 5, String.valueOf(intervalDuration));

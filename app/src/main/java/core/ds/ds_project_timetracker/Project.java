@@ -1,5 +1,8 @@
 package core.ds.ds_project_timetracker;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,7 +17,7 @@ public class Project extends Node implements Serializable, Visitable {
      * Collection that contains all the activities (Projects or Tasks).
      */
     private Collection<Node> activities;
-    //final Logger LOGGER = LoggerFactory.getLogger(Project.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(Project.class);
 
 
     /**
@@ -34,6 +37,7 @@ public class Project extends Node implements Serializable, Visitable {
             this.setDuration(0);
             this.setStartDate(null);
             this.setEndDate(null);
+
         } else {
             throw new IllegalArgumentException("Project must have a name");
         }
@@ -43,6 +47,15 @@ public class Project extends Node implements Serializable, Visitable {
         if (this.getParent() != null) {
             this.getParent().getActivities().add(this);
         }
+
+        this.id = new Id();
+        if (isRootNode()) {
+            this.id.generateid();
+        } else {
+            this.id.setId(this.getParent().getId().getId() + "." + this.getParent().getActivities().size());
+        }
+
+        Project.LOGGER.info("New Project created with name" + this.getName());
     }
 
     /**
@@ -76,7 +89,7 @@ public class Project extends Node implements Serializable, Visitable {
      */
     @Override
     public void accept(final Visitor visitor) {
-        //LOGGER.info("Visitor accepts in project" + this.getName());
+        LOGGER.info("Visitor accepts in project" + this.getName());
         ((TreeVisitor) visitor).visitProject(this);
     }
 

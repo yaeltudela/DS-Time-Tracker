@@ -32,6 +32,7 @@ public abstract class TaskDecorator extends Task {
 
     @Override
     public void accept(final Visitor visitor) {
+        LOGGER.info("Visitor accepts in task " + this.getName());
         this.baseTask.accept(visitor);
     }
 

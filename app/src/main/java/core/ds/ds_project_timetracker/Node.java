@@ -11,6 +11,7 @@ import java.util.Date;
  */
 public abstract class Node implements Serializable, Visitable {
 
+    protected Id id;
     protected String name;
     protected String description;
     protected Date endDate;
@@ -140,7 +141,14 @@ public abstract class Node implements Serializable, Visitable {
      * @return ture if it's root, false otherwise
      */
     public boolean isRootNode() {
-        return (this.getParent().getParent() == null);
+        if (this.getParent() == null) {
+            return true;
+        } else {
+            return (this.getParent().getParent() == null);
+        }
     }
 
+    public Id getId() {
+        return id;
+    }
 }

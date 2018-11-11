@@ -1,6 +1,9 @@
 package core.ds.ds_project_timetracker;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Observable;
@@ -15,6 +18,8 @@ public class Interval implements Observer, Serializable, Visitable {
     private final Date startDate;
     private Date endDate;
     private long duration;
+    private static final Logger LOGGER = LoggerFactory.getLogger(Interval.class);
+    private Id id;
 
     /**
      * Default Interval constructor. It sets up the fields.
@@ -27,6 +32,12 @@ public class Interval implements Observer, Serializable, Visitable {
         this.startDate = start;
         this.endDate = null;
         this.parentTask = parent;
+
+        this.id = new Id();
+        this.id.setId(String.valueOf(this.getParentTask().getIntervals().size() + 1));
+
+        LOGGER.info("Created new Interval " + this.getParentTask().getName() + " - " + this.getId());
+
 
     }
 
@@ -43,6 +54,8 @@ public class Interval implements Observer, Serializable, Visitable {
         this.endDate = end;
         this.duration = (this.endDate.getTime() - this.startDate.getTime()) / Clock.MS_IN_SEC;
 
+        this.id = new Id();
+        this.id.setId(String.valueOf(this.getParentTask().getIntervals().size() + 1));
     }
 
     /**
@@ -105,6 +118,7 @@ public class Interval implements Observer, Serializable, Visitable {
      */
     @Override
     public void accept(final Visitor visitor) {
+        LOGGER.info("Visitor accepts in Interval " + this.getParentTask().getName() + " - " + this.getId());
         ((TreeVisitor) visitor).visitInterval(this);
 
     }
@@ -112,6 +126,10 @@ public class Interval implements Observer, Serializable, Visitable {
     @Override
     public String toString() {
         return "\t" + this.parentTask.getName() + "Interval \t" + this.duration;
+    }
+
+    public Id getId() {
+        return this.id;
     }
 }
 

@@ -26,6 +26,8 @@ public class LimitedTask extends TaskDecorator {
     public LimitedTask(final Task baseTask, final Date maxDate) {
         super(baseTask);
         this.deathLine = maxDate;
+        LOGGER.info("new Decorated task" + this.getName() + " with " + this.getClass().getName() + "decorator");
+
     }
 
 
@@ -38,6 +40,8 @@ public class LimitedTask extends TaskDecorator {
     LimitedTask(final Task baseTask, final int maxSeconds) {
         super(baseTask);
         this.totalSeconds = maxSeconds;
+        LOGGER.info("new Decorated task" + this.getName() + " with " + this.getClass().getName() + "decorator");
+
     }
 
     /**

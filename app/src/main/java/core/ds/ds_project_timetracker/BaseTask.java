@@ -33,7 +33,16 @@ public class BaseTask extends Task {
         this.setEndDate(null);
         this.setActive(false);
 
+
         this.getParent().getActivities().add(this);
+        this.id = new Id();
+        if (isRootNode()) {
+            this.id.generateid();
+        } else {
+            this.id.setId(this.getParent().getId().getId() + "." + this.getParent().getActivities().size());
+        }
+        LOGGER.info("new basic Task " + this.getName());
+
     }
 
     /**
@@ -119,6 +128,7 @@ public class BaseTask extends Task {
      */
     @Override
     public void accept(final Visitor visitor) {
+        LOGGER.info("Visitor accepts in task " + this.getName());
         ((TreeVisitor) visitor).visitTask(this);
     }
 }

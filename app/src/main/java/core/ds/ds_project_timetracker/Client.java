@@ -18,6 +18,7 @@ public class Client {
      */
     public static void main(final String[] args) {
 
+
         boolean load = true;
         boolean save = true;
         PrinterVisitor printerVisitor = null;
@@ -73,7 +74,7 @@ public class Client {
             case 5: //Custom Test
                 testA3(root, printerVisitor);
                 break;
-            case 6: //Test decorator (A1 with task1 programmed and limited)
+            case 6: //Test decorator (A1 with task1 programmed and limited) Test David Clase Entrega
                 p1 = new Project("P1", "P1 desc", root);
                 t3 = new BaseTask("T3", "T3 desc", p1);
                 p2 = new Project("P2", "P1 desc", p1);
@@ -84,7 +85,7 @@ public class Client {
                 testA4(root, p1, p2, t1, t2, t3, printerVisitor);
                 break;
 
-            case 7: //Test entrega 2
+            case 7: //Test entrega 2 pdf
                 p1 = new Project("P1", "P1 desc", root);
                 p2 = new Project("P2", "P2 desc", root);
                 Project p1_2 = new Project("P1_2", "P1.2 desc", p1);
@@ -135,7 +136,7 @@ public class Client {
 
             Period period = new Period(d0, d);
             ReportGenerator reportGenerator = new HTMLReportGenerator();
-            Report report = new ShortReport(root, period, reportGenerator);
+            Report report = new DetailedReport(root, period, reportGenerator);
             report.createReport();
             reportGenerator.saveReportToDisk();
 

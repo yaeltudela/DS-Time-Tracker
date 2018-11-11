@@ -53,7 +53,6 @@ public class DataManager implements Serializable {
             FileOutputStream fOutStream = new FileOutputStream(this.filename);
             ObjectOutputStream outputStream
                     = new ObjectOutputStream(fOutStream);
-            //TODO ID
             outputStream.writeObject(object);
             outputStream.flush();
             outputStream.close();

@@ -1,6 +1,9 @@
 package core.ds.ds_project_timetracker;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Date;
 import java.util.Observable;
 import java.util.Timer;
@@ -20,7 +23,7 @@ public final class Clock extends Observable {
     private Date date;
     private final Timer timer;
     private TimerTask tt = null;
-    //static final Logger LOGGER = LoggerFactory.getLogger(Clock.class);
+    static final Logger LOGGER = LoggerFactory.getLogger(Clock.class);
 
     /**
      * Private constructor. It creates the timer and sets the date.
@@ -29,7 +32,7 @@ public final class Clock extends Observable {
         this.timer = new Timer(true);
         this.date = new Date();
         setupTimer();
-        //Clock.LOGGER.info("Call to private Clock constructor. Clock instanciated");
+        Clock.LOGGER.info("Call to private Clock constructor. Clock instanciated");
     }
 
     /**
@@ -79,7 +82,7 @@ public final class Clock extends Observable {
      */
     public void setRefreshTicks(final int secs) {
         if (secs >= 1) {
-            //Clock.LOGGER.info("The clock chande the REFRESHRATE to " + secs);
+            Clock.LOGGER.info("The clock chande the REFRESHRATE to " + secs);
             Clock.REFRESHRATE = secs;
             if (this.timer != null) {
                 this.tt.cancel();
@@ -97,7 +100,7 @@ public final class Clock extends Observable {
     public void stopClock() {
         this.tt.cancel();
         this.timer.cancel();
-        //Clock.LOGGER.info("The clock has been stopped");
+        Clock.LOGGER.info("The clock has been stopped");
 
     }
 

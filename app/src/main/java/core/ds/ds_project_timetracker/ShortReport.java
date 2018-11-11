@@ -62,7 +62,6 @@ public class ShortReport extends Report implements TreeVisitor {
 
     }
 
-
     @Override
     public void visitProject(final Project project) {
         long acc = this.currentDuration;
@@ -112,8 +111,8 @@ public class ShortReport extends Report implements TreeVisitor {
     }
 
     @Override
-    public void visitInterval(Interval interval) {
-
+    public void visitInterval(final Interval interval) {
+        //do nothing
     }
 
 }

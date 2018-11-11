@@ -31,6 +31,8 @@ public class ProgrammedTask extends TaskDecorator implements Observer {
         super(baseTask);
         this.dateToStart = toStart;
         Clock.getInstance().addObserver(this);
+        LOGGER.info("new Decorated task" + this.getName() + " with " + this.getClass().getName() + "decorator");
+
     }
 
 
@@ -46,6 +48,8 @@ public class ProgrammedTask extends TaskDecorator implements Observer {
         this.delay = waitSecs;
         this.dateToStart = new Date();
         Clock.getInstance().addObserver(this);
+        LOGGER.info("new Decorated task" + this.getName() + " with " + this.getClass().getName() + "decorator");
+
 
     }
 
