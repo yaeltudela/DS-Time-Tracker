@@ -19,7 +19,7 @@ public class Interval implements Observer, Serializable, Visitable {
     private Date endDate;
     private long duration;
     private static final Logger LOGGER = LoggerFactory.getLogger(Interval.class);
-    private Id id;
+    private final Id id;
 
     /**
      * Default Interval constructor. It sets up the fields.
@@ -36,7 +36,7 @@ public class Interval implements Observer, Serializable, Visitable {
         this.id = new Id();
         this.id.setId(String.valueOf(this.getParentTask().getIntervals().size() + 1));
 
-        LOGGER.info("Created new Interval " + this.getParentTask().getName() + " - " + this.getId());
+        LOGGER.info("Created new Interval by task" + this.getParentTask().getName() + " - " + this.getId());
 
 
     }
@@ -56,6 +56,9 @@ public class Interval implements Observer, Serializable, Visitable {
 
         this.id = new Id();
         this.id.setId(String.valueOf(this.getParentTask().getIntervals().size() + 1));
+
+        LOGGER.info("Created new Interval by interval" + this.getParentTask().getName() + " - " + this.getId());
+
     }
 
     /**

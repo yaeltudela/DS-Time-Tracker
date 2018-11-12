@@ -13,7 +13,7 @@ public class Id {
         return id;
     }
 
-    public void setId(String s) {
+    public void setId(final String s) {
         this.id = s;
     }
 

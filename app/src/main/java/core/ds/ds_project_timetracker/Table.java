@@ -9,8 +9,8 @@ import java.util.ArrayList;
 public class Table extends Container {
 
     private int rows;
-    private int cols;
-    private ArrayList<ArrayList<String>> data;
+    private final int cols;
+    private final ArrayList<ArrayList<String>> data;
 
 
     Table(int rows, int cols) {

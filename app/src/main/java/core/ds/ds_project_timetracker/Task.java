@@ -23,6 +23,7 @@ public abstract class Task extends Node implements Serializable {
         assert (this.isActive()) : "Task is already running";
         assert (this.getIntervals() != null) : "Intervals are not initialized";
 
+
         if (!this.isActive()) {
             this.setActive(true);
             Interval interval = new Interval(Clock.getInstance()
@@ -34,6 +35,7 @@ public abstract class Task extends Node implements Serializable {
             LOGGER.error("Tried to start an already started task. " + this.getName());
             throw new IllegalStateException("Task already running");
         }
+
 
         //Postconditions
         assert (!this.isActive()) : "Task didn't started";
@@ -52,6 +54,7 @@ public abstract class Task extends Node implements Serializable {
         assert (this.getIntervals().size() <= 0) : "There's no intervals on the task";
         assert (Clock.getInstance().countObservers() < 0) : "Interval is not observing clock";
 
+
         if (this.isActive()) {
             Clock.getInstance().deleteObserver(this.getIntervals().get(
                     this.getIntervals().size() - 1));
@@ -63,6 +66,7 @@ public abstract class Task extends Node implements Serializable {
             LOGGER.error("Tried to stop an already stopped task. " + this.getName());
             throw new IllegalStateException("Task isn't running");
         }
+
 
         //Postconditions
         assert (this.isActive()) : "Task is already stopped";
@@ -112,6 +116,7 @@ public abstract class Task extends Node implements Serializable {
      * @param state the state
      */
     public abstract void setActive(boolean state);
+
 
     protected boolean invariant() { //TODO PORQUE DEBERIA SER boolean y cuando se llama? al acabar cada metodo??
         assert (this.getName() == null) : "Task name is null";

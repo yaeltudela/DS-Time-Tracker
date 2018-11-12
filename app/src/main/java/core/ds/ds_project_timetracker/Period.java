@@ -1,11 +1,16 @@
 package core.ds.ds_project_timetracker;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Date;
 
 /**
  * Fragment of time delimited by two dates.
  */
 class Period {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(Period.class);
     private final Date startDate;
     private final Date endDate;
 
@@ -19,6 +24,9 @@ class Period {
     Period(final Date start, final Date end) {
         this.startDate = start;
         this.endDate = end;
+
+        Period.LOGGER.info("New Period created");
+
     }
 
     /**

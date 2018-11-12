@@ -35,6 +35,7 @@ public class ShortReport extends Report implements TreeVisitor {
         createTables();
         fillTables();
 
+        Report.LOGGER.info("Created new short Report");
     }
 
 
@@ -68,7 +69,6 @@ public class ShortReport extends Report implements TreeVisitor {
         this.currentDuration = 0;
         if (isOnPeriod(project.getStartDate(), project.getEndDate())) {
 
-            long projectduration = 0;
             for (Node n : project.getActivities()) {
                 if (isOnPeriod(n.getStartDate(), n.getEndDate())) {
                     n.accept(this);
@@ -79,8 +79,8 @@ public class ShortReport extends Report implements TreeVisitor {
                 ((Table) this.rootProjectsTable).addRow();
                 int index = ((Table) this.rootProjectsTable).getRows() - 1;
 
-                ((Table) this.rootProjectsTable).setCell(index, 0, "id");
-                ((Table) this.rootProjectsTable).setCell(index, 1, project.name);
+                ((Table) this.rootProjectsTable).setCell(index, 0, project.getId().getId());
+                ((Table) this.rootProjectsTable).setCell(index, 1, project.getName());
                 ((Table) this.rootProjectsTable).setCell(index, 2, calcStartDate(project.getStartDate(), project.getEndDate()).toString());
                 ((Table) this.rootProjectsTable).setCell(index, 3, calcEndDate(project.getStartDate(), project.getEndDate()).toString());
                 ((Table) this.rootProjectsTable).setCell(index, 4, String.valueOf(this.currentDuration));

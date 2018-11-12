@@ -9,16 +9,16 @@ import java.util.Date;
 public class DetailedReport extends Report implements TreeVisitor {
 
 
-    private Container subtitleSubProjects;
-    private Container textSubProjects;
-    private Container subProjectsTable;
-    private Container subtitleTasks;
-    private Container textTask;
-    private Container taskTable;
-    private Container subtitleIntervals;
-    private Container textIntervals;
-    private Container intervalsTable;
-    private Container footer;
+    private final Container subtitleSubProjects;
+    private final Container textSubProjects;
+    private final Container subProjectsTable;
+    private final Container subtitleTasks;
+    private final Container textTask;
+    private final Container taskTable;
+    private final Container subtitleIntervals;
+    private final Container textIntervals;
+    private final Container intervalsTable;
+    private final Container footer;
 
     DetailedReport(final Project rootVisitable, final Period reportPeriod, final ReportGenerator reportGenerator) {
         super(rootVisitable, reportPeriod, reportGenerator);
@@ -47,6 +47,7 @@ public class DetailedReport extends Report implements TreeVisitor {
 
         createTables();
         fillTables();
+
 
     }
 
@@ -142,7 +143,7 @@ public class DetailedReport extends Report implements TreeVisitor {
                 int index = ((Table) this.rootProjectsTable).getRows() - 1;
 
                 ((Table) this.rootProjectsTable).setCell(index, 0, project.getId().getId());
-                ((Table) this.rootProjectsTable).setCell(index, 1, project.name);
+                ((Table) this.rootProjectsTable).setCell(index, 1, project.getName());
                 ((Table) this.rootProjectsTable).setCell(index, 2, calcStartDate(project.getStartDate(), project.getEndDate()).toString());
                 ((Table) this.rootProjectsTable).setCell(index, 3, calcEndDate(project.getStartDate(), project.getEndDate()).toString());
                 ((Table) this.rootProjectsTable).setCell(index, 4, String.valueOf(this.currentDuration));
@@ -151,7 +152,7 @@ public class DetailedReport extends Report implements TreeVisitor {
                 int index = ((Table) this.subProjectsTable).getRows() - 1;
 
                 ((Table) this.subProjectsTable).setCell(index, 0, project.getId().getId());
-                ((Table) this.subProjectsTable).setCell(index, 1, project.name);
+                ((Table) this.subProjectsTable).setCell(index, 1, project.getName());
                 ((Table) this.subProjectsTable).setCell(index, 2, calcStartDate(project.getStartDate(), project.getEndDate()).toString());
                 ((Table) this.subProjectsTable).setCell(index, 3, calcEndDate(project.getStartDate(), project.getEndDate()).toString());
                 ((Table) this.subProjectsTable).setCell(index, 4, String.valueOf(this.currentDuration));

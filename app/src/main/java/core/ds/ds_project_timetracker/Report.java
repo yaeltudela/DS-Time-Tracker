@@ -1,7 +1,8 @@
 package core.ds.ds_project_timetracker;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Date;
 
 /**
@@ -10,12 +11,13 @@ import java.util.Date;
  */
 public abstract class Report implements TreeVisitor {
 
+    protected static final Logger LOGGER = LoggerFactory.getLogger(Report.class);
+
     protected final Date reportDate;
     protected final Project rootVisitable;
     protected final Period reportPeriod;
     protected long currentDuration;
-    protected Collection<Container> tables;
-    protected ReportGenerator reportGenerator;
+    protected final ReportGenerator reportGenerator;
 
 
     protected Container title;
@@ -37,18 +39,12 @@ public abstract class Report implements TreeVisitor {
         this.rootVisitable = rootVisitable;
         this.reportPeriod = reportPeriod;
         this.reportGenerator = reportGenerator;
-        this.tables = new ArrayList<>();
-
     }
 
     protected void fillTables() {
         for (Node n : rootVisitable.getActivities()) {
             n.accept(this);
         }
-    }
-
-    protected void addToReport(final Container container) {
-        tables.add(container);
     }
 
     /**
@@ -102,7 +98,7 @@ public abstract class Report implements TreeVisitor {
      * @param endDate Date to recalculate
      * @return endDate or the new date (Period endDate)
      */
-    protected Date calcEndDate(final Date startDate, Date endDate) {
+    protected Date calcEndDate(final Date startDate, final Date endDate) {
         if (isPostIntersection(startDate, endDate)) {
             return this.reportPeriod.getEndDate();
         } else {
@@ -118,7 +114,7 @@ public abstract class Report implements TreeVisitor {
      * @param duration  the default duration
      * @return duration or the new duration
      */
-    protected long calcDuration(final Date startDate, final Date endDate, long duration) {
+    protected long calcDuration(final Date startDate, final Date endDate, final long duration) {
         long newDuration = duration;
         if (!isWhole(startDate, endDate)) {
             if (isPreviousIntersection(startDate, endDate)) {
@@ -145,17 +141,17 @@ public abstract class Report implements TreeVisitor {
     boolean isOnPeriod(final Date startDate, final Date endDate) {
 
         Date pStartDate = this.reportPeriod.getStartDate();
-        Date pEndaDate = this.reportPeriod.getEndDate();
+        Date pEndDate = this.reportPeriod.getEndDate();
 
         return ((startDate.before(pStartDate) && endDate.after(pStartDate)) ||
-                (startDate.after(pStartDate) && endDate.before(pEndaDate)) ||
-                (startDate.before(pEndaDate) && endDate.after(pEndaDate)) ||
-                (startDate.before(pStartDate) && endDate.after(pEndaDate)) ||
-                (startDate.equals(pStartDate)) || endDate.equals(pEndaDate));
+                (startDate.after(pStartDate) && endDate.before(pEndDate)) ||
+                (startDate.before(pEndDate) && endDate.after(pEndDate)) ||
+                (startDate.before(pStartDate) && endDate.after(pEndDate)) ||
+                (startDate.equals(pStartDate)) || endDate.equals(pEndDate));
 
     }
 
-    boolean isWhole(final Date startDate, final Date endDate) {
+    private boolean isWhole(final Date startDate, final Date endDate) {
         return ((startDate.after(this.reportPeriod.getStartDate()) || startDate.equals(this.reportPeriod.getStartDate())) &&
                 (endDate.before(this.reportPeriod.getEndDate()) || endDate.before(this.reportPeriod.getEndDate())));
     }

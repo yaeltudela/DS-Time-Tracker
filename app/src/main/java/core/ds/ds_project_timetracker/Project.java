@@ -80,6 +80,7 @@ public class Project extends Node implements Serializable, Visitable {
         if (this.getParent() != null) {
             this.parent.updateData(time);
         }
+
     }
 
     /**

@@ -4,7 +4,7 @@ package core.ds.ds_project_timetracker;
  * Class that represents Text for the report representation.
  */
 public class Text extends Container {
-    private String text;
+    private final String text;
 
     /**
      * Constructor for the Text class. It sets up the text of the Text.
