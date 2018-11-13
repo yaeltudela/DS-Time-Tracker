@@ -33,88 +33,100 @@ public abstract class TaskDecorator extends Task {
     @Override
     public void accept(final Visitor visitor) {
         LOGGER.info("Visitor accepts in task " + this.getName());
-        this.baseTask.accept(visitor);
+        this.getBaseTask().accept(visitor);
     }
 
+    public Task getBaseTask() {
+        return this.baseTask;
+    }
 
     @Override
     public Project getParent() {
-        return this.baseTask.getParent();
+        return this.getBaseTask().getParent();
     }
 
     @Override
     public void setParent(final Node parent) {
-        this.baseTask.setParent(parent);
+        this.getBaseTask().setParent(parent);
     }
 
     @Override
     public Date getStartDate() {
-        return this.baseTask.getStartDate();
+        return this.getBaseTask().getStartDate();
     }
 
     @Override
     public void setStartDate(final Date startDate) {
-        this.baseTask.setStartDate(startDate);
+        this.getBaseTask().setStartDate(startDate);
     }
 
     @Override
     public Date getEndDate() {
-        return this.baseTask.getEndDate();
+        return this.getBaseTask().getEndDate();
     }
 
     @Override
     public void setEndDate(final Date endDate) {
-        this.baseTask.setEndDate(endDate);
+        this.getBaseTask().setEndDate(endDate);
     }
 
     @Override
     public long getDuration() {
-        return this.baseTask.getDuration();
+        return this.getBaseTask().getDuration();
     }
 
     @Override
     public void setDuration(final long duration) {
-        this.baseTask.setDuration(duration);
+        this.getBaseTask().setDuration(duration);
     }
 
     @Override
     public String getName() {
-        return this.baseTask.getName();
+        return this.getBaseTask().getName();
     }
 
     @Override
     public void setName(final String name) {
-        this.baseTask.setName(name);
+        this.getBaseTask().setName(name);
     }
 
     @Override
     public String getDescription() {
-        return this.baseTask.getDescription();
+        return this.getBaseTask().getDescription();
     }
 
     @Override
     public void setDescription(final String description) {
-        this.baseTask.setDescription(description);
+        this.getBaseTask().setDescription(description);
     }
 
     @Override
     public ArrayList<Interval> getIntervals() {
-        return this.baseTask.getIntervals();
+        return this.getBaseTask().getIntervals();
     }
 
     @Override
     public void setIntervals(final ArrayList<Interval> intervals) {
-        this.baseTask.setIntervals(intervals);
+        this.getBaseTask().setIntervals(intervals);
     }
 
     @Override
     public boolean isActive() {
-        return this.baseTask.isActive();
+        return this.getBaseTask().isActive();
     }
 
     @Override
     public void setActive(final boolean state) {
-        this.baseTask.setActive(state);
+        this.getBaseTask().setActive(state);
     }
 
+    /**
+     * Method that checks the invariant of TaskDecorator.
+     * It checks the invariants of parent classes and itself.
+     */
+    @Override
+    protected void invariant() {
+        super.invariant();
+        assert (this.getBaseTask() == null) : "BaseTask is null";
+    }
 }

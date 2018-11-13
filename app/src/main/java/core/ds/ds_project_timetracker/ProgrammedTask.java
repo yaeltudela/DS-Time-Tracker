@@ -31,7 +31,8 @@ public class ProgrammedTask extends TaskDecorator implements Observer {
         super(baseTask);
         this.dateToStart = toStart;
         Clock.getInstance().addObserver(this);
-        LOGGER.info("new Decorated task" + this.getName() + " with " + this.getClass().getName() + "decorator");
+        LOGGER.info("new Decorated task" + this.getName() + " with "
+                + this.getClass().getName() + "decorator");
 
     }
 
@@ -48,7 +49,8 @@ public class ProgrammedTask extends TaskDecorator implements Observer {
         this.delay = waitSecs;
         this.dateToStart = new Date();
         Clock.getInstance().addObserver(this);
-        LOGGER.info("new Decorated task" + this.getName() + " with " + this.getClass().getName() + "decorator");
+        LOGGER.info("new Decorated task" + this.getName() + " with "
+                + this.getClass().getName() + "decorator");
 
 
     }
@@ -64,7 +66,8 @@ public class ProgrammedTask extends TaskDecorator implements Observer {
     public void update(final Observable o, final Object arg) {
         if (this.delay != -1) {
 
-            if (((Clock) arg).getMs() >= this.dateToStart.getTime() + this.delay * Clock.MS_IN_SEC) {
+            if (((Clock) arg).getMs() >= this.dateToStart.getTime()
+                    + this.delay * Clock.MS_IN_SEC) {
                 ((Clock) arg).deleteObserver(this);
                 super.startInterval();
             }

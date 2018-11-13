@@ -1,7 +1,7 @@
 package core.ds.ds_project_timetracker;
 
 /**
- * Interfance for generalization of the different Visitors.
+ * Interface for generalization of the different Visitors.
  * Contains a visitX method for all the Visitable classes
  */
 public interface TreeVisitor extends Visitor {

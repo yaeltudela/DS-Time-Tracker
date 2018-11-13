@@ -48,7 +48,7 @@ public class DataManager implements Serializable {
      *
      * @param object The object to save
      */
-    public void saveData(final Object object) {
+    public void saveData(final Project object) {
         try {
             FileOutputStream fOutStream = new FileOutputStream(this.filename);
             ObjectOutputStream outputStream

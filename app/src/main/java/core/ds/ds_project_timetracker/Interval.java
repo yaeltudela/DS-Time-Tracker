@@ -14,12 +14,12 @@ import java.util.Observer;
  */
 public class Interval implements Observer, Serializable, Visitable {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(Interval.class);
     private final Task parentTask;
     private final Date startDate;
+    private final Id id;
     private Date endDate;
     private long duration;
-    private static final Logger LOGGER = LoggerFactory.getLogger(Interval.class);
-    private final Id id;
 
     /**
      * Default Interval constructor. It sets up the fields.
@@ -34,15 +34,17 @@ public class Interval implements Observer, Serializable, Visitable {
         this.parentTask = parent;
 
         this.id = new Id();
-        this.id.setId(String.valueOf(this.getParentTask().getIntervals().size() + 1));
+        this.id.setId(String.valueOf(this.getParentTask()
+                .getIntervals().size() + 1));
 
-        LOGGER.info("Created new Interval by task" + this.getParentTask().getName() + " - " + this.getId());
+        LOGGER.info("Created new Interval by task"
+                + this.getParentTask().getName() + " - " + this.getId());
 
 
     }
 
     /**
-     * Interval contructor for the user-input intervals. (Not implemented yet)
+     * Interval constructor for the user-input intervals. (Not implemented yet)
      *
      * @param start  Time when the Interval starts
      * @param end    Time when the Interval ends
@@ -52,12 +54,15 @@ public class Interval implements Observer, Serializable, Visitable {
         this.parentTask = parent;
         this.startDate = start;
         this.endDate = end;
-        this.duration = (this.endDate.getTime() - this.startDate.getTime()) / Clock.MS_IN_SEC;
+        this.duration = (this.endDate.getTime()
+                - this.startDate.getTime()) / Clock.MS_IN_SEC;
 
         this.id = new Id();
-        this.id.setId(String.valueOf(this.getParentTask().getIntervals().size() + 1));
+        this.id.setId(String.valueOf(this.getParentTask()
+                .getIntervals().size() + 1));
 
-        LOGGER.info("Created new Interval by interval" + this.getParentTask().getName() + " - " + this.getId());
+        LOGGER.info("Created new Interval by interval"
+                + this.getParentTask().getName() + " - " + this.getId());
 
     }
 
@@ -71,7 +76,7 @@ public class Interval implements Observer, Serializable, Visitable {
     @Override
     public void update(final Observable o, final Object arg) {
         this.endDate = ((Clock) arg).getTime();
-        this.duration += Clock.REFRESHRATE;
+        this.duration += Clock.nREFRESHRATE;
         this.parentTask.updateData(this.endDate);
     }
 
@@ -121,18 +126,38 @@ public class Interval implements Observer, Serializable, Visitable {
      */
     @Override
     public void accept(final Visitor visitor) {
-        LOGGER.info("Visitor accepts in Interval " + this.getParentTask().getName() + " - " + this.getId());
+        LOGGER.info("Visitor accepts in Interval "
+                + this.getParentTask().getName() + " - " + this.getId());
         ((TreeVisitor) visitor).visitInterval(this);
 
     }
 
+    /**
+     * Method that gets all the relevant Interval data.
+     *
+     * @return String with Interval data as the following. "Task_name duration".
+     */
     @Override
     public String toString() {
         return "\t" + this.parentTask.getName() + "Interval \t" + this.duration;
     }
 
+    /**
+     * Getter for the Interval id.
+     *
+     * @return Interval Id.
+     */
     public Id getId() {
         return this.id;
+    }
+
+    /**
+     * Getter for the String value of id.
+     *
+     * @return String with the id.
+     */
+    public String getIdName() {
+        return this.id.getId();
     }
 }
 

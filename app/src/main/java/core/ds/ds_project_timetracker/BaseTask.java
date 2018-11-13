@@ -7,7 +7,7 @@ import java.util.Date;
 
 /**
  * Class that represents a task without decorators.
- * Basetask instaciates Intervals and control when starts or stop.
+ * BaseTask creates Intervals and control when starts or stop.
  */
 public class BaseTask extends Task {
 
@@ -18,13 +18,13 @@ public class BaseTask extends Task {
      * BaseTask constructor. Calls the Task constructor
      * and adds itself to it's parent activities.
      *
-     * @param name        BaseTask's name
-     * @param description BaseTask's description
-     * @param project     BaseTask's parent project
+     * @param name    BaseTask's name
+     * @param desc    BaseTask's description
+     * @param project BaseTask's parent project
      */
-    BaseTask(final String name, final String description, final Project project) {
+    BaseTask(final String name, final String desc, final Project project) {
         this.setName(name);
-        this.setDescription(description);
+        this.setDescription(desc);
         this.setDuration(0);
 
         this.setIntervals(new ArrayList<Interval>());
@@ -37,9 +37,10 @@ public class BaseTask extends Task {
         this.getParent().getActivities().add(this);
         this.id = new Id();
         if (isRootNode()) {
-            this.id.generateid();
+            this.id.generateId();
         } else {
-            this.id.setId(this.getParent().getId().getId() + "." + this.getParent().getActivities().size());
+            this.id.setId(this.getParent().getIdName()
+                    + "." + this.getParent().getActivities().size());
         }
         LOGGER.info("new basic Task " + this.getName());
 
@@ -68,9 +69,17 @@ public class BaseTask extends Task {
     }
 
 
+    /**
+     * Method that returns Task data as string.
+     *
+     * @return String with Task data as the following
+     * "Name StartDate EndDate Duration Parent".
+     */
     @Override
     public String toString() {
-        return this.getName() + "\t" + this.getStartDate() + "\t" + this.getEndDate() + "\t" + this.getDuration() + "\t" + getParent().getName();
+        return this.getName() + "\t" + this.getStartDate() + "\t"
+                + this.getEndDate() + "\t" + this.getDuration()
+                + "\t" + getParent().getName();
     }
 
     //GETTERS AND SETTERS
@@ -131,5 +140,6 @@ public class BaseTask extends Task {
         LOGGER.info("Visitor accepts in task " + this.getName());
         ((TreeVisitor) visitor).visitTask(this);
     }
+
 }
 

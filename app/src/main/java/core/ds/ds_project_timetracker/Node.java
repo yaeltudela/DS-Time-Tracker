@@ -138,7 +138,7 @@ public abstract class Node implements Serializable, Visitable {
     /**
      * Method that checks if the project is a Root Project.
      *
-     * @return ture if it's root, false otherwise
+     * @return true if it's root, false otherwise
      */
     public boolean isRootNode() {
         if (this.getParent() == null) {
@@ -150,5 +150,16 @@ public abstract class Node implements Serializable, Visitable {
 
     public Id getId() {
         return id;
+    }
+
+    public String getIdName() {
+        return this.id.getId();
+    }
+
+
+    protected void invariant() {
+        assert (this.getIdName() == null) : "Node has no id.";
+        assert (this.getName() == null) : "Node has no name.";
+        assert (this.getDuration() >= 0) : "Node has negative duration";
     }
 }

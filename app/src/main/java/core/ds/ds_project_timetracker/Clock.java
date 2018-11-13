@@ -18,12 +18,12 @@ import java.util.TimerTask;
 public final class Clock extends Observable {
 
     public static final int MS_IN_SEC = 1000;
-    public static int REFRESHRATE = 1;
-    private static Clock clock = null;
-    private Date date;
-    private final Timer timer;
-    private TimerTask tt = null;
     static final Logger LOGGER = LoggerFactory.getLogger(Clock.class);
+    public static int nREFRESHRATE = 1;
+    private static Clock clock = null;
+    private final Timer timer;
+    private Date date;
+    private TimerTask tt = null;
 
     /**
      * Private constructor. It creates the timer and sets the date.
@@ -32,13 +32,13 @@ public final class Clock extends Observable {
         this.timer = new Timer(true);
         this.date = new Date();
         setupTimer();
-        Clock.LOGGER.info("Call to private Clock constructor. Clock instanciated");
+        Clock.LOGGER.info("Call to private Clock constructor. Clock created");
     }
 
     /**
      * The invoker of the class.
      * Whenever is called it returns the clock.
-     * The first time, in adition of the return, it creates the clock first.
+     * The first time, in addition of the return, it creates the clock first.
      *
      * @return the Clock instance
      */
@@ -60,7 +60,7 @@ public final class Clock extends Observable {
             public void run() {
                 updateClock();
             }
-        }, 0, Clock.REFRESHRATE * Clock.MS_IN_SEC);
+        }, 0, Clock.nREFRESHRATE * Clock.MS_IN_SEC);
     }
 
 
@@ -82,8 +82,8 @@ public final class Clock extends Observable {
      */
     public void setRefreshTicks(final int secs) {
         if (secs >= 1) {
-            Clock.LOGGER.info("The clock chande the REFRESHRATE to " + secs);
-            Clock.REFRESHRATE = secs;
+            Clock.LOGGER.info("The clock changed the nREFRESHRATE to " + secs);
+            Clock.nREFRESHRATE = secs;
             if (this.timer != null) {
                 this.tt.cancel();
                 setupTimer();
@@ -95,7 +95,7 @@ public final class Clock extends Observable {
     }
 
     /**
-     * Method that interupts the thread and cancel the task.
+     * Method that interrupts the thread and cancel the task.
      */
     public void stopClock() {
         this.tt.cancel();

@@ -8,7 +8,7 @@ public class Subtitle extends Container {
     private final String subtitle;
 
     /**
-     * Constructor for the Subtitile class. It sets up the text of the subtitle.
+     * Constructor for the Subtitle class. It sets up the text of the subtitle.
      *
      * @param s String with the subtitle text.
      */

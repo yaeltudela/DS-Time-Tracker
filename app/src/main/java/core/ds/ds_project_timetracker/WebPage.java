@@ -6,12 +6,12 @@ import java.util.Iterator;
 import html.Attribute;
 import html.Tag;
 
-public class Webpage {
+public class WebPage {
     private Tag webpage = new Tag("html");
     private Tag head = new Tag("head");
     private Tag body = new Tag("body");
 
-    public Webpage() {
+    public WebPage() {
         Tag title = new Tag("title");
         title.add("TimeTracker Report");
         head.add(title);

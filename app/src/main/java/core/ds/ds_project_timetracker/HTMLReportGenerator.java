@@ -9,40 +9,40 @@ import java.util.Date;
  */
 public class HTMLReportGenerator extends ReportGenerator implements ReportVisitor {
 
-    private final Webpage webpage;
+    private final WebPage webPage;
 
     /**
      * Constructor for the HTML report Generator.
      */
     HTMLReportGenerator() {
         super();
-        this.webpage = new Webpage();
+        this.webPage = new WebPage();
     }
 
 
     @Override
     public void visitTitle(final Title title) {
-        this.webpage.addHeader(title.getText(), 1, true);
+        this.webPage.addHeader(title.getText(), 1, true);
     }
 
     @Override
     public void visitSubtitle(final Subtitle subtitle) {
-        this.webpage.addHeader(subtitle.getText(), 2, false);
+        this.webPage.addHeader(subtitle.getText(), 2, false);
     }
 
     @Override
     public void visitTable(final Table table) {
-        this.webpage.addTable(table.getData(), true, true);
+        this.webPage.addTable(table.getData(), true, false);
     }
 
     @Override
     public void visitText(final Text text) {
-        this.webpage.addText(text.getText());
+        this.webPage.addText(text.getText());
     }
 
     @Override
     public void visitSeparator(final Separator separator) {
-        this.webpage.addSeparationLine();
+        this.webPage.addSeparationLine();
     }
 
 
@@ -58,7 +58,7 @@ public class HTMLReportGenerator extends ReportGenerator implements ReportVisito
         try {
             file = new PrintStream(this.filename);
             System.setOut(file);
-            this.webpage.printWebpage();
+            this.webPage.printWebpage();
             file.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();

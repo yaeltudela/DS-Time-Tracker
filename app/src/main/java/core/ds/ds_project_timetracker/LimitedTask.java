@@ -10,7 +10,7 @@ public class LimitedTask extends TaskDecorator {
     /**
      * Maximum date to end the task.
      */
-    private Date deathLine = null;
+    private Date deadline = null;
     /**
      * Maximum seconds that the task will be running.
      */
@@ -25,8 +25,9 @@ public class LimitedTask extends TaskDecorator {
      */
     public LimitedTask(final Task baseTask, final Date maxDate) {
         super(baseTask);
-        this.deathLine = maxDate;
-        LOGGER.info("new Decorated task" + this.getName() + " with " + this.getClass().getName() + "decorator");
+        this.deadline = maxDate;
+        LOGGER.info("new Decorated task" + this.getName()
+                + " with " + this.getClass().getName() + "decorator");
 
     }
 
@@ -40,26 +41,27 @@ public class LimitedTask extends TaskDecorator {
     LimitedTask(final Task baseTask, final int maxSeconds) {
         super(baseTask);
         this.totalSeconds = maxSeconds;
-        LOGGER.info("new Decorated task" + this.getName() + " with " + this.getClass().getName() + "decorator");
+        LOGGER.info("new Decorated task" + this.getName()
+                + " with " + this.getClass().getName() + "decorator");
 
     }
 
     /**
-     * Method that checks if the deathline has been passed to stop the Task.
+     * Method that checks if the deadline has been passed to stop the Task.
      *
      * @param time time to do the update. Usually the actual Clock time
      */
     @Override
     public void updateData(final Date time) {
-        if (deathLine == null) {
-            totalSeconds -= Clock.REFRESHRATE;
+        if (deadline == null) {
+            totalSeconds -= Clock.nREFRESHRATE;
             if (this.totalSeconds < 0) {
                 this.stopInterval();
             } else {
                 super.updateData(time);
             }
         } else {
-            if (this.endDate.after(this.deathLine)) {
+            if (this.endDate.after(this.deadline)) {
                 this.stopInterval();
             } else {
                 super.updateData(time);

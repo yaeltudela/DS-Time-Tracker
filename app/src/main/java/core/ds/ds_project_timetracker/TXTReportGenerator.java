@@ -19,7 +19,7 @@ public class TXTReportGenerator extends ReportGenerator implements ReportVisitor
     private PrintWriter printWriter;
 
     /**
-     * Default constructor. It initialices the printWriter to print to
+     * Default constructor. It initializes the printWriter to print to
      * the output file.
      */
     TXTReportGenerator() {

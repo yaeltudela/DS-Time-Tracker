@@ -13,11 +13,11 @@ import java.util.Date;
  */
 public class Project extends Node implements Serializable, Visitable {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(Project.class);
     /**
      * Collection that contains all the activities (Projects or Tasks).
      */
     private Collection<Node> activities;
-    private final static Logger LOGGER = LoggerFactory.getLogger(Project.class);
 
 
     /**
@@ -50,9 +50,10 @@ public class Project extends Node implements Serializable, Visitable {
 
         this.id = new Id();
         if (isRootNode()) {
-            this.id.generateid();
+            this.id.generateId();
         } else {
-            this.id.setId(this.getParent().getId().getId() + "." + this.getParent().getActivities().size());
+            this.id.setId(this.getParent().getIdName()
+                    + "." + this.getParent().getActivities().size());
         }
 
         Project.LOGGER.info("New Project created with name" + this.getName());
@@ -118,7 +119,7 @@ public class Project extends Node implements Serializable, Visitable {
      * Getter for the activity list of this node.
      *
      * @return Collection of Nodes with all the node's
-     * activities (Tasks and Subprojects)
+     * activities (Tasks and SubProjects)
      */
     public Collection<Node> getActivities() {
         return this.activities;

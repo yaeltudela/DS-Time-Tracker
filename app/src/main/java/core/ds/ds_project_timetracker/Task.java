@@ -12,14 +12,14 @@ import java.util.ArrayList;
  */
 public abstract class Task extends Node implements Serializable {
 
-    protected final static Logger LOGGER = LoggerFactory.getLogger(Task.class);
+    protected static final Logger LOGGER = LoggerFactory.getLogger(Task.class);
 
     /**
      * Method that checks if the task isn't running and
      * creates a new Interval object and makes it an Observer.
      */
     public void startInterval() {
-        //Preconditions
+        //Pre-conditions
         assert (this.isActive()) : "Task is already running";
         assert (this.getIntervals() != null) : "Intervals are not initialized";
 
@@ -30,14 +30,15 @@ public abstract class Task extends Node implements Serializable {
                     .getTime(), this);
             this.getIntervals().add(interval);
             Clock.getInstance().addObserver(interval);
-            LOGGER.info("Task starting interval" + this.getName() + " - " + interval.getId());
+            LOGGER.info("Task starting interval"
+                    + this.getName() + " - " + interval.getId());
         } else {
-            LOGGER.error("Tried to start an already started task. " + this.getName());
+            LOGGER.error("Tried to start an already"
+                    + " started task." + this.getName());
             throw new IllegalStateException("Task already running");
         }
 
-
-        //Postconditions
+        //Post-conditions
         assert (!this.isActive()) : "Task didn't started";
         assert (this.getIntervals().size() <= 0) : "Task didn't add the running interval";
         assert (Clock.getInstance().countObservers() < 0) : "Interval is not observing clock";
@@ -49,7 +50,7 @@ public abstract class Task extends Node implements Serializable {
      * Observer (making he don't refresh it's state more).
      */
     public void stopInterval() {
-        //Preconditions
+        //Pre-conditions
         assert (!this.isActive()) : "Task didn't started";
         assert (this.getIntervals().size() <= 0) : "There's no intervals on the task";
         assert (Clock.getInstance().countObservers() < 0) : "Interval is not observing clock";
@@ -68,12 +69,18 @@ public abstract class Task extends Node implements Serializable {
         }
 
 
-        //Postconditions
+        //Post-conditions
         assert (this.isActive()) : "Task is already stopped";
         assert (this.getIntervals().size() <= 0) : "Intervals are not initialized";
     }
 
 
+    /**
+     * Method that get relevant information about Task object
+     * and format into String.
+     *
+     * @return String with task info.
+     */
     @Override
     public String toString() {
         return this.getName() + "\t" + this.getStartDate() + "\t" + this.getEndDate() + "\t" + this.getDuration() + "\t" + getParent().getName();
@@ -118,9 +125,14 @@ public abstract class Task extends Node implements Serializable {
     public abstract void setActive(boolean state);
 
 
-    protected boolean invariant() { //TODO PORQUE DEBERIA SER boolean y cuando se llama? al acabar cada metodo??
-        assert (this.getName() == null) : "Task name is null";
-        return true;
+    /**
+     * Method that check the invariants of the class Task. this method checks
+     * too the overwritten methods taken from Node class.
+     */
+    @Override
+    protected void invariant() {
+        super.invariant();
+        assert (this.getParent() != null) : "Task has no parent";
     }
 }
 

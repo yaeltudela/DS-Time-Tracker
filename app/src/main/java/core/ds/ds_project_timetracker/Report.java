@@ -12,18 +12,21 @@ import java.util.Date;
 public abstract class Report implements TreeVisitor {
 
     protected static final Logger LOGGER = LoggerFactory.getLogger(Report.class);
-
+    protected static final int nZERO = 0;
+    protected static final int nONE = 1;
+    protected static final int nTWO = 2;
+    protected static final int nTHREE = 3;
+    protected static final int nFOUR = 4;
+    protected static final int nFIVE = 5;
+    protected static final int nSIX = 6;
+    protected static long currentDuration;
     protected final Date reportDate;
     protected final Project rootVisitable;
     protected final Period reportPeriod;
-    protected long currentDuration;
     protected final ReportGenerator reportGenerator;
-
-
     protected Container title;
     protected Container subtitleReports;
     protected Container reportTable;
-
     protected Container subtitleRootProjects;
     protected Container rootProjectsTable;
 
@@ -41,6 +44,12 @@ public abstract class Report implements TreeVisitor {
         this.reportGenerator = reportGenerator;
     }
 
+    /**
+     * Method that creates tables according to the subclass Report.
+     */
+    protected abstract void createTables();
+
+
     protected void fillTables() {
         for (Node n : rootVisitable.getActivities()) {
             n.accept(this);
@@ -55,7 +64,7 @@ public abstract class Report implements TreeVisitor {
 
     protected Table createReportTable() {
 
-        Table table = new Table(4, 2);
+        Table table = new Table(4, Report.nTWO);
 
         table.setCell(0, 0, "");
         table.setCell(1, 0, "From: ");
@@ -84,7 +93,7 @@ public abstract class Report implements TreeVisitor {
      * @param startDate Date to recalculate
      * @return startDate or the new date (Period startDate)
      */
-    protected Date calcStartDate(final Date startDate, Date endDate) {
+    protected Date calcStartDate(final Date startDate, final Date endDate) {
         if (isPreviousIntersection(startDate, endDate)) {
             return this.reportPeriod.getStartDate();
         } else {
@@ -143,11 +152,11 @@ public abstract class Report implements TreeVisitor {
         Date pStartDate = this.reportPeriod.getStartDate();
         Date pEndDate = this.reportPeriod.getEndDate();
 
-        return ((startDate.before(pStartDate) && endDate.after(pStartDate)) ||
-                (startDate.after(pStartDate) && endDate.before(pEndDate)) ||
-                (startDate.before(pEndDate) && endDate.after(pEndDate)) ||
-                (startDate.before(pStartDate) && endDate.after(pEndDate)) ||
-                (startDate.equals(pStartDate)) || endDate.equals(pEndDate));
+        return ((startDate.before(pStartDate) && endDate.after(pStartDate))
+                || (startDate.after(pStartDate) && endDate.before(pEndDate))
+                || (startDate.before(pEndDate) && endDate.after(pEndDate))
+                || (startDate.before(pStartDate) && endDate.after(pEndDate))
+                || (startDate.equals(pStartDate)) || endDate.equals(pEndDate));
 
     }
 
@@ -169,7 +178,5 @@ public abstract class Report implements TreeVisitor {
         return (startOk && endOk);
 
     }
-
-    protected abstract void createTables();
 
 }

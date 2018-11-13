@@ -5,7 +5,7 @@ import java.util.Date;
 /**
  * Class for make all the test.
  */
-public class Client {
+class Client {
 
     private static Project root;
     private static Project p1, p2;
