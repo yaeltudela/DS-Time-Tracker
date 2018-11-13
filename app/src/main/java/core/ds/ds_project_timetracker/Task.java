@@ -40,8 +40,10 @@ public abstract class Task extends Node implements Serializable {
 
         //Post-conditions
         assert (!this.isActive()) : "Task didn't started";
-        assert (this.getIntervals().size() <= 0) : "Task didn't add the running interval";
-        assert (Clock.getInstance().countObservers() < 0) : "Interval is not observing clock";
+        assert (this.getIntervals().size() <= 0)
+                : "Task didn't add the running interval";
+        assert (Clock.getInstance().countObservers() < 0)
+                : "Interval is not observing clock";
 
         this.invariant();
     }
@@ -54,26 +56,31 @@ public abstract class Task extends Node implements Serializable {
     public void stopInterval() {
         //Pre-conditions
         assert (!this.isActive()) : "Task didn't started";
-        assert (this.getIntervals().size() <= 0) : "There's no intervals on the task";
-        assert (Clock.getInstance().countObservers() < 0) : "Interval is not observing clock";
+        assert (this.getIntervals().size() <= 0)
+                : "There's no intervals on the task";
+        assert (Clock.getInstance().countObservers() < 0)
+                : "Interval is not observing clock";
 
 
         if (this.isActive()) {
             Clock.getInstance().deleteObserver(this.getIntervals().get(
                     this.getIntervals().size() - 1));
             this.setActive(false);
-            LOGGER.info("Task stopping interval" + this.getName() + " - " + this.getIntervals().get(
-                    this.getIntervals().size() - 1).getId());
+            LOGGER.info("Task stopping interval"
+                    + this.getName() + " - " + this.getIntervals()
+                    .get(this.getIntervals().size() - 1).getIdName());
 
         } else {
-            LOGGER.error("Tried to stop an already stopped task. " + this.getName());
+            LOGGER.error("Tried to stop an already stopped task. "
+                    + this.getName());
             throw new IllegalStateException("Task isn't running");
         }
 
 
         //Post-conditions
         assert (this.isActive()) : "Task is already stopped";
-        assert (this.getIntervals().size() <= 0) : "Intervals are not initialized";
+        assert (this.getIntervals().size() <= 0)
+                : "Intervals are not initialized";
 
         this.invariant();
     }
@@ -87,7 +94,9 @@ public abstract class Task extends Node implements Serializable {
      */
     @Override
     public String toString() {
-        return this.getName() + "\t" + this.getStartDate() + "\t" + this.getEndDate() + "\t" + this.getDuration() + "\t" + getParent().getName();
+        return this.getName() + "\t" + this.getStartDate() + "\t"
+                + this.getEndDate() + "\t" + this.getDuration()
+                + "\t" + getParent().getName();
     }
 
     //GETTERS AND SETTERS

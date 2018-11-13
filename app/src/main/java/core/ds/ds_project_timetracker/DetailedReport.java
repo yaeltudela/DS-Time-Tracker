@@ -18,7 +18,6 @@ public class DetailedReport extends Report implements TreeVisitor {
     private final Container subtitleIntervals;
     private final Container textIntervals;
     private final Container intervalsTable;
-    private final Container footer;
 
     /**
      * Constructor for Detailed report. It calls the Report constructor and
@@ -28,31 +27,26 @@ public class DetailedReport extends Report implements TreeVisitor {
      * @param reportPeriod    Period associated to the period.
      * @param reportGenerator Strategy used to generate the report.
      */
-    DetailedReport(final Project rootVisitable,
-                   final Period reportPeriod, final ReportGenerator reportGenerator) {
+    DetailedReport(final Project rootVisitable, final Period reportPeriod,
+                   final ReportGenerator reportGenerator) {
         super(rootVisitable, reportPeriod, reportGenerator);
 
         this.title = new Title("Detailed Report");
-        this.subtitleReports = new Subtitle("Period");
-        this.reportTable = createReportTable();
 
         this.subtitleRootProjects = new Subtitle("Root Projects");
-        this.rootProjectsTable = new Table(0, nFIVE);
+        this.rootProjectsTable = new Table(0, FIVE);
 
         this.subtitleSubProjects = new Subtitle("SubProjects");
         this.textSubProjects = new Text("Subtitle subProjects");
-        this.subProjectsTable = new Table(0, nFIVE);
-
+        this.subProjectsTable = new Table(0, FIVE);
 
         this.subtitleTasks = new Subtitle("Task");
         this.textTask = new Text("Subtitle tasks");
-        this.taskTable = new Table(0, nFIVE);
+        this.taskTable = new Table(0, FIVE);
 
         this.subtitleIntervals = new Subtitle("Intervals");
         this.textIntervals = new Text("Subtitle intervals");
-        this.intervalsTable = new Table(0, nSIX);
-
-        this.footer = new Text("Time Tracker 1.0");
+        this.intervalsTable = new Table(0, SIX);
 
         createTables();
         fillTables();
@@ -109,11 +103,11 @@ public class DetailedReport extends Report implements TreeVisitor {
      */
     private void createSubProjectsTable() {
         ((Table) this.subProjectsTable).addRow();
-        ((Table) this.subProjectsTable).setCell(nZERO, nZERO, "Id");
-        ((Table) this.subProjectsTable).setCell(nZERO, nONE, "Project Name");
-        ((Table) this.subProjectsTable).setCell(nZERO, nTWO, "Start Date");
-        ((Table) this.subProjectsTable).setCell(nZERO, nTHREE, "End Date");
-        ((Table) this.subProjectsTable).setCell(nZERO, nFOUR, "Duration");
+        ((Table) this.subProjectsTable).setCell(ZERO, ZERO, "Id");
+        ((Table) this.subProjectsTable).setCell(ZERO, ONE, "Project Name");
+        ((Table) this.subProjectsTable).setCell(ZERO, TWO, "Start Date");
+        ((Table) this.subProjectsTable).setCell(ZERO, THREE, "End Date");
+        ((Table) this.subProjectsTable).setCell(ZERO, FOUR, "Duration");
     }
 
     /**
@@ -121,11 +115,11 @@ public class DetailedReport extends Report implements TreeVisitor {
      */
     private void createTaskTable() {
         ((Table) this.taskTable).addRow();
-        ((Table) this.taskTable).setCell(nZERO, nZERO, "Id");
-        ((Table) this.taskTable).setCell(nZERO, nONE, "Task Name");
-        ((Table) this.taskTable).setCell(nZERO, nTWO, "Start Date");
-        ((Table) this.taskTable).setCell(nZERO, nTHREE, "End Date");
-        ((Table) this.taskTable).setCell(nZERO, nFOUR, "Duration");
+        ((Table) this.taskTable).setCell(ZERO, ZERO, "Id");
+        ((Table) this.taskTable).setCell(ZERO, ONE, "Task Name");
+        ((Table) this.taskTable).setCell(ZERO, TWO, "Start Date");
+        ((Table) this.taskTable).setCell(ZERO, THREE, "End Date");
+        ((Table) this.taskTable).setCell(ZERO, FOUR, "Duration");
     }
 
     /**
@@ -133,12 +127,12 @@ public class DetailedReport extends Report implements TreeVisitor {
      */
     private void createIntervalTable() {
         ((Table) this.intervalsTable).addRow();
-        ((Table) this.intervalsTable).setCell(nZERO, nZERO, "Project Id");
-        ((Table) this.intervalsTable).setCell(nZERO, nONE, "Task  Name");
-        ((Table) this.intervalsTable).setCell(nZERO, nTWO, "Id");
-        ((Table) this.intervalsTable).setCell(nZERO, nTHREE, "Start Date");
-        ((Table) this.intervalsTable).setCell(nZERO, nFOUR, "End Date");
-        ((Table) this.intervalsTable).setCell(nZERO, nFIVE, "Duration");
+        ((Table) this.intervalsTable).setCell(ZERO, ZERO, "Project Id");
+        ((Table) this.intervalsTable).setCell(ZERO, ONE, "Task  Name");
+        ((Table) this.intervalsTable).setCell(ZERO, TWO, "Id");
+        ((Table) this.intervalsTable).setCell(ZERO, THREE, "Start Date");
+        ((Table) this.intervalsTable).setCell(ZERO, FOUR, "End Date");
+        ((Table) this.intervalsTable).setCell(ZERO, FIVE, "Duration");
 
     }
 
@@ -147,8 +141,8 @@ public class DetailedReport extends Report implements TreeVisitor {
      * Method that visits a Project.
      * It uses the currentDuration variable to store the duration
      * between project and subProjects.
-     * If needs to be visited (is inside period) it visit all the task getting the
-     * real duration stored on currentDuration.
+     * If needs to be visited (is inside period) it visit all the task getting
+     * the real duration stored on currentDuration.
      *
      * @param project The project to visit
      */
@@ -174,20 +168,20 @@ public class DetailedReport extends Report implements TreeVisitor {
                 ((Table) this.rootProjectsTable).addRow();
                 int index = ((Table) this.rootProjectsTable).getRows() - 1;
 
-                ((Table) this.rootProjectsTable).setCell(index, nZERO, id);
-                ((Table) this.rootProjectsTable).setCell(index, nONE, name);
-                ((Table) this.rootProjectsTable).setCell(index, nTWO, startDate);
-                ((Table) this.rootProjectsTable).setCell(index, nTHREE, endDate);
-                ((Table) this.rootProjectsTable).setCell(index, nFOUR, duration);
+                ((Table) this.rootProjectsTable).setCell(index, ZERO, id);
+                ((Table) this.rootProjectsTable).setCell(index, ONE, name);
+                ((Table) this.rootProjectsTable).setCell(index, TWO, startDate);
+                ((Table) this.rootProjectsTable).setCell(index, THREE, endDate);
+                ((Table) this.rootProjectsTable).setCell(index, FOUR, duration);
             } else {
                 ((Table) this.subProjectsTable).addRow();
                 int index = ((Table) this.subProjectsTable).getRows() - 1;
 
-                ((Table) this.subProjectsTable).setCell(index, nZERO, id);
-                ((Table) this.subProjectsTable).setCell(index, nONE, name);
-                ((Table) this.subProjectsTable).setCell(index, nTWO, startDate);
-                ((Table) this.subProjectsTable).setCell(index, nTHREE, endDate);
-                ((Table) this.subProjectsTable).setCell(index, nFOUR, duration);
+                ((Table) this.subProjectsTable).setCell(index, ZERO, id);
+                ((Table) this.subProjectsTable).setCell(index, ONE, name);
+                ((Table) this.subProjectsTable).setCell(index, TWO, startDate);
+                ((Table) this.subProjectsTable).setCell(index, THREE, endDate);
+                ((Table) this.subProjectsTable).setCell(index, FOUR, duration);
             }
         }
         Report.currentDuration = acc;
@@ -227,11 +221,11 @@ public class DetailedReport extends Report implements TreeVisitor {
 
         ((Table) this.taskTable).addRow();
         int index = ((Table) this.taskTable).getRows() - 1;
-        ((Table) this.taskTable).setCell(index, nZERO, id);
-        ((Table) this.taskTable).setCell(index, nONE, name);
-        ((Table) this.taskTable).setCell(index, nTWO, startDate);
-        ((Table) this.taskTable).setCell(index, nTHREE, endDate);
-        ((Table) this.taskTable).setCell(index, nFOUR, duration);
+        ((Table) this.taskTable).setCell(index, ZERO, id);
+        ((Table) this.taskTable).setCell(index, ONE, name);
+        ((Table) this.taskTable).setCell(index, TWO, startDate);
+        ((Table) this.taskTable).setCell(index, THREE, endDate);
+        ((Table) this.taskTable).setCell(index, FOUR, duration);
 
         Report.currentDuration += taskDuration;
 
@@ -263,12 +257,12 @@ public class DetailedReport extends Report implements TreeVisitor {
             ((Table) this.intervalsTable).addRow();
             int index = ((Table) this.intervalsTable).getRows() - 1;
 
-            ((Table) this.intervalsTable).setCell(index, nZERO, projectId);
-            ((Table) this.intervalsTable).setCell(index, nONE, name);
-            ((Table) this.intervalsTable).setCell(index, nTWO, id);
-            ((Table) this.intervalsTable).setCell(index, nTHREE, startDate);
-            ((Table) this.intervalsTable).setCell(index, nFOUR, endDate);
-            ((Table) this.intervalsTable).setCell(index, nFIVE, duration);
+            ((Table) this.intervalsTable).setCell(index, ZERO, projectId);
+            ((Table) this.intervalsTable).setCell(index, ONE, name);
+            ((Table) this.intervalsTable).setCell(index, TWO, id);
+            ((Table) this.intervalsTable).setCell(index, THREE, startDate);
+            ((Table) this.intervalsTable).setCell(index, FOUR, endDate);
+            ((Table) this.intervalsTable).setCell(index, FIVE, duration);
         }
     }
 

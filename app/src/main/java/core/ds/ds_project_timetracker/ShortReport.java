@@ -6,11 +6,6 @@ package core.ds.ds_project_timetracker;
  */
 public class ShortReport extends Report implements TreeVisitor {
 
-    private final Container title;
-    private final Container subtitleReports;
-    private final Container subtitleRootProjects;
-    private final Container footer;
-
     /**
      * Constructor for the ShortReport.
      * It creates the title and the tables.
@@ -21,16 +16,7 @@ public class ShortReport extends Report implements TreeVisitor {
      */
     public ShortReport(final Project rootVisitable, final Period reportPeriod, final ReportGenerator reportGenerator) {
         super(rootVisitable, reportPeriod, reportGenerator);
-
-        this.title = new Title("Detailed Report");
-        this.subtitleReports = new Subtitle("Period");
-        this.reportTable = createReportTable();
-
-        this.subtitleRootProjects = new Subtitle("Root Projects");
-        this.rootProjectsTable = new Table(nZERO, nFIVE);
-
-        this.footer = new Text("Time Tracker 1.0");
-
+        this.title = new Title("Short Report");
 
         createTables();
         fillTables();
@@ -39,6 +25,9 @@ public class ShortReport extends Report implements TreeVisitor {
     }
 
 
+    /**
+     * Method that visits the components of the ShortReport.
+     */
     @Override
     public void createReport() {
         this.reportGenerator.visitSeparator(new Separator());
@@ -60,7 +49,6 @@ public class ShortReport extends Report implements TreeVisitor {
     @Override
     protected void createTables() {
         this.createRootProjectTables();
-
     }
 
     @Override
@@ -85,11 +73,11 @@ public class ShortReport extends Report implements TreeVisitor {
                 ((Table) this.rootProjectsTable).addRow();
                 int index = ((Table) this.rootProjectsTable).getRows() - 1;
 
-                ((Table) this.rootProjectsTable).setCell(index, nZERO, id);
-                ((Table) this.rootProjectsTable).setCell(index, nONE, name);
-                ((Table) this.rootProjectsTable).setCell(index, nTWO, startDate);
-                ((Table) this.rootProjectsTable).setCell(index, nTHREE, endDate);
-                ((Table) this.rootProjectsTable).setCell(index, nFOUR, duration);
+                ((Table) this.rootProjectsTable).setCell(index, ZERO, id);
+                ((Table) this.rootProjectsTable).setCell(index, ONE, name);
+                ((Table) this.rootProjectsTable).setCell(index, TWO, startDate);
+                ((Table) this.rootProjectsTable).setCell(index, THREE, endDate);
+                ((Table) this.rootProjectsTable).setCell(index, FOUR, duration);
             }
         }
         Report.currentDuration = acc;
@@ -105,7 +93,8 @@ public class ShortReport extends Report implements TreeVisitor {
             for (Interval i : task.getIntervals()) {
                 if (isOnPeriod(i.getStartDate(), i.getEndDate())) {
                     i.accept(this);
-                    long addDuration = calcDuration(i.getStartDate(), i.getEndDate(), i.getDuration());
+                    long addDuration = calcDuration(
+                            i.getStartDate(), i.getEndDate(), i.getDuration());
                     if (addDuration >= Clock.nREFRESHRATE) {
                         taskDuration += addDuration;
                     }

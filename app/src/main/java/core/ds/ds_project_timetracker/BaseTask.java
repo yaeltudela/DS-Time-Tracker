@@ -35,11 +35,11 @@ public class BaseTask extends Task {
 
 
         this.getParent().getActivities().add(this);
-        this.id = new Id();
+        this.setId(new Id());
         if (isRootNode()) {
-            this.id.generateId();
+            this.getId().generateId();
         } else {
-            this.id.setId(this.getParent().getIdName()
+            this.getId().setId(this.getParent().getIdName()
                     + "." + this.getParent().getActivities().size());
         }
         this.invariant();
@@ -93,7 +93,7 @@ public class BaseTask extends Task {
      */
     @Override
     public Project getParent() {
-        return (Project) parent;
+        return (Project) this.parent;
     }
 
     /**

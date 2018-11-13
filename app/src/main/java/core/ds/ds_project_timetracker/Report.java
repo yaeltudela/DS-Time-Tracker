@@ -12,13 +12,13 @@ import java.util.Date;
 public abstract class Report implements TreeVisitor {
 
     protected static final Logger LOGGER = LoggerFactory.getLogger(Report.class);
-    protected static final int nZERO = 0;
-    protected static final int nONE = 1;
-    protected static final int nTWO = 2;
-    protected static final int nTHREE = 3;
-    protected static final int nFOUR = 4;
-    protected static final int nFIVE = 5;
-    protected static final int nSIX = 6;
+    protected static final int ZERO = 0;
+    protected static final int ONE = 1;
+    protected static final int TWO = 2;
+    protected static final int THREE = 3;
+    protected static final int FOUR = 4;
+    protected static final int FIVE = 5;
+    protected static final int SIX = 6;
     protected static long currentDuration;
     protected final Date reportDate;
     protected final Project rootVisitable;
@@ -29,19 +29,30 @@ public abstract class Report implements TreeVisitor {
     protected Container reportTable;
     protected Container subtitleRootProjects;
     protected Container rootProjectsTable;
+    protected Container footer;
 
 
     /**
      * Report constructor. It set's up the main table with all the contents.
      *
-     * @param rootVisitable The first node to be visited.
-     * @param reportPeriod  The associated period with the report.
+     * @param rootNode The first node to be visited.
+     * @param period   The associated period with the report.
+     * @param strategy The strategy to generate the report file.
      */
-    Report(final Project rootVisitable, final Period reportPeriod, ReportGenerator reportGenerator) {
+    Report(final Project rootNode, final Period period, final ReportGenerator strategy) {
         this.reportDate = new Date();
-        this.rootVisitable = rootVisitable;
-        this.reportPeriod = reportPeriod;
-        this.reportGenerator = reportGenerator;
+        this.rootVisitable = rootNode;
+        this.reportPeriod = period;
+        this.reportGenerator = strategy;
+
+        this.subtitleReports = new Subtitle("Period");
+        this.reportTable = createReportTable();
+
+        this.subtitleRootProjects = new Subtitle("Root Projects");
+        this.rootProjectsTable = new Table(ZERO, FIVE);
+
+        this.footer = new Text("Time Tracker 1.0");
+
     }
 
     /**
@@ -50,6 +61,10 @@ public abstract class Report implements TreeVisitor {
     protected abstract void createTables();
 
 
+    /**
+     * Method that start the visits (visiting root projects)
+     * and fills the tables.
+     */
     protected void fillTables() {
         for (Node n : rootVisitable.getActivities()) {
             n.accept(this);
@@ -64,33 +79,34 @@ public abstract class Report implements TreeVisitor {
 
     protected Table createReportTable() {
 
-        Table table = new Table(4, Report.nTWO);
+        Table table = new Table(FOUR, Report.TWO);
 
-        table.setCell(0, 0, "");
-        table.setCell(1, 0, "From: ");
-        table.setCell(2, 0, "To: ");
-        table.setCell(3, 0, "Report generated at: ");
-        table.setCell(0, 1, "Date");
-        table.setCell(1, 1, this.reportPeriod.getStartDate().toString());
-        table.setCell(2, 1, this.reportPeriod.getEndDate().toString());
-        table.setCell(3, 1, this.reportDate.toString());
+        table.setCell(ZERO, ZERO, "");
+        table.setCell(ONE, ZERO, "From: ");
+        table.setCell(TWO, ZERO, "To: ");
+        table.setCell(THREE, ZERO, "Report generated at: ");
+        table.setCell(ZERO, ONE, "Date");
+        table.setCell(ONE, ONE, this.reportPeriod.getStartDate().toString());
+        table.setCell(TWO, ONE, this.reportPeriod.getEndDate().toString());
+        table.setCell(THREE, ONE, this.reportDate.toString());
 
         return table;
     }
 
     protected void createRootProjectTables() {
         ((Table) this.rootProjectsTable).addRow();
-        ((Table) this.rootProjectsTable).setCell(0, 0, "Id");
-        ((Table) this.rootProjectsTable).setCell(0, 1, "Project Name");
-        ((Table) this.rootProjectsTable).setCell(0, 2, "Start Date");
-        ((Table) this.rootProjectsTable).setCell(0, 3, "End Date");
-        ((Table) this.rootProjectsTable).setCell(0, 4, "Duration");
+        ((Table) this.rootProjectsTable).setCell(ZERO, ZERO, "Id");
+        ((Table) this.rootProjectsTable).setCell(ZERO, ONE, "Project Name");
+        ((Table) this.rootProjectsTable).setCell(ZERO, TWO, "Start Date");
+        ((Table) this.rootProjectsTable).setCell(ZERO, THREE, "End Date");
+        ((Table) this.rootProjectsTable).setCell(ZERO, FOUR, "Duration");
     }
 
     /**
      * Method that recalculates, if needed, the new StartDate.
      *
-     * @param startDate Date to recalculate
+     * @param startDate startDate to recalculate
+     * @param endDate endDate to recalculate
      * @return startDate or the new date (Period startDate)
      */
     protected Date calcStartDate(final Date startDate, final Date endDate) {
@@ -104,7 +120,8 @@ public abstract class Report implements TreeVisitor {
     /**
      * Method that recalculates, if needed, the new endDate.
      *
-     * @param endDate Date to recalculate
+     * @param startDate startDate to recalculate
+     * @param endDate   endDate to recalculate
      * @return endDate or the new date (Period endDate)
      */
     protected Date calcEndDate(final Date startDate, final Date endDate) {
@@ -160,21 +177,46 @@ public abstract class Report implements TreeVisitor {
 
     }
 
+    /**
+     * Method that checks if the dates are completely inside the Report period.
+     *
+     * @param startDate Starting date to check.
+     * @param endDate   Ending date to check.
+     * @return true if is inside the period, false otherwise.
+     */
     private boolean isWhole(final Date startDate, final Date endDate) {
-        return ((startDate.after(this.reportPeriod.getStartDate()) || startDate.equals(this.reportPeriod.getStartDate())) &&
-                (endDate.before(this.reportPeriod.getEndDate()) || endDate.before(this.reportPeriod.getEndDate())));
+        return ((startDate.after(this.reportPeriod.getStartDate())
+                || startDate.equals(this.reportPeriod.getStartDate()))
+                && (endDate.before(this.reportPeriod.getEndDate())
+                || endDate.before(this.reportPeriod.getEndDate())));
     }
 
+    /**
+     * Method that checks if the dates are intersecting the Period startDate.
+     *
+     * @param startDate Starting date to check.
+     * @param endDate   Ending date to check.
+     * @return true if is intersecting the startDate period, false otherwise.
+     */
     protected boolean isPreviousIntersection(final Date startDate, final Date endDate) {
-        boolean startOk = (startDate.before(this.reportPeriod.getStartDate()) || startDate.equals(this.reportPeriod.getStartDate()));
+        boolean startOk = (startDate.before(this.reportPeriod.getStartDate())
+                || startDate.equals(this.reportPeriod.getStartDate()));
         boolean endOk = (endDate.after(this.reportPeriod.getStartDate()));
         return (startOk && endOk);
     }
 
+    /**
+     * Method that checks if the dates are intersecting the Period endDate.
+     *
+     * @param startDate Starting date to check.
+     * @param endDate   Ending date to check.
+     * @return true if is intersecting the endDate period, false otherwise.
+     */
     protected boolean isPostIntersection(final Date startDate, final Date endDate) {
 
         boolean startOk = (startDate.before(this.reportPeriod.getEndDate()));
-        boolean endOk = (endDate.after(this.reportPeriod.getEndDate()) || endDate.equals(this.reportPeriod.getEndDate()));
+        boolean endOk = (endDate.after(this.reportPeriod.getEndDate())
+                || endDate.equals(this.reportPeriod.getEndDate()));
         return (startOk && endOk);
 
     }

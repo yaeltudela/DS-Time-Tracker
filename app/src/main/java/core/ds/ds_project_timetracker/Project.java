@@ -48,11 +48,11 @@ public class Project extends Node implements Serializable, Visitable {
             this.getParent().getActivities().add(this);
         }
 
-        this.id = new Id();
+        this.setId(new Id());
         if (isRootNode()) {
-            this.id.generateId();
+            this.getId().generateId();
         } else {
-            this.id.setId(this.getParent().getIdName()
+            this.getId().setId(this.getParent().getIdName()
                     + "." + this.getParent().getActivities().size());
         }
 
@@ -79,7 +79,7 @@ public class Project extends Node implements Serializable, Visitable {
         this.setDuration(tmp);
 
         if (this.getParent() != null) {
-            this.parent.updateData(time);
+            this.getParent().updateData(time);
         }
 
     }

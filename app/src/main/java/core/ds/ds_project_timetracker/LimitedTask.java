@@ -63,7 +63,7 @@ public class LimitedTask extends TaskDecorator {
                 super.updateData(time);
             }
         } else {
-            if (this.endDate.after(this.deadline)) {
+            if (this.getEndDate().after(this.deadline)) {
                 this.stopInterval();
             } else {
                 super.updateData(time);

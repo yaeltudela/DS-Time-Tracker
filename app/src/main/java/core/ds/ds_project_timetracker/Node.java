@@ -11,10 +11,10 @@ import java.util.Date;
  */
 public abstract class Node implements Serializable, Visitable {
 
-    protected Id id;
-    protected String name;
-    protected String description;
-    protected Date endDate;
+    private Id id;
+    private String name;
+    private String description;
+    private Date endDate;
     protected Node parent;
     private long duration;
     private Date startDate;
@@ -154,15 +154,36 @@ public abstract class Node implements Serializable, Visitable {
         }
     }
 
+    /**
+     * Getter for the id field.
+     *
+     * @return Id  of the node.
+     */
     public Id getId() {
         return id;
     }
 
+    /**
+     * Setter for the Id.
+     *
+     * @param i Id for the Node.
+     */
+    public void setId(final Id i) {
+        this.id = i;
+    }
+
+    /**
+     * Accessor to the id string field.
+     *
+     * @return String with the Node id.
+     */
     public String getIdName() {
         return this.id.getId();
     }
 
-
+    /**
+     * Method that check all the node invariants.
+     */
     protected void invariant() {
         assert (this.getIdName() == null) : "Node has no id.";
         assert (this.getName() == null) : "Node has no name.";

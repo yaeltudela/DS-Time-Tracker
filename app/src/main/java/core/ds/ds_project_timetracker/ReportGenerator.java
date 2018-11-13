@@ -9,10 +9,11 @@ import java.io.IOException;
 
 public abstract class ReportGenerator implements ReportVisitor {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ReportGenerator.class);
-    protected final File file;
-    protected final String filename;
-    protected Report report;
+    private static final Logger LOGGER
+            = LoggerFactory.getLogger(ReportGenerator.class);
+    private final File file;
+    private final String filename;
+    private Report report;
 
     /**
      * Constructor for ReportGenerator. It construct the filename according
@@ -35,7 +36,7 @@ public abstract class ReportGenerator implements ReportVisitor {
         if (!f.isFile()) {
             try {
                 boolean error = f.createNewFile();
-                LOGGER.info("Created file " + this.filename);
+                LOGGER.info("Created file " + this.getFilename());
             } catch (IOException e) {
                 LOGGER.error("Error creating file");
                 e.printStackTrace();
@@ -45,8 +46,34 @@ public abstract class ReportGenerator implements ReportVisitor {
         return f;
     }
 
+    /**
+     * Abstract method to create a filename according to the used strategy.
+     *
+     * @return String with the filename
+     */
     protected abstract String createFileName();
 
+    /**
+     * Abstract method to save the report to the
+     * ReportGenerator associated file.
+     */
     protected abstract void saveReportToDisk();
 
+    /**
+     * Getter for the File field.
+     *
+     * @return File descriptor associated to the ReportGenerator.
+     */
+    public File getFile() {
+        return this.file;
+    }
+
+    /**
+     * Getter for the filename field.
+     *
+     * @return String with the filename field.
+     */
+    public String getFilename() {
+        return this.filename;
+    }
 }

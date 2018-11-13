@@ -14,12 +14,13 @@ import java.util.Observer;
  */
 public class Interval implements Observer, Serializable, Visitable {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(Interval.class);
     private final Task parentTask;
     private final Date startDate;
     private final Id id;
     private Date endDate;
     private long duration;
+    private static final Logger LOGGER
+            = LoggerFactory.getLogger(Interval.class);
 
     /**
      * Default Interval constructor. It sets up the fields.

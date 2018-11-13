@@ -15,7 +15,8 @@ import java.util.Date;
  */
 public class TXTReportGenerator extends ReportGenerator implements ReportVisitor {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TXTReportGenerator.class);
+    private static final Logger LOGGER
+            = LoggerFactory.getLogger(TXTReportGenerator.class);
     private PrintWriter printWriter;
 
     /**
@@ -26,56 +27,95 @@ public class TXTReportGenerator extends ReportGenerator implements ReportVisitor
         super();
         try {
             this.printWriter = new PrintWriter(new BufferedWriter(
-                    new FileWriter(this.file)));
+                    new FileWriter(this.getFile())));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
     }
 
+    /**
+     * Method that creates a filename with txt extension.
+     *
+     * @return String with the filename
+     */
     @Override
     protected String createFileName() {
         return "reportTXT - " + (new Date().toString()) + ".txt";
     }
 
+
+    /**
+     * Method to save the report to the associated file.
+     */
     @Override
     protected void saveReportToDisk() {
         LOGGER.info("TXT report saved to disk");
-        this.printWriter.close();
+        this.getPrintWriter().close();
     }
 
 
+    /**
+     * Method that adds to the associated PrintWriter the table content.
+     * @param table the table to visit.
+     */
     @Override
     public void visitTable(final Table table) {
         for (ArrayList<String> line : table.getData()) {
             for (String word : line) {
-                this.printWriter.print(word);
-                this.printWriter.print("\t");
+                this.getPrintWriter().print(word);
+                this.getPrintWriter().print("\t");
             }
-            this.printWriter.print("\n");
+            this.getPrintWriter().print("\n");
         }
     }
 
+    /**
+     * Method that adds to the associated PrintWriter the title content.
+     * @param title the title to visit.
+     */
     @Override
     public void visitTitle(final Title title) {
-        this.printWriter.println(title.getText());
+        this.getPrintWriter().println(title.getText());
 
     }
 
+    /**
+     * Method that adds to the associated PrintWriter the subtitle content.
+     * @param subtitle the subtitle to visit.
+     */
     @Override
     public void visitSubtitle(final Subtitle subtitle) {
-        this.printWriter.println(subtitle.getText());
+        this.getPrintWriter().println(subtitle.getText());
 
     }
 
+    /**
+     * Method that adds to the associated PrintWriter the text content.
+     * @param text the text to visit.
+     */
     @Override
     public void visitText(final Text text) {
-        this.printWriter.println(text.getText());
+        this.getPrintWriter().println(text.getText());
 
     }
 
+    /**
+     * Method that adds to the associated PrintWriter the separator content.
+     * @param separator the separator to visit.
+     */
     @Override
     public void visitSeparator(final Separator separator) {
-        this.printWriter.println(separator.getText());
+        this.getPrintWriter().println(separator.getText());
+    }
+
+
+    /**
+     * Getter for the printWriter field.
+     *
+     * @return PrintWriter object associated to the ReportGenerator.
+     */
+    public PrintWriter getPrintWriter() {
+        return this.printWriter;
     }
 }
