@@ -42,6 +42,8 @@ public abstract class Task extends Node implements Serializable {
         assert (!this.isActive()) : "Task didn't started";
         assert (this.getIntervals().size() <= 0) : "Task didn't add the running interval";
         assert (Clock.getInstance().countObservers() < 0) : "Interval is not observing clock";
+
+        this.invariant();
     }
 
     /**
@@ -72,6 +74,8 @@ public abstract class Task extends Node implements Serializable {
         //Post-conditions
         assert (this.isActive()) : "Task is already stopped";
         assert (this.getIntervals().size() <= 0) : "Intervals are not initialized";
+
+        this.invariant();
     }
 
 

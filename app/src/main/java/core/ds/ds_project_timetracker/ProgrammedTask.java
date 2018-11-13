@@ -34,6 +34,7 @@ public class ProgrammedTask extends TaskDecorator implements Observer {
         LOGGER.info("new Decorated task" + this.getName() + " with "
                 + this.getClass().getName() + "decorator");
 
+        this.invariant();
     }
 
 
@@ -51,7 +52,7 @@ public class ProgrammedTask extends TaskDecorator implements Observer {
         Clock.getInstance().addObserver(this);
         LOGGER.info("new Decorated task" + this.getName() + " with "
                 + this.getClass().getName() + "decorator");
-
+        this.invariant();
 
     }
 
@@ -78,6 +79,7 @@ public class ProgrammedTask extends TaskDecorator implements Observer {
             }
         }
 
+        this.invariant();
     }
 
 }

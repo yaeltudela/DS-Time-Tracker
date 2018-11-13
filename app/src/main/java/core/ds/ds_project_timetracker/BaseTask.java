@@ -42,6 +42,7 @@ public class BaseTask extends Task {
             this.id.setId(this.getParent().getIdName()
                     + "." + this.getParent().getActivities().size());
         }
+        this.invariant();
         LOGGER.info("new basic Task " + this.getName());
 
     }
@@ -66,6 +67,7 @@ public class BaseTask extends Task {
         this.setDuration(duration);
 
         this.getParent().updateData(time);
+        this.invariant();
     }
 
 
@@ -110,6 +112,7 @@ public class BaseTask extends Task {
      */
     public void setIntervals(final ArrayList<Interval> intervalList) {
         this.intervals = intervalList;
+        this.invariant();
     }
 
     /**
@@ -128,6 +131,7 @@ public class BaseTask extends Task {
      */
     public void setActive(final boolean state) {
         this.active = state;
+        this.invariant();
     }
 
     /**

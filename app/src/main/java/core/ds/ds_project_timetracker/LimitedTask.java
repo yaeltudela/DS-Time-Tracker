@@ -29,6 +29,7 @@ public class LimitedTask extends TaskDecorator {
         LOGGER.info("new Decorated task" + this.getName()
                 + " with " + this.getClass().getName() + "decorator");
 
+        this.invariant();
     }
 
 
@@ -44,6 +45,7 @@ public class LimitedTask extends TaskDecorator {
         LOGGER.info("new Decorated task" + this.getName()
                 + " with " + this.getClass().getName() + "decorator");
 
+        this.invariant();
     }
 
     /**
@@ -67,6 +69,8 @@ public class LimitedTask extends TaskDecorator {
                 super.updateData(time);
             }
         }
+        this.invariant();
     }
+
 }
 

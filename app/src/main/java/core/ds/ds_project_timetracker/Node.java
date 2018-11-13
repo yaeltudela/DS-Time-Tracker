@@ -42,6 +42,7 @@ public abstract class Node implements Serializable, Visitable {
      */
     public void setName(final String title) {
         this.name = title;
+        this.invariant();
     }
 
     /**
@@ -60,6 +61,7 @@ public abstract class Node implements Serializable, Visitable {
      */
     public void setDescription(final String desc) {
         this.description = desc;
+        this.invariant();
     }
 
     /**
@@ -78,6 +80,7 @@ public abstract class Node implements Serializable, Visitable {
      */
     public void setDuration(final long time) {
         this.duration = time;
+        this.invariant();
     }
 
     /**
@@ -96,6 +99,7 @@ public abstract class Node implements Serializable, Visitable {
      */
     public void setStartDate(final Date start) {
         this.startDate = start;
+        this.invariant();
     }
 
     /**
@@ -114,6 +118,7 @@ public abstract class Node implements Serializable, Visitable {
      */
     public void setEndDate(final Date end) {
         this.endDate = end;
+        this.invariant();
     }
 
     /**
@@ -133,6 +138,7 @@ public abstract class Node implements Serializable, Visitable {
      */
     public void setParent(final Node father) {
         this.parent = father;
+        this.invariant();
     }
 
     /**
