@@ -38,7 +38,8 @@ public class ShortReport extends Report implements TreeVisitor {
         this.reportGenerator.visitTable((Table) this.reportTable);
         this.reportGenerator.visitSeparator(new Separator());
 
-        this.reportGenerator.visitSubtitle((Subtitle) this.subtitleRootProjects);
+        this.reportGenerator.visitSubtitle((Subtitle)
+                this.subtitleRootProjects);
         this.reportGenerator.visitTable((Table) this.rootProjectsTable);
         this.reportGenerator.visitSeparator(new Separator());
 
@@ -46,11 +47,24 @@ public class ShortReport extends Report implements TreeVisitor {
 
     }
 
+    /**
+     * Method that creates the rootProject table.
+     */
     @Override
     protected void createTables() {
         this.createRootProjectTables();
     }
 
+    /**
+     * Method that visits a Project.
+     * It uses the currentDuration variable to store the duration
+     * between project and subProjects.
+     * If needs to be visited (is inside period) and is a rootProject
+     * it visit all the task getting the real duration stored
+     * on currentDuration.
+     *
+     * @param project The project to visit
+     */
     @Override
     public void visitProject(final Project project) {
         long acc = Report.currentDuration;
@@ -65,8 +79,10 @@ public class ShortReport extends Report implements TreeVisitor {
 
             String id = project.getIdName();
             String name = project.getName();
-            String startDate = calcStartDate(project.getStartDate(), project.getEndDate()).toString();
-            String endDate = calcEndDate(project.getStartDate(), project.getEndDate()).toString();
+            String startDate = calcStartDate(project.getStartDate(),
+                    project.getEndDate()).toString();
+            String endDate = calcEndDate(project.getStartDate(),
+                    project.getEndDate()).toString();
             String duration = String.valueOf(Report.currentDuration);
 
             if (project.isRootNode()) {
@@ -85,6 +101,13 @@ public class ShortReport extends Report implements TreeVisitor {
     }
 
 
+    /**
+     * Method that visits a task.
+     * It checks if needs to be visited and visits all of the intervals
+     * inside period getting the correct duration of the task.
+     *
+     * @param task The task to visit
+     */
     @Override
     public void visitTask(final Task task) {
         long taskDuration = 0;

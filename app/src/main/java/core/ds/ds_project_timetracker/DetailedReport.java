@@ -61,11 +61,13 @@ public class DetailedReport extends Report implements TreeVisitor {
         this.reportGenerator.visitTitle((Title) this.title);
         this.reportGenerator.visitSeparator(new Separator());
 
-        this.reportGenerator.visitSubtitle((Subtitle) this.subtitleReports);
+        this.reportGenerator.visitSubtitle((Subtitle)
+                this.subtitleReports);
         this.reportGenerator.visitTable((Table) this.reportTable);
         this.reportGenerator.visitSeparator(new Separator());
 
-        this.reportGenerator.visitSubtitle((Subtitle) this.subtitleRootProjects);
+        this.reportGenerator.visitSubtitle((Subtitle)
+                this.subtitleRootProjects);
         this.reportGenerator.visitTable((Table) this.rootProjectsTable);
         this.reportGenerator.visitSeparator(new Separator());
 
@@ -160,8 +162,10 @@ public class DetailedReport extends Report implements TreeVisitor {
 
             String id = project.getIdName();
             String name = project.getName();
-            String startDate = calcStartDate(project.getStartDate(), project.getEndDate()).toString();
-            String endDate = calcEndDate(project.getStartDate(), project.getEndDate()).toString();
+            String startDate = calcStartDate(project.getStartDate(),
+                    project.getEndDate()).toString();
+            String endDate = calcEndDate(project.getStartDate(),
+                    project.getEndDate()).toString();
             String duration = String.valueOf(Report.currentDuration);
 
             if (project.isRootNode()) {
@@ -205,7 +209,8 @@ public class DetailedReport extends Report implements TreeVisitor {
             for (Interval i : task.getIntervals()) {
                 if (isOnPeriod(i.getStartDate(), i.getEndDate())) {
                     i.accept(this);
-                    long addDuration = calcDuration(i.getStartDate(), i.getEndDate(), i.getDuration());
+                    long addDuration = calcDuration(i.getStartDate(),
+                            i.getEndDate(), i.getDuration());
                     if (addDuration >= Clock.nREFRESHRATE) {
                         taskDuration += addDuration;
                     }
@@ -215,8 +220,10 @@ public class DetailedReport extends Report implements TreeVisitor {
 
         String id = task.getIdName();
         String name = task.getName();
-        String startDate = calcStartDate(task.getStartDate(), task.getEndDate()).toString();
-        String endDate = calcEndDate(task.getStartDate(), task.getEndDate()).toString();
+        String startDate = calcStartDate(task.getStartDate(),
+                task.getEndDate()).toString();
+        String endDate = calcEndDate(task.getStartDate(),
+                task.getEndDate()).toString();
         String duration = String.valueOf(taskDuration);
 
         ((Table) this.taskTable).addRow();
@@ -241,9 +248,12 @@ public class DetailedReport extends Report implements TreeVisitor {
      */
     @Override
     public void visitInterval(final Interval interval) {
-        Date intervalStartDate = calcStartDate(interval.getStartDate(), interval.getEndDate());
-        Date intervalEndDate = calcEndDate(interval.getStartDate(), interval.getEndDate());
-        long intervalDuration = calcDuration(interval.getStartDate(), interval.getEndDate(), interval.getDuration());
+        Date intervalStartDate = calcStartDate(interval.getStartDate(),
+                interval.getEndDate());
+        Date intervalEndDate = calcEndDate(interval.getStartDate(),
+                interval.getEndDate());
+        long intervalDuration = calcDuration(interval.getStartDate(),
+                interval.getEndDate(), interval.getDuration());
 
         if (intervalDuration > Clock.nREFRESHRATE) {
 

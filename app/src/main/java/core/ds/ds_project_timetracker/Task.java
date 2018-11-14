@@ -21,7 +21,7 @@ public abstract class Task extends Node implements Serializable {
     public void startInterval() {
         //Pre-conditions
         assert (this.isActive()) : "Task is already running";
-        assert (this.getIntervals() != null) : "Intervals are not initialized";
+        assert (this.getIntervals() == null) : "Intervals are not initialized";
 
 
         if (!this.isActive()) {
@@ -31,7 +31,7 @@ public abstract class Task extends Node implements Serializable {
             this.getIntervals().add(interval);
             Clock.getInstance().addObserver(interval);
             LOGGER.info("Task starting interval"
-                    + this.getName() + " - " + interval.getId());
+                    + this.getName() + " - " + interval.getIdName());
         } else {
             LOGGER.error("Tried to start an already"
                     + " started task." + this.getName());

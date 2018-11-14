@@ -57,6 +57,7 @@ public class TXTReportGenerator extends ReportGenerator implements ReportVisitor
 
     /**
      * Method that adds to the associated PrintWriter the table content.
+     *
      * @param table the table to visit.
      */
     @Override
@@ -72,6 +73,7 @@ public class TXTReportGenerator extends ReportGenerator implements ReportVisitor
 
     /**
      * Method that adds to the associated PrintWriter the title content.
+     *
      * @param title the title to visit.
      */
     @Override
@@ -82,6 +84,7 @@ public class TXTReportGenerator extends ReportGenerator implements ReportVisitor
 
     /**
      * Method that adds to the associated PrintWriter the subtitle content.
+     *
      * @param subtitle the subtitle to visit.
      */
     @Override
@@ -92,6 +95,7 @@ public class TXTReportGenerator extends ReportGenerator implements ReportVisitor
 
     /**
      * Method that adds to the associated PrintWriter the text content.
+     *
      * @param text the text to visit.
      */
     @Override
@@ -102,6 +106,7 @@ public class TXTReportGenerator extends ReportGenerator implements ReportVisitor
 
     /**
      * Method that adds to the associated PrintWriter the separator content.
+     *
      * @param separator the separator to visit.
      */
     @Override

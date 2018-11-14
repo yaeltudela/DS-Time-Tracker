@@ -11,11 +11,11 @@ import java.util.Date;
  */
 public abstract class Node implements Serializable, Visitable {
 
+    protected Node parent;
     private Id id;
     private String name;
     private String description;
     private Date endDate;
-    protected Node parent;
     private long duration;
     private Date startDate;
 

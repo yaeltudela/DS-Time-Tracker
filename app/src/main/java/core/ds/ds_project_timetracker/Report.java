@@ -25,11 +25,11 @@ public abstract class Report implements TreeVisitor {
     protected final Period reportPeriod;
     protected final ReportGenerator reportGenerator;
     protected Container title;
-    protected Container subtitleReports;
-    protected Container reportTable;
+    protected final Container subtitleReports;
+    protected final Container reportTable;
     protected Container subtitleRootProjects;
     protected Container rootProjectsTable;
-    protected Container footer;
+    protected final Container footer;
 
 
     /**
@@ -76,9 +76,12 @@ public abstract class Report implements TreeVisitor {
      */
     public abstract void createReport();
 
-
+    /**
+     * Method that adds the header for the reportTable.
+     *
+     * @return The reportTable.
+     */
     protected Table createReportTable() {
-
         Table table = new Table(FOUR, Report.TWO);
 
         table.setCell(ZERO, ZERO, "");
@@ -93,6 +96,9 @@ public abstract class Report implements TreeVisitor {
         return table;
     }
 
+    /**
+     * Method that adds the header for the rootProjectTables.
+     */
     protected void createRootProjectTables() {
         ((Table) this.rootProjectsTable).addRow();
         ((Table) this.rootProjectsTable).setCell(ZERO, ZERO, "Id");
@@ -106,7 +112,7 @@ public abstract class Report implements TreeVisitor {
      * Method that recalculates, if needed, the new StartDate.
      *
      * @param startDate startDate to recalculate
-     * @param endDate endDate to recalculate
+     * @param endDate   endDate to recalculate
      * @return startDate or the new date (Period startDate)
      */
     protected Date calcStartDate(final Date startDate, final Date endDate) {
@@ -144,11 +150,13 @@ public abstract class Report implements TreeVisitor {
         long newDuration = duration;
         if (!isWhole(startDate, endDate)) {
             if (isPreviousIntersection(startDate, endDate)) {
-                long diff = (this.reportPeriod.getStartDate().getTime() - startDate.getTime()) / Clock.MS_IN_SEC;
+                long diff = (this.reportPeriod.getStartDate().getTime()
+                        - startDate.getTime()) / Clock.MS_IN_SEC;
                 newDuration -= diff;
             }
             if (isPostIntersection(startDate, endDate)) {
-                long diff = (endDate.getTime() - this.reportPeriod.getEndDate().getTime()) / Clock.MS_IN_SEC;
+                long diff = (endDate.getTime() - this.reportPeriod.getEndDate()
+                        .getTime()) / Clock.MS_IN_SEC;
                 newDuration -= diff;
             }
             return newDuration;

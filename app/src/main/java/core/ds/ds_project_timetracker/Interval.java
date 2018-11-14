@@ -14,13 +14,13 @@ import java.util.Observer;
  */
 public class Interval implements Observer, Serializable, Visitable {
 
+    private static final Logger LOGGER
+            = LoggerFactory.getLogger(Interval.class);
     private final Task parentTask;
     private final Date startDate;
     private final Id id;
     private Date endDate;
     private long duration;
-    private static final Logger LOGGER
-            = LoggerFactory.getLogger(Interval.class);
 
     /**
      * Default Interval constructor. It sets up the fields.
@@ -39,7 +39,7 @@ public class Interval implements Observer, Serializable, Visitable {
                 .getIntervals().size() + 1));
 
         LOGGER.info("Created new Interval by task"
-                + this.getParentTask().getName() + " - " + this.getId());
+                + this.getParentTask().getName() + " - " + this.getIdName());
 
 
     }
@@ -63,7 +63,7 @@ public class Interval implements Observer, Serializable, Visitable {
                 .getIntervals().size() + 1));
 
         LOGGER.info("Created new Interval by interval"
-                + this.getParentTask().getName() + " - " + this.getId());
+                + this.getParentTask().getName() + " - " + this.getIdName());
 
     }
 
@@ -128,7 +128,7 @@ public class Interval implements Observer, Serializable, Visitable {
     @Override
     public void accept(final Visitor visitor) {
         LOGGER.info("Visitor accepts in Interval "
-                + this.getParentTask().getName() + " - " + this.getId());
+                + this.getParentTask().getName() + " - " + this.getIdName());
         ((TreeVisitor) visitor).visitInterval(this);
 
     }
