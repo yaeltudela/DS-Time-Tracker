@@ -5,7 +5,7 @@ import java.util.Date;
 /**
  * Class for make all the test.
  */
-class Client {
+public class Client {
 
     private static Project root;
     private static Project p1, p2;
@@ -36,7 +36,7 @@ class Client {
             5: A3 (Decorators)
             */
 
-        int test = 7;
+        int test = 3;
         switch (test) {
             case 1: //Test A1
                 p1 = new Project("P1", "P1 desc", root);

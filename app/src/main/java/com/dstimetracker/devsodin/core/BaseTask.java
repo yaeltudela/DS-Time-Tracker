@@ -1,6 +1,7 @@
 package com.dstimetracker.devsodin.core;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -9,7 +10,7 @@ import java.util.Date;
  * Class that represents a task without decorators.
  * BaseTask creates Intervals and control when starts or stop.
  */
-public class BaseTask extends Task {
+public class BaseTask extends Task implements Serializable {
 
     private Collection<Interval> intervals;
     private boolean active;

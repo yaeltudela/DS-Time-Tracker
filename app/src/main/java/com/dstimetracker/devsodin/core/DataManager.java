@@ -25,7 +25,7 @@ public class DataManager implements Serializable {
      *
      * @param file name of the file to load and save the data
      */
-    DataManager(final String file) {
+    public DataManager(final String file) {
         this.filename = file;
         boolean error = false;
         File f = new File(this.filename);

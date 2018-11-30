@@ -1,3 +1,17 @@
 <resources>
-    <string name="app_name">DS_Time Tracker</string>
+    <string name="app_name">Time Tracker</string>
+
+    <string name="rootProjectsText">Root Projects</string>
+    <string name="reportGeneratorText">Generate Reports</string>
+    <string name="activeText">Active Tasks</string>
+    <string name="settingsText">Time Tracker</string>
+
+    <string name="searchText">Search</string>
+    <string name="resumeAllText">Resume all</string>
+    <string name="stopAllText">Pause all</string>
+
+    <string name="newProjectTitleText">Add Project</string>
+    <string name="newTaskTitleText">Add Task</string>
+    <string name="newIntervalTitleText">Add Interval</string>
+
 </resources>

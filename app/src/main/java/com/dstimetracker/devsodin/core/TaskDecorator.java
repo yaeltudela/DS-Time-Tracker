@@ -1,13 +1,14 @@
 package com.dstimetracker.devsodin.core;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
 /**
  * Abstract class used for generalize all the decorators for Task.
  */
-public abstract class TaskDecorator extends Task {
+public abstract class TaskDecorator extends Task implements Serializable {
 
     /**
      * The task to be decorated.

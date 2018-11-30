@@ -1,9 +1,11 @@
 package com.dstimetracker.devsodin.core;
 
+import java.io.Serializable;
+
 /**
  * Class that represent a pseudo-unique id for the nodes or intervals.
  */
-public class Id {
+public class Id implements Serializable {
     private static int idCounter = -1;
     private String id;
 

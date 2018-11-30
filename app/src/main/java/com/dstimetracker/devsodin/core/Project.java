@@ -29,7 +29,7 @@ public class Project extends Node implements Serializable, Visitable {
      * @param description Project's Description
      * @param parent      Project's parent. Null if it's root project
      */
-    Project(final String name, final String description, final Project parent) {
+    public Project(final String name, final String description, final Project parent) {
         if (name != null && !name.isEmpty()) {
             this.setName(name);
             this.setDescription(description);

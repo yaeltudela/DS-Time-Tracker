@@ -1,11 +1,12 @@
 package com.dstimetracker.devsodin.core;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Task decorator for making a Task be auto-stoppable.
  */
-public class LimitedTask extends TaskDecorator {
+public class LimitedTask extends TaskDecorator implements Serializable {
 
     /**
      * Maximum date to end the task.

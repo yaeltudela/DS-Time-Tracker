@@ -1,5 +1,6 @@
 package com.dstimetracker.devsodin.core;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Observable;
 import java.util.Observer;
@@ -8,7 +9,7 @@ import java.util.Observer;
 /**
  * Task decorator for making a Task be auto-startable.
  */
-public class ProgrammedTask extends TaskDecorator implements Observer {
+public class ProgrammedTask extends TaskDecorator implements Observer, Serializable {
 
     /**
      * Starting date of the programmed Task.
