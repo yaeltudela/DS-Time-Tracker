@@ -13,5 +13,8 @@
     <string name="newProjectTitleText">Add Project</string>
     <string name="newTaskTitleText">Add Task</string>
     <string name="newIntervalTitleText">Add Interval</string>
+    <string name="nodeOptions">NodeOptions</string>
+    <string name="nodeMenuEdit">Edit</string>
+    <string name="nodeMenuDelete">Delete</string>
 
 </resources>

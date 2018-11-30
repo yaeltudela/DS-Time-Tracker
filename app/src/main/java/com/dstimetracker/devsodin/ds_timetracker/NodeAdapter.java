@@ -3,10 +3,13 @@ package com.dstimetracker.devsodin.ds_timetracker;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,6 +52,7 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
 
         TextView nodeName;
         TextView nodeDuration;
+        ImageButton optionsButton;
 
         public NodeViewHolder(@NonNull final View itemView, final Node node) {
             super(itemView);
@@ -70,6 +74,17 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
                 }
             });
 
+            optionsButton = itemView.findViewById(R.id.nodeOptions);
+            optionsButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PopupMenu popup = new PopupMenu(itemView.getContext(), v);
+                    MenuInflater inflater = popup.getMenuInflater();
+                    inflater.inflate(R.menu.node_menu, popup.getMenu());
+                    popup.show();
+
+                }
+            });
             nodeName = itemView.findViewById(R.id.nodeNameText);
             nodeDuration = itemView.findViewById(R.id.nodeDurationText);
 
