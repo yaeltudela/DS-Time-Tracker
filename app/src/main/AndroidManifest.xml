@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="core.ds.ds_project_timetracker">
+    package="com.dstimetracker.devsodin.ds_timetracker">
 
     <application
         android:allowBackup="true"
