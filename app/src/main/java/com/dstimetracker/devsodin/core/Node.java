@@ -189,4 +189,8 @@ public abstract class Node implements Serializable, Visitable {
         assert (this.getName() == null) : "Node has no name.";
         assert (this.getDuration() >= 0) : "Node has negative duration";
     }
+
+    public boolean isTask() {
+        return false;
+    }
 }

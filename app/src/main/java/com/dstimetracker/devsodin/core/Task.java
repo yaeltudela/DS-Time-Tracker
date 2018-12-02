@@ -147,5 +147,10 @@ public abstract class Task extends Node implements Serializable {
         super.invariant();
         assert (this.getParent() != null) : "Task has no parent";
     }
+
+    @Override
+    public boolean isTask() {
+        return true;
+    }
 }
 

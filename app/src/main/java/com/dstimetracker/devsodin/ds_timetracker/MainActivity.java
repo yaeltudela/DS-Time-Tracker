@@ -10,13 +10,19 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 
+import com.dstimetracker.devsodin.core.BaseTask;
 import com.dstimetracker.devsodin.core.Node;
 import com.dstimetracker.devsodin.core.Project;
+import com.dstimetracker.devsodin.core.Task;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
+
+    private RecyclerView rv;
+    private RecyclerView.LayoutManager layoutManager;
+    private RecyclerView.Adapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,29 +38,15 @@ public class MainActivity extends AppCompatActivity {
 
             }
         }
+        RecyclerView rv = findViewById(R.id.recyclerView);
 
         if (node == null) {
-            Project project = new Project("test", "desc", null);
-            Project p1 = new Project("testi134124231", "desc", project);
-            Project p12 = new Project("sdkfjg ñljsdlkj", "desc", p1);
+            Project project = createTreeProjects();
 
-            Project p2 = new Project("testkjfsdhlfksdkdhdhldkfasdhk", "desc", project);
-            Project p3 = new Project("larsh ", "desc", project);
-            Project p4 = new Project("fsdñlk", "desc", project);
-            Project p5 = new Project("dsnvm", "desc", project);
-            Project p6 = new Project("raopiwr", "desc", project);
-            Project p7 = new Project("425' dsjlk", "desc", project);
-            Project p8 = new Project("dsak", "desc", project);
-            Project p9 = new Project("dsalkj  dsñfal alkjd ", "desc", project);
-
-            RecyclerView rv = findViewById(R.id.recyclerView);
-            //ListView lv = findViewById(R.id.listViewRoot);
-
-
-            ArrayList<Node> nodes = (ArrayList<Node>) project.getActivities();
-            NodeAdapter nodeAdapter = new NodeAdapter(this, (ArrayList<Node>) project.getActivities());
-            rv.setAdapter(nodeAdapter);
-            rv.setLayoutManager(new LinearLayoutManager(this));
+            layoutManager = new LinearLayoutManager(this);
+            rv.setLayoutManager(layoutManager);
+            adapter = new NodeAdapter((ArrayList<Node>) project.getActivities());
+            rv.setAdapter(adapter);
 
 
             ArrayList<String> example = new ArrayList<>(Arrays.asList("test1", "test4534", "test4", "test6", "test1", "test4534", "test4", "test6"));
@@ -62,9 +54,8 @@ public class MainActivity extends AppCompatActivity {
 
             //lv.setAdapter(arrayAdapter);
         } else {
-            RecyclerView rv = findViewById(R.id.recyclerView);
             ArrayList<Node> nodes = (ArrayList<Node>) ((Project) node).getActivities();
-            NodeAdapter nodeAdapter = new NodeAdapter(this, nodes);
+            NodeAdapter nodeAdapter = new NodeAdapter(nodes);
             rv.setAdapter(nodeAdapter);
             rv.setLayoutManager(new LinearLayoutManager(this));
         }
@@ -90,6 +81,27 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private Project createTreeProjects() {
+        Project root = new Project("root", "", null);
+        Project p1 = new Project("P1", "P1 desc", root);
+        Task t3 = new BaseTask("T3", "T3 desc", p1);
+        Project p2 = new Project("P2", "P1 desc", p1);
+        Task t1 = new BaseTask("T1", "T1 desc", p2);
+        Task t2 = new BaseTask("T2", "T2 desc", p2);
+        Project p3 = new Project("P3", "p3 desc", root);
+        Project p4 = new Project("P4", "p4 desc", root);
+        Project p5 = new Project("P5", "p5 desc", root);
+        Project p6 = new Project("P6", "p6 desc", root);
+        Project p7 = new Project("P7", "p7 desc", root);
+        Project p8 = new Project("P8", "p8 desc", root);
+        Project p9 = new Project("P9", "p9 desc", root);
+        Project p1_1 = new Project("P1_1", "p1-1 desc", p1);
+        Project p1_2 = new Project("P1_2", "p1-2 desc", p1);
+        Project p1_3 = new Project("P1_3", "p1-3 desc", p1);
+
+        return root;
     }
 
 }

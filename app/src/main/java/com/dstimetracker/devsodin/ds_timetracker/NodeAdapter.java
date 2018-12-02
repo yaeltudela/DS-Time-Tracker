@@ -1,29 +1,23 @@
 package com.dstimetracker.devsodin.ds_timetracker;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.dstimetracker.devsodin.core.Node;
 
 import java.util.ArrayList;
 
 public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder> {
-    private ArrayList<Node> nodes = new ArrayList<>();
-    private Context context;
+    private ArrayList<Node> nodes;
 
 
-    public NodeAdapter(Context context, ArrayList<Node> nodes) {
-        this.context = context;
+    public NodeAdapter(ArrayList<Node> nodes) {
         this.nodes = nodes;
     }
 
@@ -31,14 +25,13 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
     @Override
     public NodeViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.node_layout, viewGroup, false);
-        return new NodeViewHolder(view, nodes.get(i));
+        return new NodeViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull NodeViewHolder nodeViewHolder, int i) {
-        Node node = nodes.get(i);
-        nodeViewHolder.nodeName.setText(node.getName());
-        nodeViewHolder.nodeDuration.setText(Double.toString(node.getDuration()));
+        nodeViewHolder.bindData(this.nodes.get(i), i);
+
     }
 
 
@@ -48,47 +41,64 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
     }
 
 
-    public class NodeViewHolder extends RecyclerView.ViewHolder {
+    public static class NodeViewHolder extends RecyclerView.ViewHolder {
 
         TextView nodeName;
         TextView nodeDuration;
+        TextView nodeStartDate;
+        TextView nodeEndDate;
+
         ImageButton optionsButton;
 
-        public NodeViewHolder(@NonNull final View itemView, final Node node) {
+
+        public NodeViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(v.getContext(), MainActivity.class);
-                    intent.putExtra("NEWNODE", node);
-                    v.getContext().startActivity(intent);
-                }
-            });
+            nodeName = itemView.findViewById(R.id.nodeNameText);
+            nodeDuration = itemView.findViewById(R.id.nodeDurationText);
+            nodeStartDate = itemView.findViewById(R.id.nodeStartDateText);
+            nodeEndDate = itemView.findViewById(R.id.nodeEndDateText);
 
+        }
+
+        private void bindData(final Node node, final int i) {
+            nodeName.setText(node.getName());
+            nodeDuration.setText(Double.toString(node.getDuration()));
+            if (node.getStartDate() != null) {
+                nodeStartDate.setText(node.getStartDate().toString());
+            } else {
+                nodeStartDate.setText("---");
+            }
+            nodeStartDate.setVisibility(View.GONE);
+            if (node.getEndDate() != null) {
+                nodeEndDate.setText(node.getEndDate().toString());
+            } else {
+                nodeEndDate.setText("---");
+            }
+            nodeEndDate.setVisibility(View.GONE);
+
+            if (!node.isTask()) {
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(v.getContext(), MainActivity.class);
+                        intent.putExtra("NEWNODE", node);
+                        v.getContext().startActivity(intent);
+                    }
+                });
+            }
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    Toast.makeText(v.getContext(), nodeName.getText(), Toast.LENGTH_LONG).show();
+                    nodeEndDate.setVisibility(View.VISIBLE);
+                    nodeEndDate.setVisibility(View.VISIBLE);
                     return true;
                 }
             });
-
-            optionsButton = itemView.findViewById(R.id.nodeOptions);
-            optionsButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    PopupMenu popup = new PopupMenu(itemView.getContext(), v);
-                    MenuInflater inflater = popup.getMenuInflater();
-                    inflater.inflate(R.menu.node_menu, popup.getMenu());
-                    popup.show();
-
-                }
-            });
-            nodeName = itemView.findViewById(R.id.nodeNameText);
-            nodeDuration = itemView.findViewById(R.id.nodeDurationText);
-
         }
+
+
+
     }
 
 }

@@ -23,7 +23,7 @@ public class BaseTask extends Task implements Serializable {
      * @param desc    BaseTask's description
      * @param project BaseTask's parent project
      */
-    BaseTask(final String name, final String desc, final Project project) {
+    public BaseTask(final String name, final String desc, final Project project) {
         this.setName(name);
         this.setDescription(desc);
         this.setDuration(0);
