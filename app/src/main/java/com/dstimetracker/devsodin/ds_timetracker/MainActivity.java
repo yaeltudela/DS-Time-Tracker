@@ -2,13 +2,15 @@ package com.dstimetracker.devsodin.ds_timetracker;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
+import android.view.View;
 
 import com.dstimetracker.devsodin.core.BaseTask;
 import com.dstimetracker.devsodin.core.Node;
@@ -16,20 +18,19 @@ import com.dstimetracker.devsodin.core.Project;
 import com.dstimetracker.devsodin.core.Task;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView rv;
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView.Adapter adapter;
+    private Node node = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Node node = null;
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
         if (extras != null) {
@@ -41,32 +42,41 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView rv = findViewById(R.id.recyclerView);
 
         if (node == null) {
-            Project project = createTreeProjects();
-
-            layoutManager = new LinearLayoutManager(this);
-            rv.setLayoutManager(layoutManager);
-            adapter = new NodeAdapter((ArrayList<Node>) project.getActivities());
-            rv.setAdapter(adapter);
-
-
-            ArrayList<String> example = new ArrayList<>(Arrays.asList("test1", "test4534", "test4", "test6", "test1", "test4534", "test4", "test6"));
-            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, example);
-
-            //lv.setAdapter(arrayAdapter);
-        } else {
-            ArrayList<Node> nodes = (ArrayList<Node>) ((Project) node).getActivities();
-            NodeAdapter nodeAdapter = new NodeAdapter(nodes);
-            rv.setAdapter(nodeAdapter);
-            rv.setLayoutManager(new LinearLayoutManager(this));
+            node = createTreeProjects();
         }
+
+        layoutManager = new LinearLayoutManager(this);
+        ArrayList<Node> nodes = (ArrayList<Node>) ((Project) node).getActivities();
+        adapter = new NodeAdapter(nodes);
+        rv.setAdapter(adapter);
+        rv.setLayoutManager(new LinearLayoutManager(this));
+        rv.setItemAnimator(new DefaultItemAnimator());
+
+
+        FloatingActionButton fab = findViewById(R.id.fab);
+
+        final Node finalNode = node;
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (finalNode == null || finalNode.getParent() == null) {
+                    Project newProject = new Project("ADDED", "test", (Project) finalNode);
+                    adapter.notifyItemInserted(adapter.getItemCount());
+                    layoutManager.scrollToPosition(adapter.getItemCount());
+                } else {
+                    Snackbar.make(v, "//TODO Add new project or task", Snackbar.LENGTH_SHORT).show();
+
+                }
+            }
+        });
 
 
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_menu, menu);
+        getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
 
     }
@@ -103,5 +113,6 @@ public class MainActivity extends AppCompatActivity {
 
         return root;
     }
+
 
 }
