@@ -2,9 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/nodeMenuEdit"
+        android:id="@+id/editContextMenu"
         android:title="@string/nodeMenuEdit" />
     <item
-        android:id="@+id/nodeMenuDelete"
+        android:id="@+id/deleteContextMenu"
         android:title="@string/nodeMenuDelete" />
 </menu>

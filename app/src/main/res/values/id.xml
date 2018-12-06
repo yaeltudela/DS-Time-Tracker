@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <item name="fab_new_project" type="id" />
+    <item name="fab_new_task" type="id" />
+    <item name="fab_new_interval" type="id" />
+</resources>

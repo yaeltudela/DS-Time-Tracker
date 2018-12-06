@@ -2,20 +2,22 @@ package com.dstimetracker.devsodin.ds_timetracker;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
+import android.widget.Toast;
 
 import com.dstimetracker.devsodin.core.BaseTask;
 import com.dstimetracker.devsodin.core.Node;
 import com.dstimetracker.devsodin.core.Project;
 import com.dstimetracker.devsodin.core.Task;
+import com.leinardi.android.speeddial.SpeedDialActionItem;
+import com.leinardi.android.speeddial.SpeedDialOverlayLayout;
+import com.leinardi.android.speeddial.SpeedDialView;
 
 import java.util.ArrayList;
 
@@ -24,12 +26,18 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView rv;
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView.Adapter adapter;
+    private SpeedDialView mSpeedDialView;
+
+
     private Node node = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
@@ -44,35 +52,113 @@ public class MainActivity extends AppCompatActivity {
         if (node == null) {
             node = createTreeProjects();
         }
+        initSpeedDial();
+
 
         layoutManager = new LinearLayoutManager(this);
-        ArrayList<Node> nodes = (ArrayList<Node>) ((Project) node).getActivities();
-        adapter = new NodeAdapter(nodes);
+        ArrayList nodes;
+        if (node.isTask()) {
+            nodes = ((Task) node).getIntervals();
+            adapter = new IntervalAdapter(nodes);
+        } else {
+            nodes = (ArrayList<Node>) ((Project) node).getActivities();
+            adapter = new NodeAdapter(nodes);
+        }
         rv.setAdapter(adapter);
         rv.setLayoutManager(new LinearLayoutManager(this));
         rv.setItemAnimator(new DefaultItemAnimator());
 
 
-        FloatingActionButton fab = findViewById(R.id.fab);
+    }
 
-        final Node finalNode = node;
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    private void initSpeedDial() {
+        mSpeedDialView = findViewById(R.id.speedDial);
+        SpeedDialOverlayLayout overlayLayout = findViewById(R.id.speedDialOverlay);
+        mSpeedDialView.setOverlayLayout(overlayLayout);
 
-                if (finalNode == null || finalNode.getParent() == null) {
-                    Project newProject = new Project("ADDED", "test", (Project) finalNode);
-                    adapter.notifyItemInserted(adapter.getItemCount());
-                    layoutManager.scrollToPosition(adapter.getItemCount());
-                } else {
-                    Snackbar.make(v, "//TODO Add new project or task", Snackbar.LENGTH_SHORT).show();
+        if (!(node.getParent() == null && !node.isTask())) {
+            if (node.isTask()) {
+                //Only Add interval menu
+                mSpeedDialView.setOnChangeListener(new SpeedDialView.OnChangeListener() {
+                    @Override
+                    public boolean onMainActionSelected() {
+                        makeNewInterval();
+                        return false;
+                    }
+
+                    @Override
+                    public void onToggleChanged(boolean isOpen) {
+
+                    }
+                });
+            } else {
+
+                //Add task or project menu items
+                mSpeedDialView.addActionItem(
+                        new SpeedDialActionItem.Builder(R.id.fab_new_project, R.drawable.ic_audiotrack_light).setLabel(R.string.newProjectString)
+                                .create());
+                mSpeedDialView.addActionItem(
+                        new SpeedDialActionItem.Builder(R.id.fab_new_task, R.drawable.ic_dialog_close_dark).setLabel(R.string.newTaskString)
+                                .create());
+
+
+            }
+
+        } else {
+            mSpeedDialView.setOnChangeListener(new SpeedDialView.OnChangeListener() {
+                @Override
+                public boolean onMainActionSelected() {
+                    makeNewProject();
+                    return false;
+                }
+
+                @Override
+                public void onToggleChanged(boolean isOpen) {
 
                 }
+
+            });
+        }
+
+
+        mSpeedDialView.setOnActionSelectedListener(new SpeedDialView.OnActionSelectedListener() {
+            @Override
+            public boolean onActionSelected(SpeedDialActionItem actionItem) {
+                switch (actionItem.getId()) {
+                    case R.id.fab_new_project:
+                        makeNewProject();
+                        return false;
+                    case R.id.fab_new_task:
+                        makeNewTask();
+                        return false;
+                    case R.id.fab_new_interval:
+                        makeNewInterval();
+                        return false;
+
+                }
+                return true;
             }
         });
 
+        mSpeedDialView.setExpansionMode(SpeedDialView.ExpansionMode.TOP);
+
+        mSpeedDialView.setUseReverseAnimationOnClose(true);
+
 
     }
+
+    private void makeNewProject() {
+        Toast.makeText(MainActivity.this, "new project", Toast.LENGTH_SHORT).show();
+    }
+
+    private void makeNewTask() {
+        Toast.makeText(MainActivity.this, "new task", Toast.LENGTH_SHORT).show();
+    }
+
+    private void makeNewInterval() {
+        Toast.makeText(MainActivity.this, "new interval", Toast.LENGTH_SHORT).show();
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -85,8 +171,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
-            case R.id.searchMenuItem:
-
+            case R.id.searchMenu:
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -110,6 +195,7 @@ public class MainActivity extends AppCompatActivity {
         Project p1_1 = new Project("P1_1", "p1-1 desc", p1);
         Project p1_2 = new Project("P1_2", "p1-2 desc", p1);
         Project p1_3 = new Project("P1_3", "p1-3 desc", p1);
+        t3.startInterval();
 
         return root;
     }

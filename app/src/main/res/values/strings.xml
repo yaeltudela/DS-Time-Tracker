@@ -10,11 +10,16 @@
     <string name="resumeAllText">Resume all</string>
     <string name="stopAllText">Pause all</string>
 
+    <string name="newProjectString">New Project</string>
+
     <string name="newProjectTitleText">Add Project</string>
     <string name="newTaskTitleText">Add Task</string>
     <string name="newIntervalTitleText">Add Interval</string>
     <string name="nodeOptions">NodeOptions</string>
     <string name="nodeMenuEdit">Edit</string>
     <string name="nodeMenuDelete">Delete</string>
+    <string name="saveString">Save</string>
+    <string name="newTaskString">New Task</string>
+    <string name="newIntervalString">New Interval</string>
 
 </resources>

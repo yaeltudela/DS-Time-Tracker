@@ -77,16 +77,15 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
             }
             nodeEndDate.setVisibility(View.GONE);
 
-            if (!node.isTask()) {
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(v.getContext(), MainActivity.class);
-                        intent.putExtra("NEWNODE", node);
-                        v.getContext().startActivity(intent);
-                    }
-                });
-            }
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(v.getContext(), MainActivity.class);
+                    intent.putExtra("NEWNODE", node);
+                    v.getContext().startActivity(intent);
+                }
+            });
+
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
@@ -96,7 +95,6 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
                 }
             });
         }
-
 
 
     }
