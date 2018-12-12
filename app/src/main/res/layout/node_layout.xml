@@ -12,6 +12,7 @@
         android:orientation="horizontal">
 
         <LinearLayout
+            android:id="@+id/textData"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -46,15 +47,30 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/textViewOptions"
+            android:id="@+id/threeDots"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:rotation="270"
+            android:text="..."
+            android:textSize="30dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/taskStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:text="&#8942;"
-            android:textAppearance="?android:textAppearanceLarge"
-            app:layout_constraintEnd_toEndOf="parent" />
+            android:layout_marginBottom="8dp"
+            android:background="@color/sd_overlay_color"
+            android:src="@drawable/ic_media_play_light"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/threeDots"
+            app:layout_constraintTop_toTopOf="parent" />
+
 
     </android.support.constraint.ConstraintLayout>
 

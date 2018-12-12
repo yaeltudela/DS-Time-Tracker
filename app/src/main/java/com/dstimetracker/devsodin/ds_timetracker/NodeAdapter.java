@@ -8,8 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dstimetracker.devsodin.core.Node;
+import com.dstimetracker.devsodin.core.Task;
 
 import java.util.ArrayList;
 
@@ -48,7 +50,7 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
         TextView nodeStartDate;
         TextView nodeEndDate;
 
-        ImageButton optionsButton;
+        ImageButton changeStatus;
 
 
         public NodeViewHolder(@NonNull View itemView) {
@@ -58,6 +60,7 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
             nodeDuration = itemView.findViewById(R.id.nodeDurationText);
             nodeStartDate = itemView.findViewById(R.id.nodeStartDateText);
             nodeEndDate = itemView.findViewById(R.id.nodeEndDateText);
+            changeStatus = itemView.findViewById(R.id.taskStatus);
 
         }
 
@@ -76,6 +79,24 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
                 nodeEndDate.setText("---");
             }
             nodeEndDate.setVisibility(View.GONE);
+
+            if (node.isTask()) {
+                changeStatus.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Task t = (Task) node;
+                        if (t.isActive()) {
+                            t.stopInterval();
+                            Toast.makeText(itemView.getContext(), "stoping task", Toast.LENGTH_SHORT).show();
+                        } else {
+                            t.startInterval();
+                            Toast.makeText(itemView.getContext(), "starting task", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            } else {
+                changeStatus.setVisibility(View.GONE);
+            }
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
