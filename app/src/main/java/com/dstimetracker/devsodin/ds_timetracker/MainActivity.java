@@ -1,8 +1,10 @@
 package com.dstimetracker.devsodin.ds_timetracker;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +14,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.dstimetracker.devsodin.core.BaseTask;
+import com.dstimetracker.devsodin.core.DataManager;
 import com.dstimetracker.devsodin.core.Node;
 import com.dstimetracker.devsodin.core.Project;
 import com.dstimetracker.devsodin.core.Task;
@@ -23,11 +26,15 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final String ACTUAL_NODE = "ACTUAL_NODE";
     private RecyclerView rv;
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView.Adapter adapter;
     private SpeedDialView mSpeedDialView;
-
+    private DataManager dataManager;
+    private Toolbar toolbar;
+    private SpeedDialOverlayLayout speedDialOverlayLayout;
+    private SharedPreferences sharedPreferences;
 
     private Node node = null;
 
@@ -36,25 +43,34 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        startService(new Intent(MainActivity.this, ClockService.class));
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        String language = sharedPreferences.getString(SettingsActivity.KEY_PREFERENCE_LANGUAGE, "en");
+        String refresh_Rate = sharedPreferences.getString(SettingsActivity.KEY_PREFERENCE_REFRESH_RATE, "2");
+
+        PreferenceManager.setDefaultValues(this, R.xml.app_preferences, false);
+
+        Toast.makeText(this, language + refresh_Rate, Toast.LENGTH_LONG).show();
+
+        if (this.dataManager == null) {
+            this.dataManager = new DataManager(getFilesDir() + "/save.db");
+            this.node = (Project) this.dataManager.loadData();
+            if (node == null) {
+                node = createTreeProjects();
+                dataManager.saveData((Project) node);
+            }
+        }
+        setUpScreenElements();
 
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
         if (extras != null) {
-            if (extras.containsKey("NEWNODE")) {
-                node = (Node) extras.get("NEWNODE");
+            if (extras.containsKey(ACTUAL_NODE)) {
+                node = (Node) extras.get(ACTUAL_NODE);
 
             }
         }
-        RecyclerView rv = findViewById(R.id.recyclerView);
 
-        if (node == null) {
-            node = createTreeProjects();
-        }
-        initSpeedDial();
 
 
         layoutManager = new LinearLayoutManager(this);
@@ -70,13 +86,32 @@ public class MainActivity extends AppCompatActivity {
         rv.setLayoutManager(new LinearLayoutManager(this));
         rv.setItemAnimator(new DefaultItemAnimator());
 
+    }
+
+    @Override
+    protected void onDestroy() {
+
+        if (this.dataManager != null && node.getParent() == null) {
+            this.dataManager.saveData((Project) node);
+        }
+
+        super.onDestroy();
+    }
+
+    void setUpScreenElements() {
+        this.toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        this.rv = findViewById(R.id.recyclerView);
+
+        this.mSpeedDialView = findViewById(R.id.speedDial);
+        this.speedDialOverlayLayout = findViewById(R.id.speedDialOverlay);
+        initSpeedDial();
 
     }
 
     private void initSpeedDial() {
-        mSpeedDialView = findViewById(R.id.speedDial);
-        SpeedDialOverlayLayout overlayLayout = findViewById(R.id.speedDialOverlay);
-        mSpeedDialView.setOverlayLayout(overlayLayout);
+
+        mSpeedDialView.setOverlayLayout(speedDialOverlayLayout);
 
         if (!(node.getParent() == null && !node.isTask())) {
             if (node.isTask()) {
@@ -149,6 +184,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
     private void makeNewProject() {
         Toast.makeText(MainActivity.this, "new project", Toast.LENGTH_SHORT).show();
     }
@@ -174,6 +210,8 @@ public class MainActivity extends AppCompatActivity {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.searchMenu:
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

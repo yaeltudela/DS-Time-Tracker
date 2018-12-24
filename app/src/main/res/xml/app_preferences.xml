@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/basic">
+        <ListPreference
+            android:defaultValue="1"
+            android:entries="@array/refresh_rate_selection"
+            android:entryValues="@array/refresh_rate_selection"
+            android:key="pref_refresh_rate"
+            android:summary="@string/summary_refresh_rate"
+            android:title="@string/refresh_rate" />
+        <ListPreference
+            android:defaultValue="English"
+            android:entries="@array/available_languages"
+            android:entryValues="@array/available_languages_values"
+            android:key="pref_languages"
+            android:summary="@string/summary_language"
+            android:title="@string/language" />
+    </PreferenceCategory>
+
+
+</PreferenceScreen>

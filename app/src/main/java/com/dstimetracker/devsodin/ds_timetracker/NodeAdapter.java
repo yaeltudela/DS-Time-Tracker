@@ -32,7 +32,7 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull NodeViewHolder nodeViewHolder, int i) {
-        nodeViewHolder.bindData(this.nodes.get(i), i);
+        nodeViewHolder.bindData(this.nodes, i);
 
     }
 
@@ -64,48 +64,49 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
 
         }
 
-        private void bindData(final Node node, final int i) {
-            nodeName.setText(node.getName());
-            nodeDuration.setText(Double.toString(node.getDuration()));
-            if (node.getStartDate() != null) {
-                nodeStartDate.setText(node.getStartDate().toString());
+        private void bindData(final ArrayList<Node> nodes, final int i) {
+            nodeName.setText(nodes.get(i).getName());
+            nodeDuration.setText(Double.toString(nodes.get(i).getDuration()));
+            if (nodes.get(i).getStartDate() != null) {
+                nodeStartDate.setText(nodes.get(i).getStartDate().toString());
             } else {
                 nodeStartDate.setText("---");
             }
             nodeStartDate.setVisibility(View.GONE);
-            if (node.getEndDate() != null) {
-                nodeEndDate.setText(node.getEndDate().toString());
+            if (nodes.get(i).getEndDate() != null) {
+                nodeEndDate.setText(nodes.get(i).getEndDate().toString());
             } else {
                 nodeEndDate.setText("---");
             }
             nodeEndDate.setVisibility(View.GONE);
 
-            if (node.isTask()) {
+            if (!nodes.get(i).isTask()) {
+                changeStatus.setVisibility(View.GONE);
+            } else {
                 changeStatus.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Task t = (Task) node;
-                        if (t.isActive()) {
-                            t.stopInterval();
+                        if (nodes.get(i).isActive()) {
+                            ((Task) (nodes.get(i))).stopInterval();
                             Toast.makeText(itemView.getContext(), "stoping task", Toast.LENGTH_SHORT).show();
                         } else {
-                            t.startInterval();
+                            ((Task) (nodes.get(i))).startInterval();
                             Toast.makeText(itemView.getContext(), "starting task", Toast.LENGTH_SHORT).show();
+
                         }
                     }
                 });
-            } else {
-                changeStatus.setVisibility(View.GONE);
             }
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(v.getContext(), MainActivity.class);
-                    intent.putExtra("NEWNODE", node);
+                    intent.putExtra(MainActivity.ACTUAL_NODE, nodes.get(i));
                     v.getContext().startActivity(intent);
                 }
             });
+
 
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override

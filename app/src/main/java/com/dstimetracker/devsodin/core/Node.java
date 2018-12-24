@@ -18,6 +18,7 @@ public abstract class Node implements Serializable, Visitable {
     private Date endDate;
     private long duration;
     private Date startDate;
+    private boolean active;
 
     /**
      * Abstract method used for the refresh of all the modified data.
@@ -192,5 +193,13 @@ public abstract class Node implements Serializable, Visitable {
 
     public boolean isTask() {
         return false;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

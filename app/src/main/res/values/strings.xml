@@ -21,5 +21,36 @@
     <string name="saveString">Save</string>
     <string name="newTaskString">New Task</string>
     <string name="newIntervalString">New Interval</string>
+    <string name="settingsTitle">Settings</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="summary_language">Change the application language</string>
+    <string name="language">Language</string>
+    <string name="refresh_rate">Refresh rate</string>
+    <string name="summary_refresh_rate">Change the refresh rate</string>
+    <string name="basic">Basic</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+
+    <string-array name="refresh_rate_selection">
+        <item>1</item>
+        <item>2</item>
+        <item>5</item>
+        <item>10</item>
+    </string-array>
+
+    <string-array name="available_languages">
+        <item>Spanish</item>
+        <item>Catalan</item>
+        <item>English</item>
+    </string-array>
+
+    <string-array name="available_languages_values">
+        <item>es</item>
+        <item>ca</item>
+        <item>en</item>
+    </string-array>
+
 
 </resources>
