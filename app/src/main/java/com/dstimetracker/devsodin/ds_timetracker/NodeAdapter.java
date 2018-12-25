@@ -101,8 +101,8 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(v.getContext(), MainActivity.class);
-                    intent.putExtra(MainActivity.ACTUAL_NODE, nodes.get(i));
+                    Intent intent = new Intent(v.getContext(), TreeViewerActivity.class);
+                    intent.putExtra(TreeViewerActivity.ACTUAL_NODE, nodes.get(i));
                     v.getContext().startActivity(intent);
                 }
             });

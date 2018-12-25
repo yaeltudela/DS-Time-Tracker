@@ -1,23 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:id="@+id/main"
     android:layout_height="match_parent"
-    android:layout_below="@id/toolbar">
-
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar_layout" />
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".TreeViewerActivity"
+    tools:showIn="@layout/app_bar_tree_viewer">
 
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+        android:layout_marginBottom="0dp"/>
 
     <com.leinardi.android.speeddial.SpeedDialOverlayLayout
         android:id="@+id/speedDialOverlay"
