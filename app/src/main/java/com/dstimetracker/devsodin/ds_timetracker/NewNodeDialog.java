@@ -14,17 +14,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.EditText;
+
+import com.dstimetracker.devsodin.core.Node;
+import com.dstimetracker.devsodin.core.Project;
 
 public class NewNodeDialog extends DialogFragment {
     private EditText nodeName;
     private EditText nodeDescription;
-
-
-    public static NewNodeDialog newInstance() {
-        return new NewNodeDialog();
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -36,15 +33,22 @@ public class NewNodeDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setStyle(STYLE_NORMAL, 0);
+
+
+
         return dialog;
     }
+
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View nodeDialogView = inflater.inflate(R.layout.new_node_layout, container, false);
+
+        nodeName = nodeDialogView.findViewById(R.id.nameEditText);
+        nodeDescription = nodeDialogView.findViewById(R.id.descriptionEditText);
 
         setHasOptionsMenu(true);
         Toolbar toolbar = nodeDialogView.findViewById(R.id.toolbar);
@@ -61,6 +65,8 @@ public class NewNodeDialog extends DialogFragment {
 
 
         }
+
+
         return nodeDialogView;
 
     }
@@ -77,6 +83,9 @@ public class NewNodeDialog extends DialogFragment {
 
         switch (item.getItemId()) {
             case R.id.saveMenu:
+                if (isDataOk()) {
+                    Node node = new Project(nodeName.getText().toString(), nodeDescription.getText().toString(), (Project) TreeViewerActivity.node);
+                }
                 break;
 
             default:
@@ -85,5 +94,10 @@ public class NewNodeDialog extends DialogFragment {
 
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private boolean isDataOk() {
+        return !nodeName.getText().toString().isEmpty();
+
     }
 }

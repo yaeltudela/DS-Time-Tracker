@@ -45,7 +45,7 @@ public class TreeViewerActivity extends AppCompatActivity
     private SharedPreferences sharedPreferences;
     public static ArrayList<Integer> path;
     private static DataManager dataManager;
-    private Node node;
+    public static Node node;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,12 +72,11 @@ public class TreeViewerActivity extends AppCompatActivity
 
         PreferenceManager.setDefaultValues(this, R.xml.app_preferences, false);
 
-        Toast.makeText(this, language + refresh_Rate, Toast.LENGTH_LONG).show();
 
         if (dataManager == null) {
             path = new ArrayList<>();
             dataManager = new DataManager(getFilesDir() + "/save.db");
-            this.node = (Project) dataManager.loadData();
+            node = (Project) dataManager.loadData();
             if (node == null) {
                 node = createTreeProjects();
                 dataManager.saveData((Project) node);
@@ -214,6 +213,7 @@ public class TreeViewerActivity extends AppCompatActivity
 
     private void makeNewProject() {
         Toast.makeText(TreeViewerActivity.this, "new project", Toast.LENGTH_SHORT).show();
+        getSupportFragmentManager().beginTransaction().replace(android.R.id.content, new NewNodeDialog()).commit();
     }
 
     private void makeNewTask() {

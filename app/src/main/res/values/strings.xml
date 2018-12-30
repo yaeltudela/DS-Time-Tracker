@@ -59,6 +59,8 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
     <string name="detailsMenuEdit">Details</string>
+    <string name="name">Name</string>
+    <string name="description">Description</string>
 
 
 </resources>
