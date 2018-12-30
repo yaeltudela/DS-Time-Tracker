@@ -3,21 +3,21 @@ package com.dstimetracker.devsodin.ds_timetracker;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.preference.PreferenceManager;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.dstimetracker.devsodin.core.BaseTask;
@@ -39,28 +39,29 @@ public class TreeViewerActivity extends AppCompatActivity
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView.Adapter adapter;
     private SpeedDialView mSpeedDialView;
-    private DataManager dataManager;
+    public static Node rootNode;
     private Toolbar toolbar;
     private SpeedDialOverlayLayout speedDialOverlayLayout;
     private SharedPreferences sharedPreferences;
-    private Node node = null;
-
+    public static ArrayList<Integer> path;
+    private static DataManager dataManager;
+    private Node node;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tree_viewer);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
 
@@ -73,15 +74,15 @@ public class TreeViewerActivity extends AppCompatActivity
 
         Toast.makeText(this, language + refresh_Rate, Toast.LENGTH_LONG).show();
 
-        if (this.dataManager == null) {
-            this.dataManager = new DataManager(getFilesDir() + "/save.db");
-            this.node = (Project) this.dataManager.loadData();
+        if (dataManager == null) {
+            path = new ArrayList<>();
+            dataManager = new DataManager(getFilesDir() + "/save.db");
+            this.node = (Project) dataManager.loadData();
             if (node == null) {
                 node = createTreeProjects();
                 dataManager.saveData((Project) node);
             }
         }
-        setUpScreenElements();
 
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
@@ -91,9 +92,7 @@ public class TreeViewerActivity extends AppCompatActivity
 
             }
         }
-
-
-
+        setUpScreenElements();
         layoutManager = new LinearLayoutManager(this);
         ArrayList nodes;
         if (node.isTask()) {
@@ -107,13 +106,16 @@ public class TreeViewerActivity extends AppCompatActivity
         rv.setLayoutManager(new LinearLayoutManager(this));
         rv.setItemAnimator(new DefaultItemAnimator());
 
+        if (rootNode == null) {
+            rootNode = node;
+        }
     }
 
     @Override
     protected void onDestroy() {
 
-        if (this.dataManager != null && node.getParent() == null) {
-            this.dataManager.saveData((Project) node);
+        if (TreeViewerActivity.dataManager != null) {
+            TreeViewerActivity.dataManager.saveData((Project) rootNode);
         }
 
         super.onDestroy();
@@ -123,6 +125,10 @@ public class TreeViewerActivity extends AppCompatActivity
         this.toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         this.rv = findViewById(R.id.recyclerView);
+
+        this.rv.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        this.rv.setItemAnimator(new DefaultItemAnimator());
+        registerForContextMenu(this.rv);
 
         this.mSpeedDialView = findViewById(R.id.speedDial);
         this.speedDialOverlayLayout = findViewById(R.id.speedDialOverlay);
@@ -219,13 +225,22 @@ public class TreeViewerActivity extends AppCompatActivity
     }
 
 
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        getMenuInflater().inflate(R.menu.node_menu, menu);
+
+    }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
+            if (!TreeViewerActivity.path.isEmpty()) {
+                TreeViewerActivity.path.remove(TreeViewerActivity.path.size() - 1);
+            }
             super.onBackPressed();
         }
     }
@@ -283,7 +298,7 @@ public class TreeViewerActivity extends AppCompatActivity
 
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

@@ -1,16 +1,19 @@
 package com.dstimetracker.devsodin.ds_timetracker;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dstimetracker.devsodin.core.Node;
+import com.dstimetracker.devsodin.core.Project;
 import com.dstimetracker.devsodin.core.Task;
 
 import java.util.ArrayList;
@@ -51,6 +54,8 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
         TextView nodeEndDate;
 
         ImageButton changeStatus;
+        TextView threeDots;
+        ImageView activeBar;
 
 
         public NodeViewHolder(@NonNull View itemView) {
@@ -61,10 +66,14 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
             nodeStartDate = itemView.findViewById(R.id.nodeStartDateText);
             nodeEndDate = itemView.findViewById(R.id.nodeEndDateText);
             changeStatus = itemView.findViewById(R.id.taskStatus);
+            threeDots = itemView.findViewById(R.id.threeDots);
+            activeBar = itemView.findViewById(R.id.status);
+
 
         }
 
-        private void bindData(final ArrayList<Node> nodes, final int i) {
+        private void bindData(ArrayList<Node> nodes, final int i) {
+            updateIcon(nodes.get(i));
             nodeName.setText(nodes.get(i).getName());
             nodeDuration.setText(Double.toString(nodes.get(i).getDuration()));
             if (nodes.get(i).getStartDate() != null) {
@@ -86,14 +95,27 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
                 changeStatus.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (nodes.get(i).isActive()) {
-                            ((Task) (nodes.get(i))).stopInterval();
+
+                        Node n = TreeViewerActivity.rootNode;
+                        if (TreeViewerActivity.path.isEmpty()) {
+                            n = (Node) ((ArrayList) ((Project) n).getActivities()).get(i);
+                        } else {
+                            for (int index : TreeViewerActivity.path) {
+                                n = (Node) ((ArrayList) ((Project) n).getActivities()).get(index);
+                            }
+                            n = (Node) ((ArrayList) ((Project) n).getActivities()).get(i);
+                        }
+
+
+                        if (n.isActive()) {
+                            ((Task) n).stopInterval();
                             Toast.makeText(itemView.getContext(), "stoping task", Toast.LENGTH_SHORT).show();
                         } else {
-                            ((Task) (nodes.get(i))).startInterval();
+                            ((Task) n).startInterval();
                             Toast.makeText(itemView.getContext(), "starting task", Toast.LENGTH_SHORT).show();
-
                         }
+                        updateIcon(n);
+
                     }
                 });
             }
@@ -102,23 +124,49 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(v.getContext(), TreeViewerActivity.class);
-                    intent.putExtra(TreeViewerActivity.ACTUAL_NODE, nodes.get(i));
+
+                    Node n = TreeViewerActivity.rootNode;
+                    if (TreeViewerActivity.path.isEmpty()) {
+                        n = (Node) ((ArrayList) ((Project) n).getActivities()).get(i);
+                    } else {
+                        for (int index : TreeViewerActivity.path) {
+                            n = (Node) ((ArrayList) ((Project) n).getActivities()).get(index);
+                        }
+                        n = (Node) ((ArrayList) ((Project) n).getActivities()).get(i);
+                    }
+                    TreeViewerActivity.path.add(i);
+
+                    intent.putExtra(TreeViewerActivity.ACTUAL_NODE, n);
                     v.getContext().startActivity(intent);
                 }
             });
 
-
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            threeDots.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public boolean onLongClick(View v) {
-                    nodeEndDate.setVisibility(View.VISIBLE);
-                    nodeEndDate.setVisibility(View.VISIBLE);
-                    return true;
+                public void onClick(View v) {
+                    v.showContextMenu();
                 }
             });
         }
+
+        private void updateIcon(Node node) {
+            if (node.isActive()) {
+                changeStatus.setImageResource(R.drawable.ic_media_pause_light);
+                activeBar.setVisibility(View.VISIBLE);
+                nodeName.setTypeface(Typeface.DEFAULT_BOLD);
+                nodeDuration.setTypeface(Typeface.DEFAULT_BOLD);
+            } else {
+                changeStatus.setImageResource(R.drawable.ic_media_play_light);
+                activeBar.setVisibility(View.GONE);
+                nodeName.setTypeface(Typeface.DEFAULT);
+                nodeDuration.setTypeface(Typeface.DEFAULT);
+
+            }
+        }
+
 
 
     }
 
 }
+
