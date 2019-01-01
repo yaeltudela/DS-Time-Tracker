@@ -1,10 +1,15 @@
 package com.dstimetracker.devsodin.ds_timetracker;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -46,7 +51,11 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
     }
 
 
-    public static class NodeViewHolder extends RecyclerView.ViewHolder {
+    public Node getNodebyPosition(int position) {
+        return nodes.get(position);
+    }
+
+    public static class NodeViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
 
         TextView nodeName;
         TextView nodeDuration;
@@ -57,9 +66,29 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
         TextView threeDots;
         ImageView activeBar;
 
+        Node node;
+        private final MenuItem.OnMenuItemClickListener onMenuItemClickListener = new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case 1:
+                        showDetails();
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        removeNode();
+                        break;
+                    default:
+                        return true;
+                }
+                return true;
+            }
+        };
 
         public NodeViewHolder(@NonNull View itemView) {
             super(itemView);
+            itemView.setOnCreateContextMenuListener(this);
 
             nodeName = itemView.findViewById(R.id.nodeNameText);
             nodeDuration = itemView.findViewById(R.id.nodeDurationText);
@@ -73,6 +102,7 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
         }
 
         private void bindData(ArrayList<Node> nodes, final int i) {
+            this.node = nodes.get(i);
             updateIcon(nodes.get(i));
             nodeName.setText(nodes.get(i).getName());
             nodeDuration.setText(Double.toString(nodes.get(i).getDuration()));
@@ -161,11 +191,61 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
                 nodeName.setTypeface(Typeface.DEFAULT);
                 nodeDuration.setTypeface(Typeface.DEFAULT);
 
+
             }
         }
 
+        @Override
+        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+            MenuItem details = menu.add(Menu.NONE, 1, 1, R.string.detailsMenuEdit);
+            MenuItem edit = menu.add(Menu.NONE, 2, 2, R.string.editMenuEdit);
+            MenuItem delete = menu.add(Menu.NONE, 3, 3, R.string.removeMenuEdit);
+
+            details.setOnMenuItemClickListener(onMenuItemClickListener);
+            edit.setOnMenuItemClickListener(onMenuItemClickListener);
+            delete.setOnMenuItemClickListener(onMenuItemClickListener);
+
+        }
+
+        private void showDetails() {
+            Toast.makeText(itemView.getContext(), "testmenu", Toast.LENGTH_SHORT).show();
+            AlertDialog.Builder detailsDialog = new AlertDialog.Builder(itemView.getContext());
+            detailsDialog.setTitle(R.string.detailsMenuEdit);
+
+            final View detailsView = LayoutInflater.from(itemView.getContext()).inflate(R.layout.node_details, null);
+            detailsDialog.setView(detailsView);
+
+            detailsDialog.setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
 
 
+            detailsDialog.create();
+
+
+            detailsDialog.show();
+
+            TextView name = detailsView.findViewById(R.id.nameDetails);
+            TextView description = detailsView.findViewById(R.id.descriptionDetails);
+            TextView startDate = detailsView.findViewById(R.id.startDateDetails);
+            TextView endDate = detailsView.findViewById(R.id.endDateDetails);
+            TextView duration = detailsView.findViewById(R.id.durationDetails);
+
+            name.setText(node.getName());
+            description.setText(node.getDescription());
+            startDate.setText(node.getStartDate().toString());
+            endDate.setText(node.getEndDate().toString());
+            duration.setText(Long.toString(node.getDuration()));
+
+        }
+
+
+        private void removeNode() {
+
+        }
     }
 
 }

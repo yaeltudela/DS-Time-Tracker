@@ -67,6 +67,11 @@ public class Project extends Node implements Serializable, Visitable {
      */
     @Override
     public void updateData(final Date time) {
+        this.setActive(true);
+        if (time.equals(getEndDate())) {
+            setActive(false);
+        }
+
         if (this.getStartDate() == null) {
             this.setStartDate(time);
         }

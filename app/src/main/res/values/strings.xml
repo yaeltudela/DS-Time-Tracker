@@ -59,8 +59,16 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
     <string name="detailsMenuEdit">Details</string>
+    <string name="editMenuEdit">Edit</string>
+    <string name="removeMenuEdit">Remove</string>
     <string name="name">Name</string>
     <string name="description">Description</string>
+    <string name="StartDate">Start Date</string>
+    <string name="EndDate">End Date</string>
+    <string name="okay">Okay</string>
+    <string name="defaultDescription">No description provided</string>
+    <string name="defaultDate">None</string>
+    <string name="duration">Duration</string>
 
 
 </resources>

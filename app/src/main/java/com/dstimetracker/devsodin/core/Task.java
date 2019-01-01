@@ -76,6 +76,7 @@ public abstract class Task extends Node implements Serializable {
             throw new IllegalStateException("Task isn't running");
         }
 
+        this.getParent().updateData(this.getEndDate());
 
         //Post-conditions
         assert (this.isActive()) : "Task is already stopped";

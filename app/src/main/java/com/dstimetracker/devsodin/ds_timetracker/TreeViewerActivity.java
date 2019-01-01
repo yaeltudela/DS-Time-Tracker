@@ -14,10 +14,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.ContextMenu;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.dstimetracker.devsodin.core.BaseTask;
@@ -37,7 +34,7 @@ public class TreeViewerActivity extends AppCompatActivity
     public static final String ACTUAL_NODE = "ACTUAL_NODE";
     private RecyclerView rv;
     private RecyclerView.LayoutManager layoutManager;
-    private RecyclerView.Adapter adapter;
+    RecyclerView.Adapter adapter;
     private SpeedDialView mSpeedDialView;
     public static Node rootNode;
     private Toolbar toolbar;
@@ -213,23 +210,17 @@ public class TreeViewerActivity extends AppCompatActivity
 
     private void makeNewProject() {
         Toast.makeText(TreeViewerActivity.this, "new project", Toast.LENGTH_SHORT).show();
-        getSupportFragmentManager().beginTransaction().replace(android.R.id.content, new NewNodeDialog()).commit();
+        getSupportFragmentManager().beginTransaction().replace(android.R.id.content, NewNodeDialog.newInstance(false)).addToBackStack(null).commit();
     }
 
     private void makeNewTask() {
         Toast.makeText(TreeViewerActivity.this, "new task", Toast.LENGTH_SHORT).show();
+        getSupportFragmentManager().beginTransaction().replace(android.R.id.content, NewNodeDialog.newInstance(true)).addToBackStack(null).commit();
+
     }
 
     private void makeNewInterval() {
         Toast.makeText(TreeViewerActivity.this, "new interval", Toast.LENGTH_SHORT).show();
-    }
-
-
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        getMenuInflater().inflate(R.menu.node_menu, menu);
-
     }
 
     @Override
@@ -245,12 +236,6 @@ public class TreeViewerActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.tree_viewer, menu);
-        return true;
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -302,4 +287,6 @@ public class TreeViewerActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
 }
