@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ReportSettingsActivity">
+    tools:context=".ReportSettingsActivity"
+    tools:layout_editor_absoluteY="25dp">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -21,154 +22,145 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+
+    <Button
+        android:id="@+id/fromSelect_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appBarLayout">
+        android:layout_weight="1"
+        android:gravity="center"
+        android:onClick="fromSelect_btn_onClick"
+        android:text="FROM"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1.5"
-            android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/fromSelect_btn"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="10dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:onClick="fromSelect_btn_onClick"
-                android:text="FROM" />
+    <Button
+        android:id="@+id/toSelect_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="20dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:onClick="toSelect_btn_onClick"
+        android:text="TO"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fromSelect_btn" />
 
-            <EditText
-                android:id="@+id/fromSelect_etxt"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="10dp"
-                android:layout_weight="1"
-                android:ems="10"
-                android:enabled="false"
-                android:gravity="center"
-                android:inputType="textPersonName" />
-        </LinearLayout>
+    <EditText
+        android:id="@+id/fromSelect_etxt"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_weight="1"
+        android:ems="10"
+        android:enabled="false"
+        android:gravity="center"
+        android:inputType="textPersonName"
+        app:layout_constraintBaseline_toBaselineOf="@+id/fromSelect_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/fromSelect_btn" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1.5"
-            android:orientation="horizontal">
+    <EditText
+        android:id="@+id/toSelect_etxt"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_weight="1"
+        android:ems="10"
+        android:enabled="false"
+        android:gravity="center"
+        android:inputType="textPersonName"
+        app:layout_constraintBaseline_toBaselineOf="@+id/toSelect_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/toSelect_btn" />
 
-            <Button
-                android:id="@+id/toSelect_btn"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="10dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:onClick="toSelect_btn_onClick"
-                android:text="TO" />
 
-            <EditText
-                android:id="@+id/toSelect_etxt"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="10dp"
-                android:layout_weight="1"
-                android:ems="10"
-                android:enabled="false"
-                android:gravity="center"
-                android:inputType="textPersonName" />
-        </LinearLayout>
+    <TextView
+        android:id="@+id/reportType_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="8dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="TYPE"
+        app:layout_constraintEnd_toEndOf="@+id/toSelect_btn"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toSelect_btn" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1.5"
-            android:orientation="horizontal">
+    <RadioGroup
+        android:id="@+id/reportType_rg"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/reportType_txt"
+        app:layout_constraintTop_toBottomOf="@+id/toSelect_btn">
 
-            <TextView
-                android:id="@+id/reportType_txt"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="TYPE" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <RadioGroup
-                    android:id="@+id/reportType_rg"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <RadioButton
-                        android:id="@+id/shortType_rb"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="SHORT" />
-
-                    <RadioButton
-                        android:id="@+id/detailType_rb"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="DETAIL" />
-                </RadioGroup>
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1.5"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/format_txt"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="FORMAT" />
-
-            <Spinner
-                android:id="@+id/format_sp"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+        <RadioButton
+            android:id="@+id/shortType_rb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="bottom"
-            android:orientation="horizontal">
+            android:text="@string/Short" />
 
-            <Button
-                android:id="@+id/generate_btn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:onClick="generate_btn_onClick"
-                android:text="GENERATE" />
+        <RadioButton
+            android:id="@+id/detailType_rb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/detailed" />
+    </RadioGroup>
 
-        </LinearLayout>
-    </LinearLayout>
+    <TextView
+        android:id="@+id/format_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="56dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="FORMAT"
+        app:layout_constraintEnd_toEndOf="@+id/reportType_txt"
+        app:layout_constraintTop_toBottomOf="@+id/reportType_txt" />
+
+    <Spinner
+        android:id="@+id/format_sp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_weight="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/format_txt"
+        app:layout_constraintTop_toTopOf="@+id/format_txt" />
+
+
+    <Button
+        android:id="@+id/generate_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:onClick="generate_btn_onClick"
+        android:text="@string/generate_report"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 
 </android.support.constraint.ConstraintLayout>

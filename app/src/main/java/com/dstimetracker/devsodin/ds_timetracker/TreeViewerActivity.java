@@ -43,6 +43,7 @@ public class TreeViewerActivity extends AppCompatActivity
     public static ArrayList<Integer> path;
     private static DataManager dataManager;
     public static Node node;
+    boolean isWatching;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +79,7 @@ public class TreeViewerActivity extends AppCompatActivity
                 node = createTreeProjects();
                 dataManager.saveData((Project) node);
             }
+
         }
 
         Intent intent = getIntent();
@@ -105,16 +107,6 @@ public class TreeViewerActivity extends AppCompatActivity
         if (rootNode == null) {
             rootNode = node;
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-
-        if (TreeViewerActivity.dataManager != null) {
-            TreeViewerActivity.dataManager.saveData((Project) rootNode);
-        }
-
-        super.onDestroy();
     }
 
     void setUpScreenElements() {
@@ -209,20 +201,19 @@ public class TreeViewerActivity extends AppCompatActivity
 
 
     private void makeNewProject() {
-        Toast.makeText(TreeViewerActivity.this, "new project", Toast.LENGTH_SHORT).show();
         getSupportFragmentManager().beginTransaction().replace(android.R.id.content, NewNodeDialog.newInstance(false)).addToBackStack(null).commit();
         adapter.notifyDataSetChanged();
     }
 
     private void makeNewTask() {
-        Toast.makeText(TreeViewerActivity.this, "new task", Toast.LENGTH_SHORT).show();
         getSupportFragmentManager().beginTransaction().replace(android.R.id.content, NewNodeDialog.newInstance(true)).addToBackStack(null).commit();
         adapter.notifyDataSetChanged();
     }
 
     private void makeNewInterval() {
-        Toast.makeText(TreeViewerActivity.this, "new interval", Toast.LENGTH_SHORT).show();
+        Toast.makeText(TreeViewerActivity.this, "Not implemented yet. TODO, dialog for manual intervals", Toast.LENGTH_LONG).show();
     }
+
 
     @Override
     public void onBackPressed() {
@@ -239,17 +230,57 @@ public class TreeViewerActivity extends AppCompatActivity
 
 
     @Override
+    protected void onDestroy() {
+
+        if (TreeViewerActivity.dataManager != null) {
+            TreeViewerActivity.dataManager.saveData((Project) rootNode);
+        }
+
+        super.onDestroy();
+    }
+
+
+    //Actionbar menu
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.searchMenu:
                 Intent intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
                 return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
+    //Navbar
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.nav_active:
+                startActivity(new Intent(this, ActiveNodesActivity.class));
+                break;
+            case R.id.nav_reports:
+                startActivity(new Intent(this, ReportSettingsActivity.class));
+                break;
+            case R.id.nav_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                break;
+        }
+
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    //Auxiliary
     private Project createTreeProjects() {
         Project root = new Project("root", "", null);
         Project p1 = new Project("P1", "P1 desc", root);
@@ -272,21 +303,6 @@ public class TreeViewerActivity extends AppCompatActivity
         return root;
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
 
-        if (id == R.id.nav_reports) {
-            startActivity(new Intent(this, ReportSettingsActivity.class));
-        } else if (id == R.id.nav_send) {
-
-        }
-
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
 
 }

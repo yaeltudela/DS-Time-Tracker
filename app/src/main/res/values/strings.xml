@@ -70,6 +70,10 @@
     <string name="defaultDate">None</string>
     <string name="duration">Duration</string>
     <string name="reports">Reports</string>
+    <string name="Short">Short</string>
+    <string name="detailed">Detailed</string>
+    <string name="generate_report">Generate Report</string>
+    <string name="active_task">Active Task</string>
 
 
 </resources>
