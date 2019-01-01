@@ -69,6 +69,7 @@
     <string name="defaultDescription">No description provided</string>
     <string name="defaultDate">None</string>
     <string name="duration">Duration</string>
+    <string name="reports">Reports</string>
 
 
 </resources>

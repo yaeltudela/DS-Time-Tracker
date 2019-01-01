@@ -1,7 +1,6 @@
 package com.dstimetracker.devsodin.ds_timetracker;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -90,15 +89,6 @@ public class NewNodeDialog extends DialogFragment {
     }
 
 
-    @Override
-    public void onDismiss(DialogInterface dialog) {
-        if (getActivity() != null) {
-            TreeViewerActivity treeViewerActivity = (TreeViewerActivity) getActivity();
-            treeViewerActivity.adapter.notifyItemInserted(treeViewerActivity.adapter.getItemCount());
-
-        }
-        super.onDismiss(dialog);
-    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

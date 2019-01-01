@@ -21,14 +21,16 @@ import com.dstimetracker.devsodin.core.Node;
 import com.dstimetracker.devsodin.core.Project;
 import com.dstimetracker.devsodin.core.Task;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder> {
-    private ArrayList<Node> nodes;
+    private static ArrayList<Node> nodes;
 
 
     public NodeAdapter(ArrayList<Node> nodes) {
-        this.nodes = nodes;
+        NodeAdapter.nodes = nodes;
     }
 
     @NonNull
@@ -36,11 +38,12 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
     public NodeViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.node_layout, viewGroup, false);
         return new NodeViewHolder(view);
+
     }
 
     @Override
     public void onBindViewHolder(@NonNull NodeViewHolder nodeViewHolder, int i) {
-        nodeViewHolder.bindData(this.nodes, i);
+        nodeViewHolder.bindData(nodes, i);
 
     }
 
@@ -50,23 +53,14 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
         return nodes.size();
     }
 
-
-    public Node getNodebyPosition(int position) {
-        return nodes.get(position);
+    private void removeNode(Node node) {
+        int index = nodes.indexOf(node);
+        nodes.remove(node);
+        notifyItemRemoved(index);
     }
 
-    public static class NodeViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
+    public class NodeViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
 
-        TextView nodeName;
-        TextView nodeDuration;
-        TextView nodeStartDate;
-        TextView nodeEndDate;
-
-        ImageButton changeStatus;
-        TextView threeDots;
-        ImageView activeBar;
-
-        Node node;
         private final MenuItem.OnMenuItemClickListener onMenuItemClickListener = new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -77,7 +71,8 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
                     case 2:
                         break;
                     case 3:
-                        removeNode();
+                        removeNode(node);
+                        Toast.makeText(itemView.getContext(), "nyaaaa", Toast.LENGTH_SHORT).show();
                         break;
                     default:
                         return true;
@@ -85,6 +80,17 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
                 return true;
             }
         };
+        TextView nodeName;
+        TextView nodeDuration;
+        TextView nodeStartDate;
+        TextView nodeEndDate;
+
+        ImageButton changeStatus;
+        TextView threeDots;
+        ImageView activeBar;
+
+        Node node;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM - kk:mm", Locale.ENGLISH);
 
         public NodeViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -105,19 +111,14 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
             this.node = nodes.get(i);
             updateIcon(nodes.get(i));
             nodeName.setText(nodes.get(i).getName());
-            nodeDuration.setText(Double.toString(nodes.get(i).getDuration()));
+            nodeDuration.setText(Double.toString(nodes.get(i).getDuration()) + " secs.");
             if (nodes.get(i).getStartDate() != null) {
-                nodeStartDate.setText(nodes.get(i).getStartDate().toString());
+                nodeStartDate.setText(simpleDateFormat.format(nodes.get(i).getStartDate()));
+                nodeEndDate.setText(simpleDateFormat.format(nodes.get(i).getEndDate()));
             } else {
                 nodeStartDate.setText("---");
-            }
-            nodeStartDate.setVisibility(View.GONE);
-            if (nodes.get(i).getEndDate() != null) {
-                nodeEndDate.setText(nodes.get(i).getEndDate().toString());
-            } else {
                 nodeEndDate.setText("---");
             }
-            nodeEndDate.setVisibility(View.GONE);
 
             if (!nodes.get(i).isTask()) {
                 changeStatus.setVisibility(View.GONE);
@@ -177,6 +178,8 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
                     v.showContextMenu();
                 }
             });
+
+
         }
 
         private void updateIcon(Node node) {
@@ -242,11 +245,8 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
 
         }
 
-
-        private void removeNode() {
-
-        }
     }
+
 
 }
 

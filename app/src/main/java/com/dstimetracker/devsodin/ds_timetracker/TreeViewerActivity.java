@@ -211,12 +211,13 @@ public class TreeViewerActivity extends AppCompatActivity
     private void makeNewProject() {
         Toast.makeText(TreeViewerActivity.this, "new project", Toast.LENGTH_SHORT).show();
         getSupportFragmentManager().beginTransaction().replace(android.R.id.content, NewNodeDialog.newInstance(false)).addToBackStack(null).commit();
+        adapter.notifyDataSetChanged();
     }
 
     private void makeNewTask() {
         Toast.makeText(TreeViewerActivity.this, "new task", Toast.LENGTH_SHORT).show();
         getSupportFragmentManager().beginTransaction().replace(android.R.id.content, NewNodeDialog.newInstance(true)).addToBackStack(null).commit();
-
+        adapter.notifyDataSetChanged();
     }
 
     private void makeNewInterval() {
@@ -277,8 +278,8 @@ public class TreeViewerActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_share) {
-
+        if (id == R.id.nav_reports) {
+            startActivity(new Intent(this, ReportSettingsActivity.class));
         } else if (id == R.id.nav_send) {
 
         }
@@ -287,6 +288,5 @@ public class TreeViewerActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
 
 }

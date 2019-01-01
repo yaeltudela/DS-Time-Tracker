@@ -6,9 +6,9 @@
     <item android:title="Projects">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
+                android:id="@+id/nav_reports"
+                android:icon="@drawable/ic_menu_slideshow"
+                android:title="@string/reports" />
         </menu>
     </item>
 
