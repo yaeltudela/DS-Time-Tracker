@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Time Tracker</string>
+    <string name="rootProjectsText">Proyectos Raiz</string>
+    <string name="pause_all">Pausar todas</string>
+    <string name="resume_all">Retomar todas</string>
+    <string name="active_task">Tarea Activa</string>
+    <string name="generate_report">Generar informe</string>
+    <string name="detailed">Detallado</string>
+    <string name="Short">Corto</string>
+    <string name="name">Nombre</string>
+    <string name="StartDate">Fecha inicial</string>
+    <string name="EndDate">Fecha final</string>
+    <string name="okay">Okay</string>
+    <string name="settingsTitle">Ajustes</string>
+    <string name="nodeMenuDelete">Borrar</string>
+    <string name="nodeMenuEdit">Editar</string>
+    <string name="saveString">Guardar</string>
+    <string name="newTaskString">Nueva Tarea</string>
+    <string name="newIntervalString">Nuevo Intervalo</string>
+    <string name="newTaskTitleText">Añadir Tarea</string>
+    <string name="newProjectTitleText">Añadir Proyecto</string>
+    <string name="newProjectString">Nuevo Proyecto</string>
+    <string name="language">Idioma</string>
+    <string name="duration">Duración</string>
+    <string name="reports">Informes</string>
+    <string name="action_settings">Ajustes</string>
+    <string name="searchText">Buscar</string>
+</resources>

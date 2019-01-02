@@ -15,6 +15,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dstimetracker.devsodin.core.BaseTask;
@@ -43,13 +45,14 @@ public class TreeViewerActivity extends AppCompatActivity
     public static ArrayList<Integer> path;
     private static DataManager dataManager;
     public static Node node;
-    boolean isWatching;
+    private TextView defaultText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tree_viewer);
 
+        defaultText = findViewById(R.id.noRootProjects);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -91,18 +94,27 @@ public class TreeViewerActivity extends AppCompatActivity
             }
         }
         setUpScreenElements();
-        layoutManager = new LinearLayoutManager(this);
-        ArrayList nodes;
-        if (node.isTask()) {
-            nodes = ((Task) node).getIntervals();
-            adapter = new IntervalAdapter(nodes);
+        if (node != null) {
+            rv.setVisibility(View.VISIBLE);
+            defaultText.setVisibility(View.INVISIBLE);
+
+            layoutManager = new LinearLayoutManager(this);
+            ArrayList nodes;
+            if (node.isTask()) {
+                nodes = ((Task) node).getIntervals();
+                adapter = new IntervalAdapter(nodes);
+            } else {
+                nodes = (ArrayList<Node>) ((Project) node).getActivities();
+                adapter = new NodeAdapter(nodes);
+            }
+            rv.setAdapter(adapter);
+            rv.setLayoutManager(new LinearLayoutManager(this));
+            rv.setItemAnimator(new DefaultItemAnimator());
         } else {
-            nodes = (ArrayList<Node>) ((Project) node).getActivities();
-            adapter = new NodeAdapter(nodes);
+            rv.setVisibility(View.INVISIBLE);
+            defaultText.setVisibility(View.VISIBLE);
+
         }
-        rv.setAdapter(adapter);
-        rv.setLayoutManager(new LinearLayoutManager(this));
-        rv.setItemAnimator(new DefaultItemAnimator());
 
         if (rootNode == null) {
             rootNode = node;
@@ -201,12 +213,13 @@ public class TreeViewerActivity extends AppCompatActivity
 
 
     private void makeNewProject() {
-        getSupportFragmentManager().beginTransaction().replace(android.R.id.content, NewNodeDialog.newInstance(false)).addToBackStack(null).commit();
+
+        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.sd_fade_and_translate_in, R.anim.sd_fade_and_translate_out).replace(android.R.id.content, NewNodeDialog.newInstance(false)).addToBackStack(null).commit();
         adapter.notifyDataSetChanged();
     }
 
     private void makeNewTask() {
-        getSupportFragmentManager().beginTransaction().replace(android.R.id.content, NewNodeDialog.newInstance(true)).addToBackStack(null).commit();
+        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.sd_fade_and_translate_in, R.anim.sd_fade_and_translate_out).replace(android.R.id.content, NewNodeDialog.newInstance(true)).addToBackStack(null).commit();
         adapter.notifyDataSetChanged();
     }
 
@@ -264,10 +277,12 @@ public class TreeViewerActivity extends AppCompatActivity
 
         switch (id) {
             case R.id.nav_active:
-                startActivity(new Intent(this, ActiveNodesActivity.class));
+                Intent activeActivity = new Intent(this, ActiveNodesActivity.class);
+                activeActivity.putExtra("rootNode", TreeViewerActivity.rootNode);
+                startActivity(activeActivity);
                 break;
             case R.id.nav_reports:
-                startActivity(new Intent(this, ReportSettingsActivity.class));
+                startActivity(new Intent(this, ReportGenerator.class));
                 break;
             case R.id.nav_settings:
                 startActivity(new Intent(this, SettingsActivity.class));

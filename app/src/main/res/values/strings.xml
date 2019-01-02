@@ -51,7 +51,8 @@
         <item>ca</item>
         <item>en</item>
     </string-array>
-    <string name="title_activity_tree_viewer">TreeViewerActivity</string>
+
+    <string name="title_activity_tree_viewer">Time Tracker</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
@@ -74,6 +75,12 @@
     <string name="detailed">Detailed</string>
     <string name="generate_report">Generate Report</string>
     <string name="active_task">Active Task</string>
+    <string name="pause_all">Pause all</string>
+    <string name="resume_all">Resume all</string>
+    <string name="no_active_task">There\'s no active task now.</string>
+    <string name="cancel">Cancel</string>
+    <string name="id">id</string>
+    <string name="noRootProjects">There are no projects. Press + to add the first one</string>
 
 
 </resources>

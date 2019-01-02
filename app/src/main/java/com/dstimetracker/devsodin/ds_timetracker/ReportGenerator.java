@@ -25,7 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 
-public class ReportSettingsActivity extends AppCompatActivity {
+public class ReportGenerator extends AppCompatActivity {
 
     private EditText fromSelect_etxt, toSelect_etxt;
     private Spinner format_sp;
@@ -37,7 +37,7 @@ public class ReportSettingsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_report_settings);
+        setContentView(R.layout.reports_layout);
         dateFormat = new SimpleDateFormat("HH:mm dd-MM-yy");
         setViewControl();
         setDefaultValue();
@@ -85,7 +85,7 @@ public class ReportSettingsActivity extends AppCompatActivity {
         new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, final int year, final int month, final int dayOfMonth) {
-                new TimePickerDialog(ReportSettingsActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                new TimePickerDialog(ReportGenerator.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         cal.set(Calendar.YEAR, year);
@@ -106,7 +106,7 @@ public class ReportSettingsActivity extends AppCompatActivity {
         new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, final int year, final int month, final int dayOfMonth) {
-                new TimePickerDialog(ReportSettingsActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                new TimePickerDialog(ReportGenerator.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         cal.set(Calendar.YEAR, year);

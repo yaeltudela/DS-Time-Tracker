@@ -66,13 +66,14 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case 1:
-                        showDetails();
+                        showDetailsDialog();
                         break;
                     case 2:
+                        showEditDialog();
                         break;
                     case 3:
                         removeNode(node);
-                        Toast.makeText(itemView.getContext(), "nyaaaa", Toast.LENGTH_SHORT).show();
+                        notifyDataSetChanged();
                         break;
                     default:
                         return true;
@@ -80,6 +81,8 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
                 return true;
             }
         };
+
+
         TextView nodeName;
         TextView nodeDuration;
         TextView nodeStartDate;
@@ -140,7 +143,7 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
 
                         if (n.isActive()) {
                             ((Task) n).stopInterval();
-                            Toast.makeText(itemView.getContext(), "stoping task", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(itemView.getContext(), "stopping task", Toast.LENGTH_SHORT).show();
                         } else {
                             ((Task) n).startInterval();
                             Toast.makeText(itemView.getContext(), "starting task", Toast.LENGTH_SHORT).show();
@@ -210,8 +213,7 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
 
         }
 
-        private void showDetails() {
-            Toast.makeText(itemView.getContext(), "testmenu", Toast.LENGTH_SHORT).show();
+        private void showDetailsDialog() {
             AlertDialog.Builder detailsDialog = new AlertDialog.Builder(itemView.getContext());
             detailsDialog.setTitle(R.string.detailsMenuEdit);
 
@@ -242,6 +244,43 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
             startDate.setText(node.getStartDate().toString());
             endDate.setText(node.getEndDate().toString());
             duration.setText(Long.toString(node.getDuration()));
+
+        }
+
+        private void showEditDialog() {
+            AlertDialog.Builder editDialog = new AlertDialog.Builder(itemView.getContext());
+            editDialog.setTitle(R.string.editMenuEdit);
+
+            final View detailsView = LayoutInflater.from(itemView.getContext()).inflate(R.layout.edit_node, null);
+            editDialog.setView(detailsView);
+
+            editDialog.create();
+
+            final TextView name = detailsView.findViewById(R.id.editName);
+            final TextView description = detailsView.findViewById(R.id.editDescription);
+            name.setText(node.getName());
+            description.setText(node.getDescription());
+
+            editDialog.setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    node.setName(name.getText().toString());
+                    node.setDescription(description.getText().toString());
+                    notifyDataSetChanged();
+                    dialog.dismiss();
+                }
+            });
+
+            editDialog.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+
+
+            editDialog.show();
+
 
         }
 
