@@ -15,17 +15,21 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.dstimetracker.devsodin.core.Node;
-import com.dstimetracker.devsodin.core.Project;
-import com.dstimetracker.devsodin.core.Task;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
 public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder> {
+    public static final String START = "start";
+    public static final String STOP = "stop";
+    public static final String REMOVE = "remove";
+    public static final String EDIT = "edit";
+    public static final String CHILDREN = "CHILDREN";
+
+
     private static ArrayList<Node> nodes;
 
 
@@ -51,12 +55,6 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
     @Override
     public int getItemCount() {
         return nodes.size();
-    }
-
-    private void removeNode(Node node) {
-        int index = nodes.indexOf(node);
-        nodes.remove(node);
-        notifyItemRemoved(index);
     }
 
     public class NodeViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
@@ -110,6 +108,16 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
 
         }
 
+        private void removeNode(Node node) {
+
+            Intent broadcast = new Intent(REMOVE);
+            broadcast.putExtra("type", REMOVE);
+            broadcast.putExtra("node", getAdapterPosition());
+
+            itemView.getContext().sendBroadcast(broadcast);
+
+        }
+
         private void bindData(ArrayList<Node> nodes, final int i) {
             this.node = nodes.get(i);
             updateIcon(nodes.get(i));
@@ -129,26 +137,17 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
                 changeStatus.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
-                        Node n = TreeViewerActivity.rootNode;
-                        if (TreeViewerActivity.path.isEmpty()) {
-                            n = (Node) ((ArrayList) ((Project) n).getActivities()).get(i);
+                        Intent intent;
+                        if (node.isActive()) {
+                            intent = new Intent(STOP);
+                            intent.putExtra("type", STOP);
                         } else {
-                            for (int index : TreeViewerActivity.path) {
-                                n = (Node) ((ArrayList) ((Project) n).getActivities()).get(index);
-                            }
-                            n = (Node) ((ArrayList) ((Project) n).getActivities()).get(i);
+                            intent = new Intent(START);
+                            intent.putExtra("type", START);
                         }
-
-
-                        if (n.isActive()) {
-                            ((Task) n).stopInterval();
-                            Toast.makeText(itemView.getContext(), "stopping task", Toast.LENGTH_SHORT).show();
-                        } else {
-                            ((Task) n).startInterval();
-                            Toast.makeText(itemView.getContext(), "starting task", Toast.LENGTH_SHORT).show();
-                        }
-                        updateIcon(n);
+                        intent.putExtra("nodePosition", getAdapterPosition());
+                        itemView.getContext().sendBroadcast(intent);
+                        updateIcon(node);
 
                     }
                 });
@@ -157,21 +156,11 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(v.getContext(), TreeViewerActivity.class);
-
-                    Node n = TreeViewerActivity.rootNode;
-                    if (TreeViewerActivity.path.isEmpty()) {
-                        n = (Node) ((ArrayList) ((Project) n).getActivities()).get(i);
-                    } else {
-                        for (int index : TreeViewerActivity.path) {
-                            n = (Node) ((ArrayList) ((Project) n).getActivities()).get(index);
-                        }
-                        n = (Node) ((ArrayList) ((Project) n).getActivities()).get(i);
-                    }
-                    TreeViewerActivity.path.add(i);
-
-                    intent.putExtra(TreeViewerActivity.ACTUAL_NODE, n);
-                    v.getContext().startActivity(intent);
+                    Intent intent = new Intent(CHILDREN);
+                    intent.putExtra("type", CHILDREN);
+                    intent.putExtra("nodePosition", getAdapterPosition());
+                    v.getContext().sendBroadcast(intent);
+                    notifyDataSetChanged();
                 }
             });
 
@@ -241,8 +230,10 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
 
             name.setText(node.getName());
             description.setText(node.getDescription());
-            startDate.setText(node.getStartDate().toString());
-            endDate.setText(node.getEndDate().toString());
+            if (node.getStartDate() != null) {
+                startDate.setText(node.getStartDate().toString());
+                endDate.setText(node.getEndDate().toString());
+            }
             duration.setText(Long.toString(node.getDuration()));
 
         }
@@ -251,13 +242,13 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
             AlertDialog.Builder editDialog = new AlertDialog.Builder(itemView.getContext());
             editDialog.setTitle(R.string.editMenuEdit);
 
-            final View detailsView = LayoutInflater.from(itemView.getContext()).inflate(R.layout.edit_node, null);
-            editDialog.setView(detailsView);
+            final View editView = LayoutInflater.from(itemView.getContext()).inflate(R.layout.edit_node, null);
+            editDialog.setView(editView);
 
             editDialog.create();
 
-            final TextView name = detailsView.findViewById(R.id.editName);
-            final TextView description = detailsView.findViewById(R.id.editDescription);
+            final TextView name = editView.findViewById(R.id.editName);
+            final TextView description = editView.findViewById(R.id.editDescription);
             name.setText(node.getName());
             description.setText(node.getDescription());
 
@@ -266,7 +257,11 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
                 public void onClick(DialogInterface dialog, int which) {
                     node.setName(name.getText().toString());
                     node.setDescription(description.getText().toString());
-                    notifyDataSetChanged();
+
+                    Intent broadcast = new Intent(EDIT);
+                    broadcast.putExtra("type", EDIT);
+                    itemView.getContext().sendBroadcast(broadcast);
+
                     dialog.dismiss();
                 }
             });

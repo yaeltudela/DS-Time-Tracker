@@ -1,6 +1,7 @@
 package com.dstimetracker.devsodin.ds_timetracker;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,11 +19,9 @@ import android.view.Window;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.dstimetracker.devsodin.core.BaseTask;
-import com.dstimetracker.devsodin.core.Node;
-import com.dstimetracker.devsodin.core.Project;
-
 public class NewNodeDialog extends DialogFragment {
+    public static final String NEW_TASK = "new_task";
+    public static final String NEW_PROJECT = "new_project";
     private EditText nodeName;
     private EditText nodeDescription;
     private boolean isTask;
@@ -103,12 +102,20 @@ public class NewNodeDialog extends DialogFragment {
             case R.id.saveMenu:
                 if (isDataOk()) {
                     if (isTask) {
-                        Node node = new BaseTask(nodeName.getText().toString(), nodeDescription.getText().toString(), (Project) TreeViewerActivity.node);
+                        Intent intent = new Intent(NEW_TASK);
+                        intent.putExtra("type", NEW_TASK);
+                        intent.putExtra("taskName", nodeName.getText().toString());
+                        intent.putExtra("taskDescription", nodeDescription.getText().toString());
+                        getContext().sendBroadcast(intent);
                     } else {
-                        Node node = new Project(nodeName.getText().toString(), nodeDescription.getText().toString(), (Project) TreeViewerActivity.node);
+                        Intent intent = new Intent(NEW_PROJECT);
+                        intent.putExtra("type", NEW_PROJECT);
+                        intent.putExtra("projectName", nodeName.getText().toString());
+                        intent.putExtra("projectDescription", nodeDescription.getText().toString());
+                        getContext().sendBroadcast(intent);
                     }
-                    Toast.makeText(this.getContext(), "Project added succesfully", Toast.LENGTH_LONG).show();
                     dismiss();
+
                 } else {
                     Toast.makeText(this.getContext(), "Project needs a name", Toast.LENGTH_LONG).show();
 
@@ -127,4 +134,6 @@ public class NewNodeDialog extends DialogFragment {
         return !nodeName.getText().toString().isEmpty();
 
     }
+
+
 }

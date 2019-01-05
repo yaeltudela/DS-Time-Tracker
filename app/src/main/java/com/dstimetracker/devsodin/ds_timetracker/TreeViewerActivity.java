@@ -1,6 +1,9 @@
 package com.dstimetracker.devsodin.ds_timetracker;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -14,6 +17,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -33,10 +37,10 @@ import java.util.ArrayList;
 public class TreeViewerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static final String ACTUAL_NODE = "ACTUAL_NODE";
     private RecyclerView rv;
-    private RecyclerView.LayoutManager layoutManager;
-    RecyclerView.Adapter adapter;
+    public static final String PARENT = "parent";
+    RecyclerView.Adapter nodeAdapter;
+    RecyclerView.Adapter intervalAdapter;
     private SpeedDialView mSpeedDialView;
     public static Node rootNode;
     private Toolbar toolbar;
@@ -44,8 +48,11 @@ public class TreeViewerActivity extends AppCompatActivity
     private SharedPreferences sharedPreferences;
     public static ArrayList<Integer> path;
     private static DataManager dataManager;
-    public static Node node;
+    private RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
     private TextView defaultText;
+    private Node node;
+    private Intent dataHolderService;
+    private BroadcastReceiver receiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +62,7 @@ public class TreeViewerActivity extends AppCompatActivity
         defaultText = findViewById(R.id.noRootProjects);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -73,52 +81,65 @@ public class TreeViewerActivity extends AppCompatActivity
 
         PreferenceManager.setDefaultValues(this, R.xml.app_preferences, false);
 
+        this.dataHolderService = new Intent(this, DataHolderService.class);
+        this.startService(dataHolderService);
+        this.receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.i("reciving", "reciving data");
+                Bundle bundle = intent.getExtras();
+                if (bundle != null) {
 
-        if (dataManager == null) {
-            path = new ArrayList<>();
-            dataManager = new DataManager(getFilesDir() + "/save.db");
-            node = (Project) dataManager.loadData();
-            if (node == null) {
-                node = createTreeProjects();
-                dataManager.saveData((Project) node);
+                    if (bundle.containsKey("stop")) {
+                        finish();
+                    } else {
+                        node = (Node) bundle.getSerializable("node");
+                        if (bundle.containsKey("updateDial")) {
+                            initSpeedDial();
+                        }
+                        updateScreenData();
+                    }
+
+                }
             }
+        };
 
-        }
-
-        Intent intent = getIntent();
-        Bundle extras = intent.getExtras();
-        if (extras != null) {
-            if (extras.containsKey(ACTUAL_NODE)) {
-                node = (Node) extras.get(ACTUAL_NODE);
-
-            }
-        }
         setUpScreenElements();
+
+    }
+
+    private void updateScreenData() {
         if (node != null) {
             rv.setVisibility(View.VISIBLE);
             defaultText.setVisibility(View.INVISIBLE);
-
-            layoutManager = new LinearLayoutManager(this);
-            ArrayList nodes;
             if (node.isTask()) {
-                nodes = ((Task) node).getIntervals();
-                adapter = new IntervalAdapter(nodes);
+                intervalAdapter = new IntervalAdapter(((Task) node).getIntervals());
+                rv.setAdapter(intervalAdapter);
+                intervalAdapter.notifyDataSetChanged();
             } else {
-                nodes = (ArrayList<Node>) ((Project) node).getActivities();
-                adapter = new NodeAdapter(nodes);
+                nodeAdapter = new NodeAdapter((ArrayList<Node>) ((Project) node).getActivities());
+                rv.setAdapter(nodeAdapter);
+                nodeAdapter.notifyDataSetChanged();
             }
-            rv.setAdapter(adapter);
-            rv.setLayoutManager(new LinearLayoutManager(this));
-            rv.setItemAnimator(new DefaultItemAnimator());
         } else {
             rv.setVisibility(View.INVISIBLE);
             defaultText.setVisibility(View.VISIBLE);
 
         }
+    }
 
-        if (rootNode == null) {
-            rootNode = node;
-        }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(DataHolderService.UPDATE_DATA);
+        registerReceiver(this.receiver, filter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(this.receiver);
     }
 
     void setUpScreenElements() {
@@ -129,61 +150,67 @@ public class TreeViewerActivity extends AppCompatActivity
         this.rv.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         this.rv.setItemAnimator(new DefaultItemAnimator());
         registerForContextMenu(this.rv);
+        rv.setLayoutManager(layoutManager);
 
         this.mSpeedDialView = findViewById(R.id.speedDial);
         this.speedDialOverlayLayout = findViewById(R.id.speedDialOverlay);
-        initSpeedDial();
 
     }
 
-    private void initSpeedDial() {
+    private void initRootSpeedDial() {
+        mSpeedDialView.setOnChangeListener(new SpeedDialView.OnChangeListener() {
+            @Override
+            public boolean onMainActionSelected() {
+                makeNewProject();
+                return false;
+            }
 
-        mSpeedDialView.setOverlayLayout(speedDialOverlayLayout);
-
-        if (!(node.getParent() == null && !node.isTask())) {
-            if (node.isTask()) {
-                //Only Add interval menu
-                mSpeedDialView.setOnChangeListener(new SpeedDialView.OnChangeListener() {
-                    @Override
-                    public boolean onMainActionSelected() {
-                        makeNewInterval();
-                        return false;
-                    }
-
-                    @Override
-                    public void onToggleChanged(boolean isOpen) {
-
-                    }
-                });
-            } else {
-
-                //Add task or project menu items
-                mSpeedDialView.addActionItem(
-                        new SpeedDialActionItem.Builder(R.id.fab_new_project, R.drawable.ic_audiotrack_light).setLabel(R.string.newProjectString)
-                                .create());
-                mSpeedDialView.addActionItem(
-                        new SpeedDialActionItem.Builder(R.id.fab_new_task, R.drawable.ic_dialog_close_dark).setLabel(R.string.newTaskString)
-                                .create());
-
+            @Override
+            public void onToggleChanged(boolean isOpen) {
 
             }
 
+        });
+    }
+
+    private void initTreeSpeedDial() {
+        //Add task or project menu items
+        mSpeedDialView.addActionItem(
+                new SpeedDialActionItem.Builder(R.id.fab_new_project, R.drawable.ic_audiotrack_light).setLabel(R.string.newProjectString)
+                        .create());
+        mSpeedDialView.addActionItem(
+                new SpeedDialActionItem.Builder(R.id.fab_new_task, R.drawable.ic_dialog_close_dark).setLabel(R.string.newTaskString)
+                        .create());
+    }
+
+    private void initIntervalSpeedDial() {
+        mSpeedDialView.setOnChangeListener(new SpeedDialView.OnChangeListener() {
+            @Override
+            public boolean onMainActionSelected() {
+                makeNewInterval();
+                return false;
+            }
+
+            @Override
+            public void onToggleChanged(boolean isOpen) {
+
+            }
+        });
+    }
+
+
+    private void initSpeedDial() {
+        mSpeedDialView.setOverlayLayout(speedDialOverlayLayout);
+        mSpeedDialView.clearActionItems();
+        mSpeedDialView.setOnChangeListener(null);
+
+        if (node.getParent() == null) {
+            initRootSpeedDial();
+        } else if (node.isTask()) {
+            initIntervalSpeedDial();
         } else {
-            mSpeedDialView.setOnChangeListener(new SpeedDialView.OnChangeListener() {
-                @Override
-                public boolean onMainActionSelected() {
-                    makeNewProject();
-                    return false;
-                }
-
-                @Override
-                public void onToggleChanged(boolean isOpen) {
-
-                }
-
-            });
+            initTreeSpeedDial();
         }
-
 
         mSpeedDialView.setOnActionSelectedListener(new SpeedDialView.OnActionSelectedListener() {
             @Override
@@ -215,16 +242,15 @@ public class TreeViewerActivity extends AppCompatActivity
     private void makeNewProject() {
 
         getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.sd_fade_and_translate_in, R.anim.sd_fade_and_translate_out).replace(android.R.id.content, NewNodeDialog.newInstance(false)).addToBackStack(null).commit();
-        adapter.notifyDataSetChanged();
     }
 
     private void makeNewTask() {
         getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.sd_fade_and_translate_in, R.anim.sd_fade_and_translate_out).replace(android.R.id.content, NewNodeDialog.newInstance(true)).addToBackStack(null).commit();
-        adapter.notifyDataSetChanged();
     }
 
     private void makeNewInterval() {
         Toast.makeText(TreeViewerActivity.this, "Not implemented yet. TODO, dialog for manual intervals", Toast.LENGTH_LONG).show();
+
     }
 
 
@@ -234,10 +260,9 @@ public class TreeViewerActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            if (!TreeViewerActivity.path.isEmpty()) {
-                TreeViewerActivity.path.remove(TreeViewerActivity.path.size() - 1);
-            }
-            super.onBackPressed();
+            Intent intent = new Intent(PARENT);
+            intent.putExtra("type", PARENT);
+            sendBroadcast(intent);
         }
     }
 
@@ -249,6 +274,7 @@ public class TreeViewerActivity extends AppCompatActivity
             TreeViewerActivity.dataManager.saveData((Project) rootNode);
         }
 
+        stopService(this.dataHolderService);
         super.onDestroy();
     }
 
@@ -317,7 +343,5 @@ public class TreeViewerActivity extends AppCompatActivity
 
         return root;
     }
-
-
 
 }
