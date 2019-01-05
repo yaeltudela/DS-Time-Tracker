@@ -70,8 +70,7 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
                         showEditDialog();
                         break;
                     case 3:
-                        removeNode(node);
-                        notifyDataSetChanged();
+                        removeNode();
                         break;
                     default:
                         return true;
@@ -108,11 +107,11 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
 
         }
 
-        private void removeNode(Node node) {
+        private void removeNode() {
 
             Intent broadcast = new Intent(REMOVE);
             broadcast.putExtra("type", REMOVE);
-            broadcast.putExtra("node", getAdapterPosition());
+            broadcast.putExtra("nodePosition", getAdapterPosition());
 
             itemView.getContext().sendBroadcast(broadcast);
 
@@ -173,6 +172,7 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
 
 
         }
+
 
         private void updateIcon(Node node) {
             if (node.isActive()) {
@@ -255,11 +255,10 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
             editDialog.setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    node.setName(name.getText().toString());
-                    node.setDescription(description.getText().toString());
-
                     Intent broadcast = new Intent(EDIT);
                     broadcast.putExtra("type", EDIT);
+                    broadcast.putExtra("nodeName", name.getText().toString());
+                    broadcast.putExtra("nodeDescription", description.getText().toString());
                     itemView.getContext().sendBroadcast(broadcast);
 
                     dialog.dismiss();

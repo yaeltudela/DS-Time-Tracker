@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,14 +18,12 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dstimetracker.devsodin.core.BaseTask;
-import com.dstimetracker.devsodin.core.DataManager;
 import com.dstimetracker.devsodin.core.Node;
 import com.dstimetracker.devsodin.core.Project;
 import com.dstimetracker.devsodin.core.Task;
@@ -42,12 +41,10 @@ public class TreeViewerActivity extends AppCompatActivity
     RecyclerView.Adapter nodeAdapter;
     RecyclerView.Adapter intervalAdapter;
     private SpeedDialView mSpeedDialView;
-    public static Node rootNode;
     private Toolbar toolbar;
     private SpeedDialOverlayLayout speedDialOverlayLayout;
     private SharedPreferences sharedPreferences;
     public static ArrayList<Integer> path;
-    private static DataManager dataManager;
     private RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
     private TextView defaultText;
     private Node node;
@@ -58,6 +55,7 @@ public class TreeViewerActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tree_viewer);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         defaultText = findViewById(R.id.noRootProjects);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -86,7 +84,6 @@ public class TreeViewerActivity extends AppCompatActivity
         this.receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                Log.i("reciving", "reciving data");
                 Bundle bundle = intent.getExtras();
                 if (bundle != null) {
 
@@ -111,7 +108,7 @@ public class TreeViewerActivity extends AppCompatActivity
     private void updateScreenData() {
         if (node != null) {
             rv.setVisibility(View.VISIBLE);
-            defaultText.setVisibility(View.INVISIBLE);
+            defaultText.setVisibility(View.GONE);
             if (node.isTask()) {
                 intervalAdapter = new IntervalAdapter(((Task) node).getIntervals());
                 rv.setAdapter(intervalAdapter);
@@ -133,6 +130,7 @@ public class TreeViewerActivity extends AppCompatActivity
         super.onResume();
         IntentFilter filter = new IntentFilter();
         filter.addAction(DataHolderService.UPDATE_DATA);
+        filter.addAction(DataHolderService.STOP);
         registerReceiver(this.receiver, filter);
     }
 
@@ -241,11 +239,11 @@ public class TreeViewerActivity extends AppCompatActivity
 
     private void makeNewProject() {
 
-        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.sd_fade_and_translate_in, R.anim.sd_fade_and_translate_out).replace(android.R.id.content, NewNodeDialog.newInstance(false)).addToBackStack(null).commit();
+        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.sd_fade_and_translate_in, R.anim.sd_fade_and_translate_out).add(R.id.drawer_layout, NewNodeDialog.newInstance(false)).addToBackStack("new").commit();
     }
 
     private void makeNewTask() {
-        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.sd_fade_and_translate_in, R.anim.sd_fade_and_translate_out).replace(android.R.id.content, NewNodeDialog.newInstance(true)).addToBackStack(null).commit();
+        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.sd_fade_and_translate_in, R.anim.sd_fade_and_translate_out).add(R.id.drawer_layout, NewNodeDialog.newInstance(true)).addToBackStack("new").commit();
     }
 
     private void makeNewInterval() {
@@ -256,24 +254,23 @@ public class TreeViewerActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
         } else {
-            Intent intent = new Intent(PARENT);
-            intent.putExtra("type", PARENT);
-            sendBroadcast(intent);
+            DrawerLayout drawer = findViewById(R.id.drawer_layout);
+            if (drawer.isDrawerOpen(GravityCompat.START)) {
+                drawer.closeDrawer(GravityCompat.START);
+            } else {
+                Intent intent = new Intent(PARENT);
+                intent.putExtra("type", PARENT);
+                sendBroadcast(intent);
+            }
         }
     }
 
 
     @Override
     protected void onDestroy() {
-
-        if (TreeViewerActivity.dataManager != null) {
-            TreeViewerActivity.dataManager.saveData((Project) rootNode);
-        }
-
         stopService(this.dataHolderService);
         super.onDestroy();
     }
@@ -304,7 +301,6 @@ public class TreeViewerActivity extends AppCompatActivity
         switch (id) {
             case R.id.nav_active:
                 Intent activeActivity = new Intent(this, ActiveNodesActivity.class);
-                activeActivity.putExtra("rootNode", TreeViewerActivity.rootNode);
                 startActivity(activeActivity);
                 break;
             case R.id.nav_reports:

@@ -51,6 +51,7 @@ public class NewNodeDialog extends DialogFragment {
         return dialog;
     }
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -95,6 +96,7 @@ public class NewNodeDialog extends DialogFragment {
 
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -134,6 +136,5 @@ public class NewNodeDialog extends DialogFragment {
         return !nodeName.getText().toString().isEmpty();
 
     }
-
 
 }
