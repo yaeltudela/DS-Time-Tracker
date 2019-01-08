@@ -33,12 +33,19 @@
 
     <!-- Example General settings -->
 
-    <string-array name="refresh_rate_selection">
+    <string-array name="refresh_rate_strings">
         <item>1</item>
         <item>2</item>
         <item>5</item>
         <item>10</item>
     </string-array>
+
+    <integer-array name="refresh_rate_selection">
+        <item>1</item>
+        <item>2</item>
+        <item>5</item>
+        <item>10</item>
+    </integer-array>
 
     <string-array name="available_languages">
         <item>Spanish</item>
@@ -81,6 +88,7 @@
     <string name="cancel">Cancel</string>
     <string name="id">id</string>
     <string name="noRootProjects">There are no projects. Press + to add the first one</string>
+    <string name="display_path">Display Path</string>
 
 
 </resources>

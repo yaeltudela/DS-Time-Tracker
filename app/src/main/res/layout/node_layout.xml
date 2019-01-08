@@ -54,27 +54,6 @@
                 app:layout_constraintStart_toEndOf="@+id/nodeNameText"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/nodeStartDateText"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:text="@string/StartDate"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/nodeNameText"
-                app:layout_constraintTop_toBottomOf="@+id/nodeNameText"
-                app:layout_constraintVertical_bias="0.0" />
-
-            <TextView
-                android:id="@+id/nodeEndDateText"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:text="@string/StartDate"
-                app:layout_constraintBaseline_toBaselineOf="@+id/nodeStartDateText"
-                app:layout_constraintEnd_toEndOf="parent" />
-
         </android.support.constraint.ConstraintLayout>
 
         <TextView

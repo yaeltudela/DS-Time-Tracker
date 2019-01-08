@@ -7,4 +7,10 @@
         android:icon="@android:drawable/ic_menu_search"
         android:title="@string/searchText"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/showPath"
+        android:icon="@android:drawable/ic_menu_search"
+        android:title="@string/display_path"
+        app:showAsAction="ifRoom" />
+
 </menu>

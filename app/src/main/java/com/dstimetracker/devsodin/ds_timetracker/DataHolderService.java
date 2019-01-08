@@ -5,8 +5,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 
 import com.dstimetracker.devsodin.core.BaseTask;
 import com.dstimetracker.devsodin.core.Clock;
@@ -31,6 +33,7 @@ public class DataHolderService extends Service implements Observer {
     private ArrayList<Node> path = new ArrayList<>();
     private BroadcastReceiver receiver;
     private boolean isLevelChanged = false;
+    private int refreshRate;
 
 
     public DataHolderService() {
@@ -44,8 +47,11 @@ public class DataHolderService extends Service implements Observer {
 
     @Override
     public int onStartCommand(Intent intent, int flags, final int startId) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        refreshRate = Integer.parseInt(preferences.getString(SettingsActivity.KEY_PREFERENCE_REFRESH_RATE, "1"));
+
+        Clock.getInstance().setRefreshTicks(refreshRate);
         Clock.getInstance().addObserver(this);
-        Clock.getInstance().setRefreshTicks(2);
 
         receiver = new BroadcastReceiver() {
             @Override
@@ -66,6 +72,7 @@ public class DataHolderService extends Service implements Observer {
                         case TreeViewerActivity.PARENT:
                             if (currentNode.getParent() != null) {
                                 currentNode = currentNode.getParent();
+                                path.remove(path.size() - 1);
 
                             } else {
                                 dataManager.saveData((Project) rootNode);
@@ -129,6 +136,19 @@ public class DataHolderService extends Service implements Observer {
             }
         };
 
+        if (rootNode == null) {
+            if (dataManager == null) {
+                dataManager = new DataManager(getFilesDir() + "/save.db");
+                this.rootNode = (Node) dataManager.loadData();
+                if (this.rootNode == null) {
+                    rootNode = new Project("root", "", null);
+                }
+                currentNode = rootNode;
+                sendNewData();
+            }
+        }
+
+
         IntentFilter filter = new IntentFilter();
         filter.addAction(TreeViewerActivity.PARENT);
         filter.addAction(NodeAdapter.CHILDREN);
@@ -142,17 +162,6 @@ public class DataHolderService extends Service implements Observer {
         filter.addAction(ActiveNodesActivity.PAUSE_ALL);
         filter.addAction(ActiveNodesActivity.RESUME_ALL);
         registerReceiver(this.receiver, filter);
-
-
-        if (rootNode == null) {
-            if (dataManager == null) {
-                dataManager = new DataManager(getFilesDir() + "/save.db");
-                this.rootNode = (Node) dataManager.loadData();
-                currentNode = rootNode;
-                sendNewData();
-            }
-        }
-
 
         return Service.START_STICKY;
     }
@@ -171,7 +180,23 @@ public class DataHolderService extends Service implements Observer {
             isLevelChanged = false;
         }
         broadcast.putExtra("node", currentNode);
+        broadcast.putExtra("path", getNewPath());
         sendBroadcast(broadcast);
+    }
+
+    private String getNewPath() {
+        StringBuilder newPath = new StringBuilder();
+        newPath.append("/");
+        if (path.size() > 0) {
+            for (int i = 1; i < path.size(); i++) {
+                newPath.append(path.get(i).getName());
+                newPath.append("/");
+            }
+            if (currentNode != null) {
+                newPath.append(currentNode.getName());
+            }
+        }
+        return newPath.toString();
     }
 
     private void sendNewData() {
@@ -181,6 +206,7 @@ public class DataHolderService extends Service implements Observer {
             isLevelChanged = false;
         }
         broadcast.putExtra("node", currentNode);
+        broadcast.putExtra("path", getNewPath());
         sendBroadcast(broadcast);
     }
 
@@ -189,4 +215,5 @@ public class DataHolderService extends Service implements Observer {
         unregisterReceiver(this.receiver);
         super.onDestroy();
     }
+
 }

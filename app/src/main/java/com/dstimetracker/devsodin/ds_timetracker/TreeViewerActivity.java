@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -18,8 +17,10 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,13 +44,15 @@ public class TreeViewerActivity extends AppCompatActivity
     private SpeedDialView mSpeedDialView;
     private Toolbar toolbar;
     private SpeedDialOverlayLayout speedDialOverlayLayout;
-    private SharedPreferences sharedPreferences;
     public static ArrayList<Integer> path;
     private RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
     private TextView defaultText;
     private Node node;
     private Intent dataHolderService;
     private BroadcastReceiver receiver;
+    private ImageButton homeButton;
+    private TextView pathText;
+    private boolean visiblePath = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,12 +74,6 @@ public class TreeViewerActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-
-        String language = sharedPreferences.getString(SettingsActivity.KEY_PREFERENCE_LANGUAGE, "en");
-        String refresh_Rate = sharedPreferences.getString(SettingsActivity.KEY_PREFERENCE_REFRESH_RATE, "2");
-
         PreferenceManager.setDefaultValues(this, R.xml.app_preferences, false);
 
         this.dataHolderService = new Intent(this, DataHolderService.class);
@@ -94,7 +91,8 @@ public class TreeViewerActivity extends AppCompatActivity
                         if (bundle.containsKey("updateDial")) {
                             initSpeedDial();
                         }
-                        updateScreenData();
+                        String newPath = bundle.getString("path");
+                        updateScreenData(newPath);
                     }
 
                 }
@@ -102,10 +100,13 @@ public class TreeViewerActivity extends AppCompatActivity
         };
 
         setUpScreenElements();
+        initRootSpeedDial();
+        displayPath();
 
     }
 
-    private void updateScreenData() {
+    private void updateScreenData(String newPath) {
+
         if (node != null) {
             rv.setVisibility(View.VISIBLE);
             defaultText.setVisibility(View.GONE);
@@ -114,15 +115,23 @@ public class TreeViewerActivity extends AppCompatActivity
                 rv.setAdapter(intervalAdapter);
                 intervalAdapter.notifyDataSetChanged();
             } else {
-                nodeAdapter = new NodeAdapter((ArrayList<Node>) ((Project) node).getActivities());
-                rv.setAdapter(nodeAdapter);
-                nodeAdapter.notifyDataSetChanged();
+                if (((Project) node).getActivities().size() == 0) {
+                    rv.setVisibility(View.INVISIBLE);
+                    defaultText.setVisibility(View.VISIBLE);
+                } else {
+                    ArrayList<Node> nodes = ((ArrayList<Node>) ((Project) node).getActivities());
+                    nodeAdapter = new NodeAdapter(nodes);
+                    rv.setAdapter(nodeAdapter);
+                    nodeAdapter.notifyDataSetChanged();
+                }
             }
         } else {
             rv.setVisibility(View.INVISIBLE);
             defaultText.setVisibility(View.VISIBLE);
 
         }
+
+        //pathText.setText(newPath);
     }
 
     @Override
@@ -144,6 +153,9 @@ public class TreeViewerActivity extends AppCompatActivity
         this.toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         this.rv = findViewById(R.id.recyclerView);
+
+        //this.pathText = findViewById(R.id.path);
+        //this.homeButton = findViewById(R.id.goHome);
 
         this.rv.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         this.rv.setItemAnimator(new DefaultItemAnimator());
@@ -174,10 +186,10 @@ public class TreeViewerActivity extends AppCompatActivity
     private void initTreeSpeedDial() {
         //Add task or project menu items
         mSpeedDialView.addActionItem(
-                new SpeedDialActionItem.Builder(R.id.fab_new_project, R.drawable.ic_audiotrack_light).setLabel(R.string.newProjectString)
+                new SpeedDialActionItem.Builder(R.id.fab_new_project, R.drawable.ic_add_black_24dp).setLabel(R.string.newProjectString)
                         .create());
         mSpeedDialView.addActionItem(
-                new SpeedDialActionItem.Builder(R.id.fab_new_task, R.drawable.ic_dialog_close_dark).setLabel(R.string.newTaskString)
+                new SpeedDialActionItem.Builder(R.id.fab_new_task, R.drawable.ic_add_black_24dp).setLabel(R.string.newTaskString)
                         .create());
     }
 
@@ -281,13 +293,30 @@ public class TreeViewerActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.searchMenu:
-                Intent intent = new Intent(this, SettingsActivity.class);
-                startActivity(intent);
+                Toast.makeText(this, "TODO, show a search", Toast.LENGTH_LONG).show();
                 return true;
+            case R.id.showPath:
+                this.visiblePath = !this.visiblePath;
+                displayPath();
 
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void displayPath() {
+        return;
+/*
+*         if(this.visiblePath){
+            pathText.setVisibility(View.VISIBLE);
+            homeButton.setVisibility(View.VISIBLE);
+        }else{
+            pathText.setVisibility(View.GONE);
+            homeButton.setVisibility(View.GONE);
+        }
+
+*
+* */
     }
 
     //Navbar
@@ -300,8 +329,7 @@ public class TreeViewerActivity extends AppCompatActivity
 
         switch (id) {
             case R.id.nav_active:
-                Intent activeActivity = new Intent(this, ActiveNodesActivity.class);
-                startActivity(activeActivity);
+                startActivity(new Intent(this, ActiveNodesActivity.class));
                 break;
             case R.id.nav_reports:
                 startActivity(new Intent(this, ReportGenerator.class));
@@ -315,6 +343,12 @@ public class TreeViewerActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.tree_viewer, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     //Auxiliary

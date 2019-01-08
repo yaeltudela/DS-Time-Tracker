@@ -82,13 +82,12 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
 
         TextView nodeName;
         TextView nodeDuration;
-        TextView nodeStartDate;
-        TextView nodeEndDate;
 
         ImageButton changeStatus;
         TextView threeDots;
         ImageView activeBar;
 
+        int nodePosition;
         Node node;
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM - kk:mm", Locale.ENGLISH);
 
@@ -98,8 +97,6 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
 
             nodeName = itemView.findViewById(R.id.nodeNameText);
             nodeDuration = itemView.findViewById(R.id.nodeDurationText);
-            nodeStartDate = itemView.findViewById(R.id.nodeStartDateText);
-            nodeEndDate = itemView.findViewById(R.id.nodeEndDateText);
             changeStatus = itemView.findViewById(R.id.taskStatus);
             threeDots = itemView.findViewById(R.id.threeDots);
             activeBar = itemView.findViewById(R.id.status);
@@ -111,9 +108,10 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
 
             Intent broadcast = new Intent(REMOVE);
             broadcast.putExtra("type", REMOVE);
-            broadcast.putExtra("nodePosition", getAdapterPosition());
+            broadcast.putExtra("nodePosition", nodePosition);
 
             itemView.getContext().sendBroadcast(broadcast);
+            notifyItemRemoved(getAdapterPosition());
 
         }
 
@@ -122,13 +120,7 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
             updateIcon(nodes.get(i));
             nodeName.setText(nodes.get(i).getName());
             nodeDuration.setText(Double.toString(nodes.get(i).getDuration()) + " secs.");
-            if (nodes.get(i).getStartDate() != null) {
-                nodeStartDate.setText(simpleDateFormat.format(nodes.get(i).getStartDate()));
-                nodeEndDate.setText(simpleDateFormat.format(nodes.get(i).getEndDate()));
-            } else {
-                nodeStartDate.setText("---");
-                nodeEndDate.setText("---");
-            }
+            nodePosition = getAdapterPosition();
 
             if (!nodes.get(i).isTask()) {
                 changeStatus.setVisibility(View.GONE);
@@ -172,6 +164,7 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
 
 
         }
+
 
 
         private void updateIcon(Node node) {
@@ -259,9 +252,11 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
                     broadcast.putExtra("type", EDIT);
                     broadcast.putExtra("nodeName", name.getText().toString());
                     broadcast.putExtra("nodeDescription", description.getText().toString());
+                    broadcast.putExtra("nodePosition", nodePosition);
                     itemView.getContext().sendBroadcast(broadcast);
 
                     dialog.dismiss();
+                    notifyDataSetChanged();
                 }
             });
 

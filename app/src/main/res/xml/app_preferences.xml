@@ -3,10 +3,11 @@
     <PreferenceCategory android:title="@string/basic">
         <ListPreference
             android:defaultValue="1"
-            android:entries="@array/refresh_rate_selection"
-            android:entryValues="@array/refresh_rate_selection"
+            android:entries="@array/refresh_rate_strings"
+            android:entryValues="@array/refresh_rate_strings"
             android:key="pref_refresh_rate"
             android:summary="@string/summary_refresh_rate"
+            android:icon="@drawable/ic_alarm_black_24dp"
             android:title="@string/refresh_rate" />
         <ListPreference
             android:defaultValue="English"
