@@ -79,9 +79,7 @@ public class DataHolderService extends Service implements Observer {
                                 isLevelChanged = true;
                             } else {
                                 dataManager.saveData((Project) rootNode);
-                                Intent broadcast = new Intent(STOP);
-                                broadcast.putExtra("stop", 0);
-                                sendBroadcast(broadcast);
+                                stopSelf();
                             }
                             break;
                         case NewNodeDialog.NEW_TASK:
@@ -148,7 +146,6 @@ public class DataHolderService extends Service implements Observer {
                 currentNode = rootNode;
             }
         }
-
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(TreeViewerActivity.HOME);

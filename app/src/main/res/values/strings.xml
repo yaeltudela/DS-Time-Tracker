@@ -4,7 +4,7 @@
     <string name="rootProjectsText">Root Projects</string>
     <string name="reportGeneratorText">Generate Reports</string>
     <string name="activeText">Active Tasks</string>
-    <string name="settingsText">Time Tracker</string>
+    <string name="settingsText">Settings</string>
 
     <string name="searchText">Search</string>
     <string name="resumeAllText">Resume all</string>

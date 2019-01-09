@@ -65,7 +65,6 @@ public class TreeViewerActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -148,8 +147,8 @@ public class TreeViewerActivity extends AppCompatActivity
 
     @Override
     protected void onStop() {
-        super.onStop();
         unregisterReceiver(this.receiver);
+        super.onStop();
 
     }
 
@@ -286,9 +285,13 @@ public class TreeViewerActivity extends AppCompatActivity
             if (drawer.isDrawerOpen(GravityCompat.START)) {
                 drawer.closeDrawer(GravityCompat.START);
             } else {
-                Intent intent = new Intent(PARENT);
-                intent.putExtra("type", PARENT);
-                sendBroadcast(intent);
+                if(node.getParent() == null){
+                    finish();
+                }else{
+                    Intent intent = new Intent(PARENT);
+                    intent.putExtra("type", PARENT);
+                    sendBroadcast(intent);
+                }
             }
         }
     }
