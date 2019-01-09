@@ -92,6 +92,7 @@ public class NewNodeDialog extends DialogFragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
         inflater.inflate(R.menu.new_node_menu, menu);
 
     }

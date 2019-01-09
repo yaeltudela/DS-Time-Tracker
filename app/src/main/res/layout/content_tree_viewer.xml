@@ -50,7 +50,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_behavior="@string/speeddial_scrolling_view_snackbar_behavior"
-        app:sdMainFabClosedSrc="@drawable/ic_audiotrack_dark">
+        app:sdMainFabClosedSrc="@drawable/ic_add_black_24dp">
 
     </com.leinardi.android.speeddial.SpeedDialView>
 
@@ -68,7 +68,8 @@
             android:layout_weight="1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_mr_button_connected_00_light" />
+            android:background="@android:color/transparent"
+            app:srcCompat="@drawable/ic_home_black_24dp" />
 
         <TextView
             android:id="@+id/path"

@@ -89,6 +89,11 @@
     <string name="id">id</string>
     <string name="noRootProjects">There are no projects. Press + to add the first one</string>
     <string name="display_path">Display Path</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="format">Format</string>
+    <string name="type">Type</string>
+    <string name="projects">Projects</string>
 
 
 </resources>
