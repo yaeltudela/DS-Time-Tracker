@@ -15,7 +15,7 @@
     <string name="newProjectTitleText">Add Project</string>
     <string name="newTaskTitleText">Add Task</string>
     <string name="newIntervalTitleText">Add Interval</string>
-    <string name="nodeOptions">NodeOptions</string>
+    <string name="nodeOptions" translatable="false">NodeOptions</string>
     <string name="nodeMenuEdit">Edit</string>
     <string name="nodeMenuDelete">Delete</string>
     <string name="saveString">Save</string>
@@ -60,11 +60,11 @@
     </string-array>
 
     <string name="title_activity_tree_viewer">Time Tracker</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
-    <string name="nav_header_desc">Navigation header</string>
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+    <string name="nav_header_title" translatable="false">Android Studio</string>
+    <string name="nav_header_subtitle" translatable="false">android.studio@android.com</string>
+    <string name="nav_header_desc" translatable="false">Navigation header</string>
     <string name="action_settings">Settings</string>
     <string name="detailsMenuEdit">Details</string>
     <string name="editMenuEdit">Edit</string>
@@ -86,7 +86,7 @@
     <string name="resume_all">Resume all</string>
     <string name="no_active_task">There\'s no active task now.</string>
     <string name="cancel">Cancel</string>
-    <string name="id">id</string>
+    <string name="id" translatable="false">id</string>
     <string name="noRootProjects">There are no projects. Press + to add the first one</string>
     <string name="display_path">Display Path</string>
     <string name="from">From</string>
