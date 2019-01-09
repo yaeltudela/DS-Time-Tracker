@@ -19,6 +19,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".TreeViewerActivity" />
         </activity>
+
         <activity
             android:name=".TreeViewerActivity"
             android:label="@string/title_activity_tree_viewer"
@@ -28,11 +29,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".ReportGenerator">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".TreeViewerActivity" />
         </activity>
+
         <activity android:name=".ActiveNodesActivity" />
 
         <service

@@ -33,7 +33,6 @@ public class DataHolderService extends Service implements Observer {
     private ArrayList<Node> path = new ArrayList<>();
     private BroadcastReceiver receiver;
     private boolean isLevelChanged = false;
-    private int refreshRate;
 
 
     public DataHolderService() {
@@ -47,8 +46,8 @@ public class DataHolderService extends Service implements Observer {
 
     @Override
     public int onStartCommand(Intent intent, int flags, final int startId) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        refreshRate = Integer.parseInt(preferences.getString(SettingsActivity.KEY_PREFERENCE_REFRESH_RATE, "1"));
+        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        int refreshRate = Integer.parseInt(preferences.getString(SettingsActivity.KEY_PREFERENCE_REFRESH_RATE, "1"));
 
         Clock.getInstance().setRefreshTicks(refreshRate);
         Clock.getInstance().addObserver(this);
@@ -59,7 +58,6 @@ public class DataHolderService extends Service implements Observer {
                 Bundle intentData = intent.getExtras();
                 if (intentData != null && intentData.containsKey("type")) {
                     String type = intentData.getString("type");
-                    Node n;
                     int nodePosition;
                     switch (type) {
                         case TreeViewerActivity.HOME:
@@ -77,15 +75,14 @@ public class DataHolderService extends Service implements Observer {
                         case TreeViewerActivity.PARENT:
                             if (currentNode.getParent() != null) {
                                 currentNode = currentNode.getParent();
-                                path.remove(path.size() - 1);
-
+                                path.remove(path.size()-1);
+                                isLevelChanged = true;
                             } else {
                                 dataManager.saveData((Project) rootNode);
                                 Intent broadcast = new Intent(STOP);
                                 broadcast.putExtra("stop", 0);
                                 sendBroadcast(broadcast);
                             }
-                            isLevelChanged = true;
                             break;
                         case NewNodeDialog.NEW_TASK:
                             Task task = new BaseTask(intentData.getString("taskName"), intentData.getString("taskDescription"), (Project) currentNode);
@@ -181,14 +178,7 @@ public class DataHolderService extends Service implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        Intent broadcast = new Intent(UPDATE_DATA);
-        if (isLevelChanged) {
-            broadcast.putExtra("updateDial", 0);
-            isLevelChanged = false;
-        }
-        broadcast.putExtra("node", currentNode);
-        broadcast.putExtra("path", getNewPath());
-        sendBroadcast(broadcast);
+        sendNewData();
     }
 
     private String getNewPath() {
@@ -217,8 +207,11 @@ public class DataHolderService extends Service implements Observer {
         sendBroadcast(broadcast);
     }
 
+
+
     @Override
     public void onDestroy() {
+        path.clear();
         unregisterReceiver(this.receiver);
         super.onDestroy();
     }

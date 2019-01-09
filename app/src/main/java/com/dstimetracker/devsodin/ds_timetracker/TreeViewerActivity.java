@@ -106,6 +106,7 @@ public class TreeViewerActivity extends AppCompatActivity
 
     }
 
+
     private void updateScreenData(String newPath) {
 
         if (node != null) {
@@ -144,10 +145,12 @@ public class TreeViewerActivity extends AppCompatActivity
         registerReceiver(this.receiver, filter);
     }
 
+
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onStop() {
+        super.onStop();
         unregisterReceiver(this.receiver);
+
     }
 
     void setUpScreenElements() {
