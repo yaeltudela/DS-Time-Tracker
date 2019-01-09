@@ -37,6 +37,7 @@ import java.util.ArrayList;
 public class TreeViewerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    public static final String HOME = "home";
     private RecyclerView rv;
     public static final String PARENT = "parent";
     RecyclerView.Adapter nodeAdapter;
@@ -131,7 +132,7 @@ public class TreeViewerActivity extends AppCompatActivity
 
         }
 
-        //pathText.setText(newPath);
+        pathText.setText(newPath);
     }
 
     @Override
@@ -154,8 +155,17 @@ public class TreeViewerActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         this.rv = findViewById(R.id.recyclerView);
 
-        //this.pathText = findViewById(R.id.path);
-        //this.homeButton = findViewById(R.id.goHome);
+        this.pathText = findViewById(R.id.path);
+        this.homeButton = findViewById(R.id.goHome);
+        this.homeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HOME);
+                intent.putExtra("type", HOME);
+                sendBroadcast(intent);
+
+            }
+        });
 
         this.rv.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         this.rv.setItemAnimator(new DefaultItemAnimator());
@@ -305,9 +315,7 @@ public class TreeViewerActivity extends AppCompatActivity
     }
 
     private void displayPath() {
-        return;
-/*
-*         if(this.visiblePath){
+        if (this.visiblePath) {
             pathText.setVisibility(View.VISIBLE);
             homeButton.setVisibility(View.VISIBLE);
         }else{
@@ -315,8 +323,6 @@ public class TreeViewerActivity extends AppCompatActivity
             homeButton.setVisibility(View.GONE);
         }
 
-*
-* */
     }
 
     //Navbar

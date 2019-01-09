@@ -62,6 +62,11 @@ public class DataHolderService extends Service implements Observer {
                     Node n;
                     int nodePosition;
                     switch (type) {
+                        case TreeViewerActivity.HOME:
+                            path.clear();
+                            isLevelChanged = true;
+                            currentNode = rootNode;
+                            break;
                         case NodeAdapter.CHILDREN:
                             nodePosition = intentData.getInt("nodePosition");
                             Node newNode = (Node) ((Project) currentNode).getActivities().toArray()[nodePosition];
@@ -144,12 +149,12 @@ public class DataHolderService extends Service implements Observer {
                     rootNode = new Project("root", "", null);
                 }
                 currentNode = rootNode;
-                sendNewData();
             }
         }
 
 
         IntentFilter filter = new IntentFilter();
+        filter.addAction(TreeViewerActivity.HOME);
         filter.addAction(TreeViewerActivity.PARENT);
         filter.addAction(NodeAdapter.CHILDREN);
         filter.addAction(NodeAdapter.REMOVE);
@@ -162,6 +167,8 @@ public class DataHolderService extends Service implements Observer {
         filter.addAction(ActiveNodesActivity.PAUSE_ALL);
         filter.addAction(ActiveNodesActivity.RESUME_ALL);
         registerReceiver(this.receiver, filter);
+
+        sendNewData();
 
         return Service.START_STICKY;
     }
