@@ -1,6 +1,9 @@
 package com.dstimetracker.devsodin.ds_timetracker;
 
+import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,8 +19,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TimePicker;
 import android.widget.Toast;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class NewNodeDialog extends DialogFragment {
     public static final String NEW_TASK = "new_task";
@@ -25,6 +34,7 @@ public class NewNodeDialog extends DialogFragment {
     private EditText nodeName;
     private EditText nodeDescription;
     private boolean isTask;
+
 
     public static NewNodeDialog newInstance(boolean isTask) {
 
@@ -56,7 +66,7 @@ public class NewNodeDialog extends DialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View nodeDialogView = inflater.inflate(R.layout.new_node_layout, container, false);
+        final View nodeDialogView = inflater.inflate(R.layout.new_node_layout, container, false);
 
         nodeName = nodeDialogView.findViewById(R.id.nameEditText);
         nodeDescription = nodeDialogView.findViewById(R.id.descriptionEditText);
@@ -66,6 +76,35 @@ public class NewNodeDialog extends DialogFragment {
         toolbar.getMenu().clear();
         if (this.isTask) {
             toolbar.setTitle(R.string.newTaskString);
+
+            if (!isDataOk()) {
+                nodeDialogView.findViewById(R.id.fromSelectText).setVisibility(View.VISIBLE);
+                nodeDialogView.findViewById(R.id.toSelectText).setVisibility(View.VISIBLE);
+                nodeDialogView.findViewById(R.id.fromSelect_btn2).setVisibility(View.VISIBLE);
+                nodeDialogView.findViewById(R.id.toSelect_btn2).setVisibility(View.VISIBLE);
+
+                nodeDialogView.findViewById(R.id.fromSelect_btn2).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try {
+                            time_btn_onClick((EditText) nodeDialogView.findViewById(R.id.fromSelectText), nodeDialogView.getContext());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                nodeDialogView.findViewById(R.id.toSelect_btn2).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try {
+                            time_btn_onClick((EditText) nodeDialogView.findViewById(R.id.toSelectText), nodeDialogView.getContext());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+
 
         } else {
             toolbar.setTitle(R.string.newProjectString);
@@ -79,8 +118,6 @@ public class NewNodeDialog extends DialogFragment {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeButtonEnabled(true);
             actionBar.setHomeAsUpIndicator(android.R.drawable.ic_menu_close_clear_cancel);
-
-
         }
 
 
@@ -121,7 +158,6 @@ public class NewNodeDialog extends DialogFragment {
 
                 } else {
                     Toast.makeText(this.getContext(), "Project needs a name", Toast.LENGTH_LONG).show();
-
                 }
                 break;
 
@@ -138,4 +174,25 @@ public class NewNodeDialog extends DialogFragment {
 
     }
 
+
+    public void time_btn_onClick(final EditText fromSelect_etxt, final Context context) {
+        final DateFormat dateFormat = new SimpleDateFormat("HH:mm dd-MM-yy");
+        final Calendar cal = Calendar.getInstance();
+        new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, final int year, final int month, final int dayOfMonth) {
+                new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        cal.set(Calendar.YEAR, year);
+                        cal.set(Calendar.MONTH, month);
+                        cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        cal.set(Calendar.HOUR, hourOfDay);
+                        cal.set(Calendar.MINUTE, minute);
+                        fromSelect_etxt.setText(dateFormat.format(cal.getTime()));
+                    }
+                }, cal.get(Calendar.HOUR), cal.get(Calendar.MINUTE), true).show();
+            }
+        }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show();
+    }
 }
