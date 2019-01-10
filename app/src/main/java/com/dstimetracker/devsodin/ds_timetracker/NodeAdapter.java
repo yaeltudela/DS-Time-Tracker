@@ -22,6 +22,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
+/**
+ * Adapter class for Nodes (Projects and Tasks).
+ * It extends from RecyclerView.Adapter (because this adapter is for RecyclerView)
+ * It binds the data and set up it's listeners (contextmenu, play, pause, and itemclick)
+ */
 public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder> {
     public static final String START = "start";
     public static final String STOP = "stop";
@@ -57,6 +62,11 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
         return nodes.size();
     }
 
+
+    /**
+     * Class that implements the ViewHolder Android pattern.
+     * This class links the data to the adapter elements.
+     */
     public class NodeViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
 
         private final MenuItem.OnMenuItemClickListener onMenuItemClickListener = new MenuItem.OnMenuItemClickListener() {
@@ -104,6 +114,9 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
 
         }
 
+        /**
+         * Method that sends a petition to DataHolderService to remove the current node.
+         */
         private void removeNode() {
 
             Intent broadcast = new Intent(REMOVE);
@@ -115,6 +128,12 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
 
         }
 
+        /**
+         * Method that links all the data from the node to the layout and config it's listener.
+         *
+         * @param nodes ArrayList of all nodes to be shown on adapter
+         * @param i     position on array
+         */
         private void bindData(ArrayList<Node> nodes, final int i) {
             this.node = nodes.get(i);
             updateIcon(nodes.get(i));
@@ -166,7 +185,11 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
         }
 
 
-
+        /**
+         * Method that change the icons visibility depending on status of this node
+         *
+         * @param node Node to check status
+         */
         private void updateIcon(Node node) {
             if (node.isActive()) {
                 changeStatus.setImageResource(R.drawable.ic_media_pause_light);
@@ -195,6 +218,10 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
 
         }
 
+
+        /**
+         * Method that creates an AlertDialog that display all the node data.
+         */
         private void showDetailsDialog() {
             AlertDialog.Builder detailsDialog = new AlertDialog.Builder(itemView.getContext());
             detailsDialog.setTitle(R.string.detailsMenuEdit);
@@ -231,6 +258,9 @@ public class NodeAdapter extends RecyclerView.Adapter<NodeAdapter.NodeViewHolder
 
         }
 
+        /**
+         * Method that creates an AlertDialog that display the node name and description and gives the user the option to change it.
+         */
         private void showEditDialog() {
             AlertDialog.Builder editDialog = new AlertDialog.Builder(itemView.getContext());
             editDialog.setTitle(R.string.editMenuEdit);

@@ -24,7 +24,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.dstimetracker.devsodin.core.BaseTask;
 import com.dstimetracker.devsodin.core.Node;
 import com.dstimetracker.devsodin.core.Project;
 import com.dstimetracker.devsodin.core.Task;
@@ -34,6 +33,12 @@ import com.leinardi.android.speeddial.SpeedDialView;
 
 import java.util.ArrayList;
 
+/**
+ * Activity that shows the tree structure on recycler view.
+ * Also contains a speedDial to add more Nodes.
+ * <p>
+ * This activity use a broadcastReceiver to update the data.
+ */
 public class TreeViewerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -106,6 +111,50 @@ public class TreeViewerActivity extends AppCompatActivity
     }
 
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(DataHolderService.UPDATE_DATA);
+        filter.addAction(DataHolderService.STOP);
+        registerReceiver(this.receiver, filter);
+    }
+
+    @Override
+    protected void onStop() {
+        unregisterReceiver(this.receiver);
+        super.onStop();
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        stopService(this.dataHolderService);
+        super.onDestroy();
+    }
+
+
+    //Actionbar menu
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.searchMenu:
+                Toast.makeText(this, "TODO, show a search", Toast.LENGTH_LONG).show();
+                return true;
+            case R.id.showPath:
+                this.visiblePath = !this.visiblePath;
+                displayPath();
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+
+    /**
+     * Method that updates the fields from the linked layout.
+     * @param newPath new path to show (if needed)
+     */
     private void updateScreenData(String newPath) {
 
         if (node != null) {
@@ -119,6 +168,7 @@ public class TreeViewerActivity extends AppCompatActivity
                 if (((Project) node).getActivities().size() == 0) {
                     rv.setVisibility(View.INVISIBLE);
                     defaultText.setVisibility(View.VISIBLE);
+                    rv.setAdapter(null);
                 } else {
                     ArrayList<Node> nodes = ((ArrayList<Node>) ((Project) node).getActivities());
                     nodeAdapter = new NodeAdapter(nodes);
@@ -129,29 +179,16 @@ public class TreeViewerActivity extends AppCompatActivity
         } else {
             rv.setVisibility(View.INVISIBLE);
             defaultText.setVisibility(View.VISIBLE);
-
+            rv.setAdapter(null);
         }
 
         pathText.setText(newPath);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(DataHolderService.UPDATE_DATA);
-        filter.addAction(DataHolderService.STOP);
-        registerReceiver(this.receiver, filter);
-    }
 
-
-    @Override
-    protected void onStop() {
-        unregisterReceiver(this.receiver);
-        super.onStop();
-
-    }
-
+    /**
+     * Method called on onCreate method. It finds by id the elements and add the common clickListener.
+     */
     void setUpScreenElements() {
         this.toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -179,48 +216,9 @@ public class TreeViewerActivity extends AppCompatActivity
 
     }
 
-    private void initRootSpeedDial() {
-        mSpeedDialView.setOnChangeListener(new SpeedDialView.OnChangeListener() {
-            @Override
-            public boolean onMainActionSelected() {
-                makeNewProject();
-                return false;
-            }
-
-            @Override
-            public void onToggleChanged(boolean isOpen) {
-
-            }
-
-        });
-    }
-
-    private void initTreeSpeedDial() {
-        //Add task or project menu items
-        mSpeedDialView.addActionItem(
-                new SpeedDialActionItem.Builder(R.id.fab_new_project, R.drawable.ic_add_black_24dp).setLabel(R.string.newProjectString)
-                        .create());
-        mSpeedDialView.addActionItem(
-                new SpeedDialActionItem.Builder(R.id.fab_new_task, R.drawable.ic_add_black_24dp).setLabel(R.string.newTaskString)
-                        .create());
-    }
-
-    private void initIntervalSpeedDial() {
-        mSpeedDialView.setOnChangeListener(new SpeedDialView.OnChangeListener() {
-            @Override
-            public boolean onMainActionSelected() {
-                makeNewInterval();
-                return false;
-            }
-
-            @Override
-            public void onToggleChanged(boolean isOpen) {
-
-            }
-        });
-    }
-
-
+    /**
+     * Method called on onCreate. It sets up the speeddial according to tree level
+     */
     private void initSpeedDial() {
         mSpeedDialView.setOverlayLayout(speedDialOverlayLayout);
         mSpeedDialView.clearActionItems();
@@ -260,16 +258,75 @@ public class TreeViewerActivity extends AppCompatActivity
 
     }
 
+    /**
+     * Method that add listener for speedDial (used only on root level)
+     */
+    private void initRootSpeedDial() {
+        mSpeedDialView.setOnChangeListener(new SpeedDialView.OnChangeListener() {
+            @Override
+            public boolean onMainActionSelected() {
+                makeNewProject();
+                return false;
+            }
 
+            @Override
+            public void onToggleChanged(boolean isOpen) {
+
+            }
+
+        });
+    }
+
+    /**
+     * Method that add listeners to menu items for speedDial (used on non-root level)
+     */
+    private void initTreeSpeedDial() {
+        //Add task or project menu items
+        mSpeedDialView.addActionItem(
+                new SpeedDialActionItem.Builder(R.id.fab_new_project, R.drawable.ic_add_black_24dp).setLabel(R.string.newProjectString)
+                        .create());
+        mSpeedDialView.addActionItem(
+                new SpeedDialActionItem.Builder(R.id.fab_new_task, R.drawable.ic_add_black_24dp).setLabel(R.string.newTaskString)
+                        .create());
+    }
+
+    /**
+     * Method that add listener for speedDial (used only inside tasks (interval levels))
+     */
+    private void initIntervalSpeedDial() {
+        mSpeedDialView.setOnChangeListener(new SpeedDialView.OnChangeListener() {
+            @Override
+            public boolean onMainActionSelected() {
+                makeNewInterval();
+                return false;
+            }
+
+            @Override
+            public void onToggleChanged(boolean isOpen) {
+
+            }
+        });
+    }
+
+
+    /**
+     * Method that put a newNodeDialog (a fragment) on top. Used to create a project.
+     */
     private void makeNewProject() {
 
         getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.sd_fade_and_translate_in, R.anim.sd_fade_and_translate_out).add(R.id.drawer_layout, NewNodeDialog.newInstance(false)).addToBackStack("new").commit();
     }
 
+    /**
+     * Method that put a newNodeDialog (a fragment) on top. Used to create a task.
+     */
     private void makeNewTask() {
         getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.sd_fade_and_translate_in, R.anim.sd_fade_and_translate_out).add(R.id.drawer_layout, NewNodeDialog.newInstance(true)).addToBackStack("new").commit();
     }
 
+    /**
+     * Method that shows a toast because is an unimplemented function.
+     */
     private void makeNewInterval() {
         Toast.makeText(TreeViewerActivity.this, "Not implemented yet. TODO, dialog for manual intervals", Toast.LENGTH_LONG).show();
 
@@ -297,29 +354,9 @@ public class TreeViewerActivity extends AppCompatActivity
     }
 
 
-    @Override
-    protected void onDestroy() {
-        stopService(this.dataHolderService);
-        super.onDestroy();
-    }
-
-
-    //Actionbar menu
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.searchMenu:
-                Toast.makeText(this, "TODO, show a search", Toast.LENGTH_LONG).show();
-                return true;
-            case R.id.showPath:
-                this.visiblePath = !this.visiblePath;
-                displayPath();
-
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
+    /**
+     * Method to change layout element visibility (display path and home button)
+     */
     private void displayPath() {
         if (this.visiblePath) {
             pathText.setVisibility(View.VISIBLE);
@@ -362,28 +399,4 @@ public class TreeViewerActivity extends AppCompatActivity
         getMenuInflater().inflate(R.menu.tree_viewer, menu);
         return super.onCreateOptionsMenu(menu);
     }
-
-    //Auxiliary
-    private Project createTreeProjects() {
-        Project root = new Project("root", "", null);
-        Project p1 = new Project("P1", "P1 desc", root);
-        Task t3 = new BaseTask("T3", "T3 desc", p1);
-        Project p2 = new Project("P2", "P1 desc", p1);
-        Task t1 = new BaseTask("T1", "T1 desc", p2);
-        Task t2 = new BaseTask("T2", "T2 desc", p2);
-        Project p3 = new Project("P3", "p3 desc", root);
-        Project p4 = new Project("P4", "p4 desc", root);
-        Project p5 = new Project("P5", "p5 desc", root);
-        Project p6 = new Project("P6", "p6 desc", root);
-        Project p7 = new Project("P7", "p7 desc", root);
-        Project p8 = new Project("P8", "p8 desc", root);
-        Project p9 = new Project("P9", "p9 desc", root);
-        Project p1_1 = new Project("P1_1", "p1-1 desc", p1);
-        Project p1_2 = new Project("P1_2", "p1-2 desc", p1);
-        Project p1_3 = new Project("P1_3", "p1-3 desc", p1);
-        t3.startInterval();
-
-        return root;
-    }
-
 }

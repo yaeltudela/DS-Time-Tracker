@@ -25,6 +25,10 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 
+/**
+ * Activity that shows (only layout) how to generate reports for the tree.
+ * It doesn't implements really the report generation.
+ */
 public class ReportGenerator extends AppCompatActivity {
 
     private EditText fromSelect_etxt, toSelect_etxt;
@@ -60,6 +64,9 @@ public class ReportGenerator extends AppCompatActivity {
         detailType_rb = findViewById(R.id.detailType_rb);
     }
 
+    /**
+     * method that set up the default text (hints) to the "from" and "to" fields.
+     */
     private void setDefaultValue() {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.SECOND, 0);
@@ -125,6 +132,11 @@ public class ReportGenerator extends AppCompatActivity {
         generateReport();
     }
 
+    /**
+     * Method called when click on generateReport.
+     * It creates an empty file and creates an intent expecting someone who can handle this kind of file.
+     * Not generating the report because on handout says is not needed.
+     */
     @SuppressLint("NewApi")
     public void generateReport() {
         try {

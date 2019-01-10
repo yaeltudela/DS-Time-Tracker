@@ -11,6 +11,11 @@ import com.dstimetracker.devsodin.core.Interval;
 
 import java.util.ArrayList;
 
+/**
+ * Adapter class for Intervals.
+ * It extends from RecyclerView.Adapter (because this adapter is for RecyclerView)
+ * It binds the data from the task intervals.
+ */
 class IntervalAdapter extends RecyclerView.Adapter<IntervalAdapter.IntervalViewHolder> {
 
     private ArrayList<Interval> intervals;
@@ -55,6 +60,13 @@ class IntervalAdapter extends RecyclerView.Adapter<IntervalAdapter.IntervalViewH
             intervalDuration = itemView.findViewById(R.id.intervalDurationText);
         }
 
+
+        /**
+         * Method that links all the data from the Interval to the layout.
+         *
+         * @param interval interval structure to get data.
+         * @param i        position on array
+         */
         private void bindData(final Interval interval, final int i) {
             intervalId.setText(interval.getIdName());
             intervalStartDate.setText(interval.getStartDate().toString());

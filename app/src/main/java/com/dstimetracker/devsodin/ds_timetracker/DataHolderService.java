@@ -13,15 +13,23 @@ import android.preference.PreferenceManager;
 import com.dstimetracker.devsodin.core.BaseTask;
 import com.dstimetracker.devsodin.core.Clock;
 import com.dstimetracker.devsodin.core.DataManager;
+import com.dstimetracker.devsodin.core.Interval;
 import com.dstimetracker.devsodin.core.Node;
 import com.dstimetracker.devsodin.core.Project;
 import com.dstimetracker.devsodin.core.Task;
+import com.dstimetracker.devsodin.core.TreeVisitor;
 
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
-public class DataHolderService extends Service implements Observer {
+/**
+ * Service class used to hold the Node-tree.
+ * It implements observer to send new data according to refresh rate and treeVisitor to get all active tasks
+ * <p>
+ * This class has one reciver to manage the messages of activities who interact with nodes.
+ */
+public class DataHolderService extends Service implements Observer, TreeVisitor {
 
     public static final String UPDATE_DATA = "updateData";
     public static final String STOP = "stop";
@@ -90,12 +98,10 @@ public class DataHolderService extends Service implements Observer {
                             break;
                         case NodeAdapter.START:
                             nodePosition = intentData.getInt("nodePosition");
-                            activeTasks.add(((Task) ((Project) currentNode).getActivities().toArray()[nodePosition]));
                             ((Task) ((Project) currentNode).getActivities().toArray()[nodePosition]).startInterval();
                             break;
                         case NodeAdapter.STOP:
                             nodePosition = intentData.getInt("nodePosition");
-                            activeTasks.remove(((Project) currentNode).getActivities().toArray()[nodePosition]);
                             ((Task) ((Project) currentNode).getActivities().toArray()[nodePosition]).stopInterval();
                             break;
                         case NodeAdapter.REMOVE:
@@ -167,7 +173,12 @@ public class DataHolderService extends Service implements Observer {
         return Service.START_STICKY;
     }
 
-    private void sendActiveTasks() {
+    /**
+     * Method that visits all the tree and add the active tasks to an array who it's sended via broadcast to ActiveNodesActivity.
+     */
+    private synchronized void sendActiveTasks() {
+        activeTasks.clear();
+        rootNode.accept(this);
         Intent broadcast = new Intent(ACTIVE_TASKS_DATA);
         broadcast.putExtra("activeTasks", activeTasks);
         sendBroadcast(broadcast);
@@ -178,6 +189,10 @@ public class DataHolderService extends Service implements Observer {
         sendNewData();
     }
 
+    /**
+     * Method that generetaes the new path to be shown.
+     * @return string with path
+     */
     private String getNewPath() {
         StringBuilder newPath = new StringBuilder();
         newPath.append("/");
@@ -193,6 +208,9 @@ public class DataHolderService extends Service implements Observer {
         return newPath.toString();
     }
 
+    /**
+     * method used on update method. it sends the data of currentNode and it's path.
+     */
     private void sendNewData() {
         Intent broadcast = new Intent(UPDATE_DATA);
         if (isLevelChanged) {
@@ -213,4 +231,24 @@ public class DataHolderService extends Service implements Observer {
         super.onDestroy();
     }
 
+    @Override
+    public void visitProject(Project project) {
+        for (Node n : project.getActivities()) {
+            if (n.isTask()) {
+                n.accept(this);
+            }
+        }
+    }
+
+    @Override
+    public void visitTask(Task task) {
+        if (task.isActive()) {
+            activeTasks.add(task);
+        }
+    }
+
+    @Override
+    public void visitInterval(Interval interval) {
+
+    }
 }

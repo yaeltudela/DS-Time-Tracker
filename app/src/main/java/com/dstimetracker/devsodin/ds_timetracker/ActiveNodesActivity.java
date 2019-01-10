@@ -67,8 +67,12 @@ public class ActiveNodesActivity extends AppCompatActivity {
         updateScreenData();
 
 
+
     }
 
+    /**
+     * Method that updates the fields from the linked layout.
+     */
     private void updateScreenData() {
         if (!activeTasks.isEmpty()) {
             this.defaultText.setVisibility(View.INVISIBLE);
@@ -80,6 +84,9 @@ public class ActiveNodesActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Method to ask DataHolderService for the activeTasks via broadcast.
+     */
     private void getActiveTasks() {
         Intent intent = new Intent(ACTIVE_TASKS);
         intent.putExtra("type", ACTIVE_TASKS);
